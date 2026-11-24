@@ -10,60 +10,123 @@ import { Counter, Item, Reveal, SectionHead } from "./ui";
    Real numbers from one client build. The client is never named.
    One giant number, then the rest as a compact strip. */
 const changeIcons = [Search, Gauge, PhoneCall];
+/* Card accents, in order: top border + big number color. */
+const statStyles = [
+  { border: "border-t-sage", num: "text-sage" },
+  { border: "border-t-blaze", num: "text-blaze" },
+  { border: "border-t-sage", num: "text-sage" },
+  { border: "border-t-sage", num: "text-cream" },
+];
+
+/** "151 → 382" with the arrow picked out in sage. */
+function BeforeAfterLine({ text }: { text: string }) {
+  const parts = text.split("→");
+  return (
+    <>
+      {parts.map((part, i) => (
+        <span key={i}>
+          {i > 0 && (
+            <span className="text-sage" aria-hidden="true">
+              →
+            </span>
+          )}
+          {i > 0 && <span className="sr-only">to</span>}
+          {part}
+        </span>
+      ))}
+    </>
+  );
+}
 
 export function CaseStudy() {
   const g = caseStudy.giant;
+  const cut = caseStudy.headline.indexOf(caseStudy.headlineHighlight);
   return (
-    <section id="case">
-      <div className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-28">
-        <SectionHead eyebrow={caseStudy.eyebrow} title={caseStudy.headline} sub={caseStudy.sub} />
-
-        <Reveal className="mt-6 grid gap-x-10 gap-y-2 md:mt-14 lg:grid-cols-[auto_1fr] lg:items-end">
-          <Item>
-            <Counter
-              to={g.value}
-              prefix={g.prefix}
-              suffix={g.suffix}
-              decimals={g.decimals}
-              className="block whitespace-nowrap text-[clamp(6rem,27vw,12rem)] font-extrabold leading-[0.82] tracking-[-0.06em] text-cream"
-            />
+    <section id="case" className="grain relative overflow-hidden border-y-2 border-line bg-deep">
+      <div className="relative mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-28">
+        <Reveal className="max-w-4xl">
+          <Item as="p" className="eyebrow mb-4 md:mb-5">
+            {caseStudy.eyebrow}
           </Item>
-          <Item className="lg:pb-3">
-            <p className="max-w-xl text-2xl font-extrabold leading-[1.05] tracking-[-0.03em] md:text-[2.75rem]">{g.line}</p>
-            <p className="mt-2 text-base font-bold text-muted md:mt-3 md:text-xl" style={{ fontVariantNumeric: "tabular-nums" }}>
-              {g.detail}
-            </p>
+          <Item as="h2" className="display-lg">
+            {cut < 0 ? (
+              caseStudy.headline
+            ) : (
+              <>
+                {caseStudy.headline.slice(0, cut)}
+                <span className="text-sage">{caseStudy.headlineHighlight}</span>
+                {caseStudy.headline.slice(cut + caseStudy.headlineHighlight.length)}
+              </>
+            )}
+          </Item>
+          <Item as="p" className="mt-4 text-lg leading-snug opacity-80 md:mt-5 md:text-xl">
+            {caseStudy.sub}
           </Item>
         </Reveal>
 
-        <Reveal as="ul" className="mt-7 grid grid-cols-2 gap-x-5 gap-y-5 md:mt-16 md:gap-x-8 lg:grid-cols-4">
-          {caseStudy.strip.map((s) => (
-            <Item as="li" key={s.text} className="border-t-[3px] border-cream pt-3 md:pt-5">
-              <Counter
-                to={s.value}
-                prefix={s.prefix}
-                suffix={s.suffix}
-                decimals={s.decimals}
-                className="block whitespace-nowrap text-[2rem] font-extrabold leading-none tracking-[-0.04em] text-cream md:text-5xl"
-              />
-              <p className="mt-2 text-sm font-semibold leading-snug text-cream md:mt-3 md:text-base">{s.text}</p>
-              <p className="mt-1 text-sm text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>
-                {s.detail}
+        <div className="relative mt-7 md:mt-14">
+          {/* soft sage glow behind the giant number */}
+          <div
+            className="pointer-events-none absolute -left-24 top-1/2 h-[34rem] w-[min(60rem,170vw)] -translate-y-1/2"
+            style={{ background: "radial-gradient(closest-side, rgba(141,184,154,0.12), rgba(141,184,154,0))" }}
+            aria-hidden="true"
+          />
+          <Reveal className="relative grid gap-x-10 gap-y-4 lg:grid-cols-[auto_1fr] lg:items-end">
+            <Item>
+              <span className="inline-block border-b-[3px] border-blaze pb-2 md:pb-3">
+                <Counter
+                  to={g.value}
+                  prefix={g.prefix}
+                  suffix={g.suffix}
+                  decimals={g.decimals}
+                  className="block whitespace-nowrap text-[clamp(6rem,27vw,12rem)] font-extrabold leading-[0.82] tracking-[-0.06em] text-sage"
+                />
+              </span>
+            </Item>
+            <Item className="lg:pb-3">
+              <p className="max-w-xl text-2xl font-extrabold leading-[1.05] tracking-[-0.03em] text-cream md:text-[2.75rem]">{g.line}</p>
+              <p className="mt-2 text-xl font-extrabold text-blaze md:mt-3 md:text-3xl" style={{ fontVariantNumeric: "tabular-nums" }}>
+                <BeforeAfterLine text={g.detail} />
               </p>
             </Item>
-          ))}
+          </Reveal>
+        </div>
+
+        <Reveal as="ul" className="relative mt-8 grid grid-cols-2 gap-3 md:mt-16 md:gap-5 lg:grid-cols-4">
+          {caseStudy.strip.map((s, i) => {
+            const style = statStyles[i % statStyles.length];
+            return (
+              <Item
+                as="li"
+                key={s.text}
+                className={`flex flex-col rounded-md border border-t-4 border-line bg-raised p-3.5 transition-[translate] duration-300 hover:-translate-y-1 md:p-6 ${style.border}`}
+              >
+                <Counter
+                  to={s.value}
+                  prefix={s.prefix}
+                  suffix={s.suffix}
+                  decimals={s.decimals}
+                  className={`block whitespace-nowrap text-[2rem] font-extrabold leading-none tracking-[-0.04em] md:text-5xl ${style.num}`}
+                />
+                <p className="mb-3 mt-2 text-sm font-semibold leading-snug text-cream md:mt-3 md:text-base">{s.text}</p>
+                <p className="mt-auto text-sm text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>
+                  <BeforeAfterLine text={s.detail} />
+                </p>
+              </Item>
+            );
+          })}
         </Reveal>
 
-        <Reveal className="mt-7 md:mt-14">
+        <Reveal className="relative mt-8 md:mt-14">
+          <Item as="p" className="text-xs font-extrabold uppercase tracking-[0.18em] text-blaze">
+            {caseStudy.changesLabel}
+          </Item>
           <Item>
-            <ul className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-bold text-cream md:text-base" aria-label={caseStudy.changesLabel}>
-              <li className="text-xs font-bold uppercase tracking-[0.18em] text-muted" aria-hidden="true">
-                {caseStudy.changesLabel}
-              </li>
+            <ul className="mt-3 flex flex-wrap gap-2 md:gap-3">
               {caseStudy.changes.map((c, i) => {
                 const Icon = changeIcons[i % changeIcons.length];
                 return (
-                  <li key={c} className="flex items-center gap-2">
+                  <li key={c} className="flex items-center gap-2 rounded-full bg-forest px-4 py-2 text-sm font-bold text-cream md:px-5 md:py-2.5 md:text-base">
                     <Icon className="h-4 w-4 shrink-0 text-sage md:h-5 md:w-5" strokeWidth={2} aria-hidden="true" />
                     {c}
                   </li>
@@ -71,7 +134,7 @@ export function CaseStudy() {
               })}
             </ul>
           </Item>
-          <Item as="p" className="mt-5 max-w-4xl text-xs leading-relaxed text-muted md:text-sm">
+          <Item as="p" className="mt-6 max-w-4xl text-xs leading-relaxed text-muted md:text-sm">
             {caseStudy.finePrint}
           </Item>
         </Reveal>
@@ -87,7 +150,7 @@ const badge = "inline-block rounded-sm border-2 border-sage px-2 py-1 text-xs fo
 
 export function Pillars() {
   return (
-    <section className="grain border-y-2 border-line bg-deep">
+    <section>
       <div className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-28">
         <SectionHead eyebrow={pillars.eyebrow} title={pillars.headline} />
 

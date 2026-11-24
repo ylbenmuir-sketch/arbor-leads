@@ -175,6 +175,8 @@ export const beforeAfter = {
 export const caseStudy = {
   eyebrow: "Recent website case",
   headline: "Not a prettier website. A website that gets found.",
+  /** These words in the headline are colored sage. Must match the headline exactly. */
+  headlineHighlight: "gets found.",
   sub: "We rebuilt the structure, pages, speed and Google setup, not just the look. Here's the first 30 days.",
   giant: {
     prefix: "+",

@@ -65,7 +65,7 @@ export default function BeforeAfter() {
   }
 
   return (
-    <section className="relative overflow-x-clip py-16 md:py-28">
+    <section className="grain relative overflow-x-clip border-y-2 border-line bg-deep py-16 md:py-28">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <SectionHead eyebrow={copy.eyebrow} title={copy.headline} sub={copy.sub} center />
 
