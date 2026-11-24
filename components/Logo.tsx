@@ -14,6 +14,6 @@ export default function Logo({
 }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={`/logo/logo-${variant}.svg`} alt="Arbor Leads" width={302} height={56} className={className} />
+    <img src={`/logo/logo-${variant}.svg`} alt="Arbor Leads" width={331} height={54} className={className} />
   );
 }

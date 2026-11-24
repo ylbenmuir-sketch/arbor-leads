@@ -7,7 +7,7 @@ export const contentType = "image/png";
 
 const SAGE = "#9BBF9B";
 const CREAM = "#F4F1EA";
-const TREE = "M24 2 36 18H30L40 32H33L44 48H28V56H20V48H4L15 32H8L18 18H12Z";
+const TREE = "M32 4 L44 22 L39 22 L50 38 L44 38 L58 58 L38 58 L32 46 L26 58 L6 58 L20 38 L14 38 L25 22 L20 22 Z";
 
 /** Try to load Inter Tight 800 for the image; fall back to the default font if offline. */
 async function loadFont(text: string) {
@@ -44,7 +44,7 @@ export default async function OgImage() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <svg width="56" height="65" viewBox="0 0 48 56">
+          <svg width="62" height="64" viewBox="6 4 52 54">
             <path d={TREE} fill={SAGE} />
           </svg>
           <div style={{ fontSize: 40, fontWeight: 800, letterSpacing: 2 }}>ARBOR LEADS</div>
