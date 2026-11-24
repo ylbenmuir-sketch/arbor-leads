@@ -16,7 +16,7 @@ function MapPack() {
     </span>
   );
   return (
-    <figure className="fade-up mx-auto w-full max-w-md max-md:w-[90%] lg:max-w-none" style={{ "--d": "0.9s" } as React.CSSProperties}>
+    <figure className="fade-up mx-auto w-full max-w-md max-md:hidden lg:max-w-none" style={{ "--d": "0.9s" } as React.CSSProperties}>
       <div className="overflow-hidden rounded-lg border-2 border-cream bg-cream text-bg shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)]">
         {/* search bar */}
         <div className="flex items-center gap-2.5 border-b-2 border-bg/10 px-3.5 py-2 md:px-4 md:py-3">
@@ -116,7 +116,7 @@ export function Hero() {
     </Fragment>
   );
   return (
-    <section id="top" className="relative overflow-hidden pb-12 pt-32 md:pb-24 md:pt-44">
+    <section id="top" className="relative overflow-hidden pb-10 pt-[9.25rem] md:pb-24 md:pt-44">
       {/* Darkened, desaturated forest photo, faded into the page background. */}
       <div
         className="pointer-events-none absolute inset-0"
@@ -135,8 +135,7 @@ export function Hero() {
       </div>
 
       <div className="relative mx-auto grid max-w-7xl gap-8 px-5 md:gap-10 md:px-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center lg:gap-14">
-        {/* Phones: this block fills the first screen on its own (headline, one line, one button). */}
-        <div className="max-md:flex max-md:min-h-[calc(100svh-9.5rem)] max-md:flex-col max-md:justify-center max-md:pb-[11svh]">
+        <div>
           <h1 className="display-hero" aria-label={hero.headline}>
             <span aria-hidden="true">
               {lead.map(word)}
@@ -166,6 +165,26 @@ export function Hero() {
               <span className="max-md:hidden">{hero.micro}</span>
             </p>
 
+            {/* phones: a quiet proof card (links to the case section), then one muted row of trust points */}
+            <a
+              href={hero.proofHref}
+              className="mt-7 flex items-center gap-4 rounded-md border border-l-[3px] border-line border-l-sage bg-deep px-4 py-3.5 md:hidden"
+            >
+              <span className="min-w-0">
+                <span className="block text-xs font-bold uppercase leading-none tracking-[0.18em] text-sage">{hero.proofEyebrow}</span>
+                <span className="mt-2.5 flex items-center gap-3">
+                  <span className="text-[2.5rem] font-extrabold leading-none tracking-[-0.04em] text-cream">
+                    {caseStudy.giant.prefix}
+                    {caseStudy.giant.value}
+                    {caseStudy.giant.suffix}
+                  </span>
+                  <span className="text-base font-semibold leading-snug text-cream">{hero.proofTextShort}</span>
+                </span>
+              </span>
+              <ArrowRight className="ml-auto h-5 w-5 shrink-0 text-sage" strokeWidth={2.5} aria-hidden="true" />
+            </a>
+            <p className="mt-5 text-center text-[0.8125rem] font-semibold text-muted md:hidden">{hero.chipsShort.join("  ·  ")}</p>
+
             {/* desktop: proof strip and chips sit under the button */}
             <ProofCard text={hero.proofText} className="mt-8 max-md:!hidden" />
             <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-base font-bold text-cream max-md:hidden">
@@ -179,14 +198,8 @@ export function Hero() {
           </div>
         </div>
 
-        {/* desktop: fills the right half. phones: starts the second screen. */}
+        {/* The map example fills the right half on desktop. It is left out on phones. */}
         <MapPack />
-
-        {/* phones: proof strip moves below the map example, then one quiet row of trust points */}
-        <div className="md:hidden">
-          <ProofCard text={hero.proofTextShort} />
-          <p className="mt-5 text-center text-[0.8125rem] font-semibold text-muted">{hero.chipsShort.join("  ·  ")}</p>
-        </div>
       </div>
     </section>
   );

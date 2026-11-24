@@ -66,7 +66,9 @@ export const hero = {
   subheadShort: "Websites, Google Maps and ads for tree companies. Live in 7 days or your first month is free.",
   micro: "Free Google audit · 60 seconds · No call required",
   microShort: "Free audit · 60 seconds",
-  proofTextShort: "Google clicks in 30 days on a recent project",
+  /** The phone proof card: small label, then the number with this line. */
+  proofEyebrow: "Recent project",
+  proofTextShort: "Google clicks in 30 days",
   chipsShort: ["Live in 7 days", "Google Maps", "$0 down"],
   /** The number itself comes from `caseStudy.giant`. */
   proofText: "Google clicks in 30 days, our most recent website build",
