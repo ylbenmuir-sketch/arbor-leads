@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Award, Check, Gauge, KeyRound, MapPinned, Megaphone, MessageSquareText, MonitorSmartphone, PhoneCall, Search } from "lucide-react";
+import { Award, Briefcase, CalendarRange, ChartLine, Check, Gauge, Hammer, KeyRound, MapPinned, Megaphone, MessageSquareText, MonitorSmartphone, PhoneCall, Search } from "lucide-react";
 import { about, analyzer, caseStudy, comparison, footer, guarantee, pillars, site } from "@/content";
 import Analyzer from "./Analyzer";
 import Logo from "./Logo";
-import { Counter, Item, Reveal, SectionHead } from "./ui";
+import { Counter, CtaButton, Item, Reveal, SectionHead } from "./ui";
 
 /* ───────────── Recent website case (proof) ─────────────
    Real numbers from one client build. The client is never named.
@@ -38,33 +38,54 @@ function BeforeAfterLine({ text }: { text: string }) {
   );
 }
 
+const ticketIcons = { project: Briefcase, rebuild: Hammer, measured: CalendarRange, source: ChartLine };
+
 export function CaseStudy() {
   const g = caseStudy.giant;
-  const cut = caseStudy.headline.indexOf(caseStudy.headlineHighlight);
   return (
     <section id="case" className="grain relative overflow-hidden border-y-2 border-line bg-deep">
       <div className="relative mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-28">
+        {/* case-file header */}
         <Reveal className="max-w-4xl">
-          <Item as="p" className="eyebrow mb-4 md:mb-5">
-            {caseStudy.eyebrow}
+          <Item as="p" className="mb-4 md:mb-5">
+            <span className="inline-block rounded-full border-2 border-blaze px-3 py-1.5 text-xs font-extrabold uppercase leading-none tracking-[0.16em] text-blaze">
+              {caseStudy.tag}
+            </span>
           </Item>
           <Item as="h2" className="display-lg">
-            {cut < 0 ? (
-              caseStudy.headline
-            ) : (
-              <>
-                {caseStudy.headline.slice(0, cut)}
-                <span className="text-sage">{caseStudy.headlineHighlight}</span>
-                {caseStudy.headline.slice(cut + caseStudy.headlineHighlight.length)}
-              </>
-            )}
+            {caseStudy.headline}
           </Item>
-          <Item as="p" className="mt-4 text-lg leading-snug opacity-80 md:mt-5 md:text-xl">
+          <Item as="p" className="mt-4 text-lg leading-snug text-cream md:mt-5 md:text-[1.35rem]">
             {caseStudy.sub}
           </Item>
         </Reveal>
 
-        <div className="relative mt-7 md:mt-14">
+        {/* project card: reads like a job ticket */}
+        <Reveal className="mt-6 md:mt-9">
+          <Item>
+            <dl className="grid grid-cols-2 rounded-md border border-line bg-raised lg:grid-cols-4">
+              {caseStudy.ticket.map((row, i) => {
+                const Icon = ticketIcons[row.icon];
+                return (
+                  <div
+                    key={row.label}
+                    className={`flex gap-2.5 px-3.5 py-3 md:gap-3 md:px-5 md:py-4 ${i % 2 ? "border-l border-line" : ""} ${i > 1 ? "max-lg:border-t max-lg:border-line" : ""} ${i === 2 ? "lg:border-l lg:border-line" : ""}`}
+                  >
+                    <Icon className="mt-0.5 h-4 w-4 shrink-0 text-sage md:h-5 md:w-5" strokeWidth={2} aria-hidden="true" />
+                    <div className="min-w-0">
+                      <dt className="text-[0.6875rem] font-extrabold uppercase leading-none tracking-[0.16em] text-muted md:text-xs">{row.label}</dt>
+                      <dd className="mt-1.5 text-sm font-bold leading-snug text-cream md:text-base">
+                        <BeforeAfterLine text={row.value} />
+                      </dd>
+                    </div>
+                  </div>
+                );
+              })}
+            </dl>
+          </Item>
+        </Reveal>
+
+        <div className="relative mt-8 md:mt-14">
           {/* soft sage glow behind the giant number */}
           <div
             className="pointer-events-none absolute -left-24 top-1/2 h-[34rem] w-[min(60rem,170vw)] -translate-y-1/2"
@@ -92,14 +113,15 @@ export function CaseStudy() {
           </Reveal>
         </div>
 
-        <Reveal as="ul" className="relative mt-8 grid grid-cols-2 gap-3 md:mt-16 md:gap-5 lg:grid-cols-4">
+        {/* equal-height cards; the before → after line and label sit at the bottom */}
+        <Reveal as="ul" className="relative mt-8 grid grid-cols-2 items-stretch gap-3 md:mt-16 md:gap-5 lg:grid-cols-4">
           {caseStudy.strip.map((s, i) => {
             const style = statStyles[i % statStyles.length];
             return (
               <Item
                 as="li"
                 key={s.text}
-                className={`flex flex-col rounded-md border border-t-4 border-line bg-raised p-3.5 transition-[translate] duration-300 hover:-translate-y-1 md:p-6 ${style.border}`}
+                className={`flex h-full flex-col rounded-md border border-t-4 border-line bg-raised p-3.5 transition-[translate] duration-300 hover:-translate-y-1 md:p-6 ${style.border}`}
               >
                 <Counter
                   to={s.value}
@@ -112,13 +134,20 @@ export function CaseStudy() {
                 <p className="mt-auto text-sm text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>
                   <BeforeAfterLine text={s.detail} />
                 </p>
+                <p className="mt-2.5 border-t border-line pt-2 text-[0.6875rem] font-bold uppercase leading-none tracking-[0.16em] text-muted">
+                  {caseStudy.cardLabel}
+                </p>
               </Item>
             );
           })}
         </Reveal>
 
-        <Reveal className="relative mt-8 md:mt-14">
-          <Item as="p" className="text-xs font-extrabold uppercase tracking-[0.18em] text-blaze">
+        <Reveal className="relative">
+          <Item as="p" className="mt-4 max-w-4xl text-xs leading-relaxed text-muted md:text-sm">
+            {caseStudy.finePrint}
+          </Item>
+
+          <Item as="p" className="mt-8 text-xs font-extrabold uppercase tracking-[0.18em] text-blaze md:mt-12">
             {caseStudy.changesLabel}
           </Item>
           <Item>
@@ -134,8 +163,13 @@ export function CaseStudy() {
               })}
             </ul>
           </Item>
-          <Item as="p" className="mt-6 max-w-4xl text-xs leading-relaxed text-muted md:text-sm">
-            {caseStudy.finePrint}
+          <Item as="p" className="mt-4 max-w-2xl text-sm leading-relaxed text-muted">
+            {caseStudy.resultsNote}
+          </Item>
+
+          <Item className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5 md:mt-10">
+            <CtaButton size="lg" arrow />
+            <p className="text-base font-semibold text-cream max-sm:text-center">{caseStudy.ctaNote}</p>
           </Item>
         </Reveal>
       </div>

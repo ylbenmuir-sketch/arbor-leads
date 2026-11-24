@@ -173,17 +173,23 @@ export const beforeAfter = {
  * Each number counts up to `value`; `prefix`/`suffix` wrap it (e.g. "+153%").
  */
 export const caseStudy = {
-  eyebrow: "Recent website case",
-  headline: "Not a prettier website. A website that gets found.",
-  /** These words in the headline are colored sage. Must match the headline exactly. */
-  headlineHighlight: "gets found.",
-  sub: "We rebuilt the structure, pages, speed and Google setup, not just the look. Here's the first 30 days.",
+  /** Small orange tag above the headline. */
+  tag: "Case study · Real client",
+  headline: "One recent project. 30 days after launch.",
+  sub: "We rebuilt the structure, pages, speed and Google setup, not just the look. Here's what changed.",
+  /** The "job ticket" row. Keep it general enough that the client can't be identified. */
+  ticket: [
+    { icon: "project", label: "Project", value: "Local service business" },
+    { icon: "rebuild", label: "Rebuild", value: "Old WordPress → Arbor build" },
+    { icon: "measured", label: "Measured", value: "30 days before vs. 30 days after" },
+    { icon: "source", label: "Source", value: "Google Search Console & Analytics" },
+  ] as { icon: "project" | "rebuild" | "measured" | "source"; label: string; value: string }[],
   giant: {
     prefix: "+",
     value: 153,
     decimals: 0,
     suffix: "%",
-    line: "more clicks from Google in the first 30 days",
+    line: "more clicks from Google, 30 days after launch",
     detail: "151 → 382",
   },
   strip: [
@@ -192,8 +198,13 @@ export const caseStudy = {
     { prefix: "+", value: 70, decimals: 0, suffix: "%", text: "Visitors from Google per day", detail: "16 → 28" },
     { prefix: "", value: 98, decimals: 0, suffix: "–100", text: "Mobile speed score", detail: "Google Lighthouse" },
   ],
+  /** Tiny label at the bottom of each stat card. */
+  cardLabel: "This project",
   changesLabel: "What we changed",
   changes: ["Restructured pages for search", "Built for speed on mobile", "Clear paths to call or book"],
+  resultsNote: "Your results will depend on your market, season and competition. We show you your own numbers every month.",
+  /** Small text beside the button at the end of the section. */
+  ctaNote: "See where your site stands. Free.",
   finePrint:
     "Results from a recent client build, measured Sep 17–Oct 16 vs. Oct 18–Nov 16, 2026 (Google Search Console) and Sep 1–Oct 17 vs. Oct 18–Nov 17, 2026 (Google Analytics). Individual results vary and depend on market, season, and competition.",
 };
