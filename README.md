@@ -20,7 +20,9 @@ Everything is in **`content.ts`**. Change it there and the page, SEO metadata an
 - Testimonials: fill in `about.testimonials` (leave `quote` empty to keep the placeholder slot)
 - Headshot: put a photo in `public/images/` and set `about.headshot.src`
 
-Accent color is one variable: `--accent` in `app/globals.css`.
+Colors are CSS variables at the top of `app/globals.css` (`--bg`, `--sage`, `--cream`, `--blaze`, …).
+
+Logo files are in `public/logo/` (`logo-dark.svg`, `logo-light.svg`, `icon.svg`). Replace them to change the logo; also copy `icon.svg` to `app/icon.svg` and re-export `app/apple-icon.png` (180px) for the favicon.
 
 ## Before launch
 
@@ -29,4 +31,4 @@ Accent color is one variable: `--accent` in `app/globals.css`.
 
 ## Photo credits
 
-Mockup photos from Unsplash (free license): Dmytro Glazunov, Richard Burlton.
+Photos from Unsplash (free license): Dmytro Glazunov, Richard Burlton, Dejan Zakic.

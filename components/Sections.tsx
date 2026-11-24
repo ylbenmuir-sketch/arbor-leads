@@ -1,120 +1,98 @@
 import Image from "next/image";
 import Link from "next/link";
-import { about, comparison, finalCta, footer, guarantee, site } from "@/content";
+import { Check, Globe, MapPin, Star, UserRound } from "lucide-react";
+import { about, analyzer, comparison, footer, guarantee, ownership, site } from "@/content";
 import Analyzer from "./Analyzer";
 import Logo from "./Logo";
-import { Check, Counter, Item, PlaceholderTag, Reveal, SectionHead } from "./ui";
+import { Counter, Item, PlaceholderTag, Reveal, SectionHead } from "./ui";
 
-/* ───────────── 9. Comparison table ───────────── */
+/* ───────────── Comparison (light section) ─────────────
+   Arbor Leads vs typical agency vs doing it yourself.
+   Built as an ARIA table on a CSS grid so the row label can sit
+   above its three cells on phones. */
 export function Comparison() {
   const { columns, rows } = comparison;
+  const cols = "grid grid-cols-3 md:grid-cols-[1fr_1.25fr_1fr_1fr]";
   return (
-    <section className="mx-auto max-w-5xl px-5 py-24 md:px-8 md:py-36">
-      <SectionHead title={comparison.headline} center />
-      <Reveal className="mt-12 md:mt-16">
-        <Item>
-          <table className="w-full table-fixed border-separate border-spacing-0 text-left">
-            <caption className="sr-only">{comparison.headline}</caption>
-            <colgroup>
-              <col className="w-[26%]" />
-              <col className="w-[34%]" />
-              <col className="w-[40%]" />
-            </colgroup>
-            <thead>
-              <tr>
-                <td />
-                <th scope="col" className="px-3 pb-4 align-bottom text-sm font-bold leading-tight text-white/60 md:px-6 md:text-lg">
-                  {columns.them}
-                </th>
-                <th scope="col" className="rounded-t-3xl border-x-2 border-t-2 border-accent bg-accent/[0.08] px-3 pb-4 pt-5 align-bottom text-base font-extrabold uppercase tracking-tight text-accent md:px-6 md:text-2xl">
+    <section className="on-cream bg-cream text-bg">
+      <div className="mx-auto max-w-6xl px-5 py-24 md:px-8 md:py-36">
+        <SectionHead title={comparison.headline} center />
+        <Reveal className="mt-12 md:mt-16">
+          <Item>
+            <div role="table" aria-label={comparison.headline} className="overflow-hidden rounded-lg border-2 border-bg">
+              <div role="row" className={cols}>
+                <span role="columnheader" className="hidden border-b-2 border-bg md:block" />
+                <span role="columnheader" className="border-b-2 border-bg bg-bg px-3 py-4 text-sm font-extrabold uppercase tracking-[0.08em] text-cream md:px-6 md:py-5 md:text-lg">
                   {columns.us}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
+                </span>
+                <span role="columnheader" className="border-b-2 border-bg px-3 py-4 text-sm font-extrabold uppercase tracking-[0.06em] md:px-6 md:py-5 md:text-base">
+                  {columns.agency}
+                </span>
+                <span role="columnheader" className="border-b-2 border-l-2 border-bg border-l-bg/15 px-3 py-4 text-sm font-extrabold uppercase tracking-[0.06em] md:px-6 md:py-5 md:text-base">
+                  {columns.diy}
+                </span>
+              </div>
               {rows.map((r, i) => {
-                const last = i === rows.length - 1;
+                const line = i < rows.length - 1 ? "border-b-2 border-b-bg/15" : "";
                 return (
-                  <tr key={r.label}>
-                    <th scope="row" className="border-t border-line py-4 pr-2 align-top text-sm font-semibold text-white/75 md:py-6 md:text-lg">
-                      {r.label}
-                    </th>
-                    <td className="border-t border-line px-3 py-4 align-top text-sm text-white/60 md:px-6 md:py-6 md:text-lg">
-                      {r.them}
-                    </td>
-                    <td
-                      className={`border-x-2 border-t border-accent border-t-accent/20 bg-accent/[0.08] px-3 py-4 align-top text-sm font-extrabold md:px-6 md:py-6 md:text-xl ${
-                        last ? "rounded-b-3xl border-b-2" : ""
-                      }`}
+                  <div role="row" key={r.label} className={cols}>
+                    <span
+                      role="rowheader"
+                      className={`col-span-3 bg-bg/[0.07] px-3 py-2 text-xs font-extrabold uppercase tracking-[0.14em] md:col-span-1 md:bg-transparent md:px-6 md:py-5 md:text-sm ${line} max-md:border-b-0`}
                     >
-                      <span className="flex gap-2 md:gap-3">
-                        <Check className="mt-px !h-4 !w-4 text-accent md:mt-0.5 md:!h-6 md:!w-6" />
-                        {r.us}
-                      </span>
-                    </td>
-                  </tr>
+                      {r.label}
+                    </span>
+                    <span role="cell" className={`flex gap-2 bg-bg px-3 py-4 text-sm font-extrabold leading-snug text-cream md:gap-3 md:px-6 md:py-5 md:text-lg ${i < rows.length - 1 ? "border-b-2 border-line" : ""}`}>
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-sage md:h-5 md:w-5" strokeWidth={3} aria-hidden="true" />
+                      {r.us}
+                    </span>
+                    <span role="cell" className={`px-3 py-4 text-sm leading-snug md:px-6 md:py-5 md:text-base ${line}`}>
+                      {r.agency}
+                    </span>
+                    <span role="cell" className={`border-l-2 border-l-bg/15 px-3 py-4 text-sm leading-snug md:px-6 md:py-5 md:text-base ${line}`}>
+                      {r.diy}
+                    </span>
+                  </div>
                 );
               })}
-            </tbody>
-          </table>
-        </Item>
-      </Reveal>
+            </div>
+          </Item>
+        </Reveal>
+      </div>
     </section>
   );
 }
 
-/* ───────────── 10. Guarantee ───────────── */
+/* ───────────── Guarantee: flat panel + one dark card ───────────── */
 export function Guarantee() {
   return (
-    <section className="px-3 md:px-6">
-      <div className="relative mx-auto max-w-[90rem] overflow-hidden rounded-[2rem] bg-accent text-black md:rounded-[3rem]">
-        <div className="mx-auto grid max-w-7xl gap-12 px-6 py-20 md:px-10 md:py-28 lg:grid-cols-[1.25fr_1fr] lg:items-center lg:gap-16">
+    <section className="px-3 pt-24 md:px-6 md:pt-36">
+      <div className="grain relative mx-auto max-w-[90rem] overflow-hidden rounded-lg border-2 border-forest bg-forest text-cream">
+        <div className="mx-auto grid max-w-7xl gap-12 px-6 py-20 md:px-10 md:py-28 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-16">
           <Reveal>
-            <Item as="p" className="mb-5 text-xs font-extrabold uppercase tracking-[0.18em]">
+            <Item as="p" className="mb-5 text-xs font-bold uppercase tracking-[0.22em] text-cream">
               {guarantee.eyebrow}
             </Item>
-            <Item as="h2" className="display text-[clamp(2.5rem,6.5vw,5.25rem)]">
+            <Item as="h2" className="display text-[clamp(2.5rem,6vw,4.75rem)]">
               {guarantee.headline}
             </Item>
-            <Item as="p" className="mt-7 max-w-2xl text-lg font-medium leading-relaxed md:text-xl">
-              {guarantee.body}
-            </Item>
-            <Item as="p" className="mt-6 max-w-2xl border-t border-black/25 pt-5 text-sm font-medium leading-relaxed text-black/80">
-              {guarantee.smallPrint}
+            <Item as="p" className="mt-7 max-w-xl border-t-2 border-cream/30 pt-6 text-lg font-medium leading-relaxed md:text-xl">
+              {guarantee.note}
             </Item>
           </Reveal>
 
-          <Reveal>
-            <Item>
-              <p className="mb-3 inline-block rounded-full border border-dashed border-black/60 px-3 py-1 text-xs font-bold uppercase tracking-wider">
-                {guarantee.exampleLabel}
-              </p>
-              <div className="grid grid-cols-2 gap-3 md:gap-4">
-                {guarantee.reports.map((r, i) => (
-                  <div
-                    key={r.title}
-                    className={`rounded-2xl p-4 md:p-6 ${
-                      i === 0 ? "bg-black/10 text-black" : "bg-black text-white shadow-[0_30px_60px_-20px_rgba(0,0,0,0.6)]"
-                    }`}
-                  >
-                    <p className={`text-sm font-extrabold uppercase tracking-widest ${i === 0 ? "text-black/70" : "text-accent"}`}>
-                      {r.title}
-                    </p>
-                    <dl className="mt-4 space-y-4">
-                      {r.metrics.map((mt) => (
-                        <div key={mt.label}>
-                          <dt className={`text-xs font-semibold ${i === 0 ? "text-black/70" : "text-white/65"}`}>{mt.label}</dt>
-                          <dd className="text-3xl font-extrabold leading-none tracking-tight md:text-4xl">
-                            <Counter to={mt.value} prefix={mt.prefix} />
-                            {mt.suffix && <span className="text-sm font-bold opacity-60">{mt.suffix}</span>}
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
-                  </div>
-                ))}
-              </div>
-            </Item>
+          <Reveal className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+            {guarantee.items.map((g, i) => (
+              <Item
+                key={g.label}
+                className={`flex flex-col rounded-lg border-2 p-6 md:p-8 ${
+                  i === 0 ? "border-cream/40 bg-transparent" : "border-deep bg-deep shadow-[0_24px_50px_-24px_rgba(0,0,0,0.7)]"
+                }`}
+              >
+                <p className={`text-xs font-bold uppercase tracking-[0.22em] ${i === 0 ? "text-cream" : "text-sage"}`}>{g.label}</p>
+                <p className="mt-5 text-2xl font-extrabold leading-[1.1] tracking-[-0.03em] md:text-[1.75rem]">{g.text}</p>
+              </Item>
+            ))}
           </Reveal>
         </div>
       </div>
@@ -122,22 +100,57 @@ export function Guarantee() {
   );
 }
 
-/* ───────────── 11. About ───────────── */
+/* ───────────── Ownership ───────────── */
+const ownershipIcons = [Globe, MapPin, Star];
+
+export function Ownership() {
+  return (
+    <section className="mx-auto max-w-7xl px-5 pt-24 md:px-8 md:pt-36">
+      <div className="grid gap-10 border-y-2 border-line py-14 md:py-20 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-16">
+        <Reveal>
+          <Item as="p" className="eyebrow mb-5">
+            {ownership.eyebrow}
+          </Item>
+          <Item as="h2" className="display text-[clamp(2.25rem,5vw,3.75rem)]">
+            {ownership.headline}
+          </Item>
+        </Reveal>
+        <Reveal>
+          <Item as="p" className="text-xl leading-relaxed text-cream md:text-2xl">
+            {ownership.body}
+          </Item>
+          <Item>
+            <ul className="mt-7 flex flex-wrap gap-3">
+              {ownership.points.map((p, i) => {
+                const Icon = ownershipIcons[i % ownershipIcons.length];
+                return (
+                  <li key={p} className="flex items-center gap-2.5 rounded-md border-2 border-line bg-raised px-4 py-2.5 text-base font-bold">
+                    <Icon className="h-5 w-5 text-sage" strokeWidth={2} aria-hidden="true" />
+                    {p}
+                  </li>
+                );
+              })}
+            </ul>
+          </Item>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ───────────── About ───────────── */
 export function About() {
   return (
     <section className="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-36">
       <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:gap-20">
         <Reveal>
           <Item>
-            <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-3xl border border-line bg-panel lg:max-w-none">
+            <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-lg border-2 border-line bg-raised lg:max-w-none">
               {about.headshot.src ? (
                 <Image src={about.headshot.src} alt={about.headshot.alt} fill sizes="(max-width: 1024px) 384px, 480px" className="object-cover" />
               ) : (
-                <div className="flex h-full flex-col items-center justify-center gap-4 border-2 border-dashed border-amber-300/40 text-center">
-                  <svg viewBox="0 0 64 64" className="h-24 w-24 text-white/20" fill="currentColor" aria-hidden="true">
-                    <circle cx="32" cy="22" r="13" />
-                    <path d="M6 62c0-15 11.600-24 26-24s26 9 26 24z" />
-                  </svg>
+                <div className="flex h-full flex-col items-center justify-center gap-4 text-center">
+                  <UserRound className="h-24 w-24 text-line" strokeWidth={1.25} aria-hidden="true" />
                   <PlaceholderTag>{about.headshot.placeholderText}</PlaceholderTag>
                 </div>
               )}
@@ -151,23 +164,23 @@ export function About() {
           <Item as="h2" className="display text-[clamp(2.25rem,5.5vw,4.25rem)]">
             {about.title}
           </Item>
-          <Item as="p" className="mt-7 text-xl leading-relaxed text-white/85 md:text-2xl">
+          <Item as="p" className="mt-7 text-xl leading-relaxed text-muted md:text-2xl">
             {about.copy}
           </Item>
-          <Item as="p" className="mt-6 text-xl font-extrabold tracking-tight text-accent">
+          <Item as="p" className="mt-6 text-xl font-extrabold tracking-tight text-sage">
             {about.signature}
           </Item>
         </Reveal>
       </div>
 
       {/* stat strip */}
-      <Reveal className="mt-16 grid divide-y divide-line rounded-3xl border border-line sm:grid-cols-3 sm:divide-x sm:divide-y-0 md:mt-24">
+      <Reveal className="mt-16 grid divide-y-2 divide-line rounded-lg border-2 border-line sm:grid-cols-3 sm:divide-x-2 sm:divide-y-0 md:mt-24">
         {about.stats.map((s) => (
           <Item key={s.label} className="px-7 py-8 text-center">
             <p className="display text-6xl md:text-7xl">
-              {s.placeholder ? <span className="text-white/25">000</span> : <Counter to={s.value} suffix={s.suffix} />}
+              {s.placeholder ? <span className="text-muted/60">000</span> : <Counter to={s.value} suffix={s.suffix} />}
             </p>
-            <p className="mt-2 text-base font-semibold text-white/80">{s.label}</p>
+            <p className="mt-2 text-base font-semibold text-cream">{s.label}</p>
             {s.placeholder && (
               <p className="mt-2">
                 <PlaceholderTag>{about.placeholderTag}</PlaceholderTag>
@@ -182,17 +195,17 @@ export function About() {
         {about.testimonials.map((t, i) => (
           <Item as="li" key={i}>
             {t.quote ? (
-              <figure className="flex h-full flex-col rounded-3xl border border-line bg-panel p-7">
+              <figure className="flex h-full flex-col rounded-lg border-2 border-line bg-raised p-7">
                 <blockquote className="text-lg font-medium leading-snug">&ldquo;{t.quote}&rdquo;</blockquote>
-                <figcaption className="mt-auto pt-6 text-sm text-mute">
-                  <span className="font-bold text-white">{t.name}</span>
+                <figcaption className="mt-auto pt-6 text-sm text-muted">
+                  <span className="font-bold text-cream">{t.name}</span>
                   {t.company && <> · {t.company}</>}
                 </figcaption>
               </figure>
             ) : (
-              <div className="flex h-full min-h-40 flex-col items-start justify-center gap-3 rounded-3xl border-2 border-dashed border-white/15 p-7">
+              <div className="flex h-full min-h-40 flex-col items-start justify-center gap-3 rounded-lg border-2 border-dashed border-line p-7">
                 <PlaceholderTag>{about.placeholderTag}</PlaceholderTag>
-                <p className="text-base text-white/60">{about.testimonialPlaceholder}</p>
+                <p className="text-base text-muted">{about.testimonialPlaceholder}</p>
               </div>
             )}
           </Item>
@@ -202,23 +215,21 @@ export function About() {
   );
 }
 
-/* ───────────── 13. Final CTA ───────────── */
-export function FinalCta() {
+/* ───────────── Free analyzer (the section every CTA points to) ───────────── */
+export function AnalyzerSection() {
   return (
-    <section className="relative overflow-hidden border-t border-line">
-      <div
-        className="pointer-events-none absolute left-1/2 top-full h-[520px] w-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 blur-[130px]"
-        style={{ background: "var(--accent)" }}
-        aria-hidden="true"
-      />
-      <Reveal className="relative mx-auto max-w-5xl px-5 py-28 text-center md:px-8 md:py-44">
-        <Item as="h2" className="display text-[clamp(2.75rem,9vw,7rem)]">
-          {finalCta.headline}
+    <section id="analyzer" className="relative">
+      <Reveal className="relative mx-auto max-w-4xl px-5 py-24 text-center md:px-8 md:py-36">
+        <Item as="p" className="eyebrow mb-5">
+          {analyzer.eyebrow}
         </Item>
-        <Item as="p" className="mx-auto mt-6 max-w-xl text-xl text-white/80 md:text-2xl">
-          {finalCta.sub}
+        <Item as="h2" className="display text-[clamp(2.5rem,7.5vw,5.5rem)]">
+          {analyzer.headline}
         </Item>
-        <Item className="mx-auto mt-10 max-w-3xl text-left">
+        <Item as="p" className="mx-auto mt-6 max-w-xl text-xl text-muted md:text-2xl">
+          {analyzer.sub}
+        </Item>
+        <Item className="mx-auto mt-10 max-w-3xl">
           <Analyzer />
         </Item>
       </Reveal>
@@ -226,29 +237,42 @@ export function FinalCta() {
   );
 }
 
-/* ───────────── 14. Footer ───────────── */
+/* ───────────── Footer ───────────── */
 export function Footer() {
   return (
-    <footer className="border-t border-line">
-      <div className="mx-auto flex max-w-7xl flex-col items-start gap-6 px-5 py-12 md:flex-row md:items-center md:justify-between md:px-8">
-        <div>
-          <Logo />
-          <p className="mt-3 text-sm text-mute">{site.tagline}</p>
-        </div>
-        <a href={`mailto:${site.email}`} className="text-lg font-bold underline-offset-4 hover:text-accent hover:underline">
-          {site.email}
-        </a>
-        <div className="flex flex-col gap-2 text-sm text-mute md:items-end">
-          <nav aria-label="Legal" className="flex gap-5">
+    <footer className="grain border-t-2 border-line bg-deep">
+      <div className="mx-auto max-w-7xl px-5 py-14 md:px-8">
+        <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
+          <div className="max-w-sm">
+            <Link href="/" className="inline-block rounded-sm">
+              <Logo className="h-9 w-auto" />
+            </Link>
+            <p className="mt-5 text-base text-muted">{footer.line}</p>
+            <a href={`mailto:${site.email}`} className="mt-3 inline-flex min-h-11 items-center font-bold text-cream underline-offset-4 hover:underline">
+              {site.email}
+            </a>
+          </div>
+          <nav aria-label="Footer" className="flex flex-col gap-1 md:items-end">
             {footer.links.map((l) => (
-              <Link key={l.href} href={l.href} className="py-1 font-semibold underline-offset-4 hover:text-white hover:underline">
+              <Link
+                key={l.href}
+                href={l.href}
+                className="inline-flex min-h-11 items-center text-sm font-extrabold uppercase tracking-[0.14em] text-cream underline-offset-4 hover:text-sage hover:underline"
+              >
                 {l.label}
               </Link>
             ))}
           </nav>
-          <p>
-            © {new Date().getFullYear()} {footer.copyright}
-          </p>
+        </div>
+        <div className="mt-10 flex flex-col gap-3 border-t-2 border-line pt-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+          <p>{footer.copyright}</p>
+          <nav aria-label="Legal" className="flex gap-5">
+            {footer.legalLinks.map((l) => (
+              <Link key={l.href} href={l.href} className="inline-flex min-h-11 items-center font-semibold underline-offset-4 hover:text-cream hover:underline">
+                {l.label}
+              </Link>
+            ))}
+          </nav>
         </div>
       </div>
     </footer>

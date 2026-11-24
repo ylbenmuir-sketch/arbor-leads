@@ -12,77 +12,70 @@ export const site = {
   domain: "arborleads.co",
   url: "https://arborleads.co",
   email: "hello@arborleads.co",
-  tagline: "More tree jobs. Zero extra work.",
+  tagline: "More booked jobs. Less chasing leads.",
   seo: {
     title: "Arbor Leads | Websites, SEO & Lead Systems for Tree Service Companies",
     description:
-      "We rebuild your tree service website, get you found on Google, and answer every lead in seconds. Built by a former tree service owner. $0 down. You own your site.",
+      "Websites, Google rankings, and instant lead follow-up for tree service companies. We build it, run it, and keep it working. Built by a former tree service owner.",
   },
-  /** The one call to action, repeated everywhere. */
-  cta: "Get My Free Analysis",
+  /** The main call to action (orange buttons). */
+  cta: "Get My Free Business Analysis",
+  /** Short version for the header on phones. */
+  ctaShort: "Free Analysis",
+  secondaryCta: "See Pricing",
 };
 
 export const marquee = [
   "Built for tree pros",
   "Never miss a call",
-  "More 5-star reviews",
   "Live in 7 days",
-  "You own your site",
+  "Automatic review requests",
+  "Your domain stays yours",
 ];
 
 export const hero = {
-  headline: "More tree jobs. Zero extra work.",
+  headline: "More booked jobs. Less chasing leads.",
   subhead:
-    "We rebuild your website, get you found on Google, and answer every lead in seconds — while you're up the tree.",
-  trustLine: "Built by a former tree service owner. $0 down. You own your site.",
+    "Websites, Google rankings, and instant lead follow-up for tree service companies. We build it, run it, and keep it working. You run crews.",
+  trustLine: "Built by a former tree service owner. $0 down option. Live in 7 days.",
 };
 
 export const analyzer = {
-  inputLabel: "Enter your website",
-  button: "See What It's Costing You →",
+  eyebrow: "Free analysis",
+  headline: "See where your business stands.",
+  sub: "Free. Takes 60 seconds. We'll email you a report and a time to walk through it.",
+  fields: {
+    business: "Business name",
+    website: "Website URL",
+    email: "Email",
+    phone: "Phone",
+  },
+  button: "Analyze My Business",
   scanSteps: [
     "Checking speed…",
     "Checking Google profile…",
     "Checking reviews…",
     "Checking mobile…",
   ],
-  scoreLabel: "Your lead score",
-  scoreVerdict: "You're losing jobs to the other guys.",
-  redFlagsTitle: "3 red flags found",
+  scoreLabel: "Your starting score",
+  scoreVerdict: "There's room to pick up more jobs.",
+  redFlagsTitle: "3 things to fix",
   /** Shown blurred. Real findings come from the backend later. */
-  redFlags: ["Red flag #1", "Red flag #2", "Red flag #3"],
-  leadPrompt: "Get your full report free — where should we send it?",
-  fields: {
-    business: "Business name",
-    email: "Email",
-    phone: "Phone",
-  },
-  leadButton: "Send My Free Report",
+  redFlags: ["Finding #1", "Finding #2", "Finding #3"],
   success: "Your report is on the way — check your inbox in a few minutes.",
-  startOver: "Check another site",
+  startOver: "Check another business",
 };
 
 export const problem = {
   eyebrow: "The problem",
   headline: "Good tree guys lose jobs every day. Not on the work. On the phone.",
+  /** Plain statements only. No stats unless you can source them. */
   cards: [
-    {
-      title: "Missed calls are lost jobs.",
-      body: "You're in the bucket. They call the next guy.",
-      stat: { value: 62, suffix: "%", label: "of calls go unanswered", placeholder: true },
-    },
-    {
-      title: "Slow replies lose the lead.",
-      body: "Whoever answers first usually gets the job.",
-      stat: { value: 78, suffix: "%", label: "hire the first to reply", placeholder: true },
-    },
-    {
-      title: "An outdated site loses trust before you ever talk.",
-      body: "They judge you in seconds. Then they hit back.",
-      stat: { value: 3, suffix: " sec", label: "to make a first impression", placeholder: true },
-    },
-  ],
-  placeholderNote: "Placeholder stat — swap in a sourced number",
+    { icon: "phone", title: "You miss calls while you're up in a tree." },
+    { icon: "clock", title: "The company that calls back first usually gets the job." },
+    { icon: "site", title: "Your site looks older than your equipment." },
+    { icon: "star", title: "Customers check Google reviews before they ever call." },
+  ] as { icon: "phone" | "clock" | "site" | "star"; title: string }[],
 };
 
 export const beforeAfter = {
@@ -91,7 +84,7 @@ export const beforeAfter = {
   sub: "Drag the handle.",
   before: "Before",
   after: "After",
-  caption: "Ridgeline Tree Service is a made-up company. The difference is real.",
+  caption: "Ridgeline Tree Service is a made-up company, shown as an example.",
 };
 
 /** The fictional company used in the slider and phone demo. */
@@ -143,14 +136,14 @@ export const mock = {
 export const speedToLead = {
   eyebrow: "Speed to lead",
   headline: "You're up a tree. The phone rings. Here's what happens next.",
-  caption: "That job used to go to whoever called back first. Now it's you.",
+  caption: "A missed call gets an automatic text within seconds. You pick it up when you're back on the ground.",
   replay: "Replay",
   contactName: "Homeowner",
   missedCall: { title: "Missed call", detail: "(615) 555-0188 · just now" },
   messages: [
-    { from: "business", text: "Sorry we missed you! We're on a job. What can we help with?", tag: "Auto-text · sent in 4 sec" },
+    { from: "business", text: "Sorry we missed you! We're on a job. What can we help with?", tag: "Automatic text · sent in seconds" },
     { from: "customer", text: "Hi, I've got a big dead oak leaning toward my house. Can someone come take a look?" },
-    { from: "business", text: "We can help with that. Pick a time for a free estimate:", link: "ridgelinetree.com/book", tag: "Auto-reply" },
+    { from: "business", text: "We can help with that. Pick a time for a free estimate:", link: "ridgelinetree.com/book", tag: "Automatic reply" },
   ] as { from: "business" | "customer"; text: string; link?: string; tag?: string }[],
   booked: "Estimate booked: Thursday 10am",
 };
@@ -164,43 +157,39 @@ export const roi = {
   resultMonth: "more per month",
   resultYear: "per year.",
   footnote: "Arbor Leads starts at $149/mo.",
+  disclaimer: "Your numbers, your math. This is a calculator, not a promise.",
 };
 
 export const howItWorks = {
   eyebrow: "How it works",
   headline: "Three steps. Then back to work.",
   steps: [
-    { title: "Free analysis", body: "We show you what your site and Google profile are costing you. No pitch. Just the numbers." },
-    { title: "We rebuild & launch in 7 days", body: "New site. Google profile fixed. Text-back switched on. You approve it, we launch it." },
-    { title: "Leads roll in. We handle the rest.", body: "Updates, SEO, reviews, replies. You answer the leads and do the work." },
+    { title: "Free analysis", body: "We look at your site and your Google profile and show you what we'd fix. No pitch." },
+    { title: "We rebuild & launch in 7 days", body: "New site. Google profile set up. Text-back switched on. You approve it, we launch it." },
+    { title: "We run it. You run crews.", body: "Hosting, updates, follow-up and a report every month. You answer your leads and do the work." },
   ],
 };
 
+/**
+ * PRICING
+ * NOTE: `regular` prices take effect Jan 1 for new customers.
+ * `price` is the year-end price, locked in for life for anyone who joins before Jan 1.
+ */
 export const pricing = {
   eyebrow: "Pricing",
   headline: "Simple pricing. No surprises.",
-  banner: {
-    title: "Year-End Pricing",
-    text: "locked in for life if you join by Dec 31",
-    /** Countdown target. Local time of the visitor. */
-    deadline: "2026-12-31T23:59:59",
-    ended: "Year-end pricing has ended.",
-  },
+  /** The orange "sale" tag. */
+  saleTag: "Year-end pricing — locked in for life if you join before Jan 1.",
+  /** Countdown target (visitor's local time). Regular prices start then. */
+  deadline: "2027-01-01T00:00:00",
+  ended: "Year-end pricing has ended.",
   toggle: { monthly: "Monthly", annual: "Annual", annualNote: "2 months free" },
-  /** Annual = pay for (12 − monthsFree) months. */
+  /** Annual = pay for (12 − monthsFree) months, shown as a per-month price. */
   annualMonthsFree: 2,
-  build: {
-    title: "Website build",
-    primary: { price: "$0 down", detail: "with a 6-month plan" },
-    or: "or",
-    secondary: { price: "$495 one-time", detail: "month-to-month" },
-    note: "Most choose $0 down",
-  },
-  regularLabel: "Regular price",
-  yearEndLabel: "Year-end price",
+  billedYearly: "billed yearly",
+  billedMonthly: "billed monthly",
+  regularLabel: "Regular",
   perMonth: "/mo",
-  perYear: "/yr",
-  saveLabel: "You save",
   plans: [
     {
       name: "Get Found",
@@ -210,16 +199,15 @@ export const pricing = {
       priceSuffix: "",
       featured: false,
       features: [
-        "Website hosting & updates",
-        "Local SEO",
-        "Google Business Profile management",
-        "Automatic review requests",
-        "2 change requests/month",
+        "Modern website",
+        "Google Business Profile setup + optimization",
+        "Local SEO basics",
+        "Hosting and updates",
       ],
     },
     {
       name: "Get Booked",
-      blurb: "Never lose a lead to a missed call.",
+      blurb: "Follow up with every lead, fast.",
       regular: 499,
       price: 349,
       priceSuffix: "",
@@ -227,69 +215,67 @@ export const pricing = {
       features: [
         "Everything in Get Found",
         "Missed-call text-back",
-        "Instant replies to every lead",
-        "Simple lead inbox",
-        "90-day results report",
+        "Instant lead follow-up",
+        "Review request automation",
+        "Monthly report",
       ],
     },
     {
       name: "Dominate",
-      blurb: "Own your town.",
+      blurb: "Cover more ground.",
       regular: 999,
       price: 749,
       priceSuffix: "+ ad spend",
       featured: false,
       features: [
         "Everything in Get Booked",
-        "Google Local Services Ads & Meta ads managed",
-        "Monthly results report",
+        "Google/Facebook ad management",
+        "More service-area pages",
+        "Priority support",
       ],
     },
   ],
   featuredBadge: "Most Popular",
-  trust: ["$0 down option", "You own your site", "Cancel after term", "Price locked for life"],
+  setup: {
+    title: "Setup",
+    options: [
+      { price: "$0 down", detail: "with a 6-month commitment" },
+      { price: "$495 one-time setup", detail: "then month-to-month" },
+    ],
+    or: "or",
+  },
+  trust: ["$0 down option", "Live in 7 days", "Your domain and reviews stay yours", "Price locked for life"],
 };
 
 export const comparison = {
-  headline: "Why tree companies are switching.",
-  columns: { label: "", them: "Typical tree marketing agency", us: "Arbor Leads" },
+  headline: "Three ways to get more work.",
+  columns: { us: "Arbor Leads", agency: "Typical agency", diy: "Doing it yourself" },
+  /** Keep these general. No competitor names, no numbers you can't source. */
   rows: [
-    { label: "Monthly cost", them: "$1,299–$3,450/mo", us: "From $149/mo" },
-    { label: "Setup fee", them: "$500–$5,000", us: "$0 down" },
-    { label: "Contract", them: "12 months", us: "6 months or none" },
-    { label: "Who owns the site", them: "Them", us: "You" },
-    { label: "Missed-call text-back", them: "Extra", us: "Included" },
-    { label: "Built by", them: "Marketers", us: "A former tree service owner" },
+    { label: "Monthly cost", us: "From $149/mo", agency: "Often much higher", diy: "Free, but it's your time" },
+    { label: "Setup", us: "$0 down option", agency: "Setup fees are common", diy: "You build it" },
+    { label: "Contract", us: "6 months or month-to-month", agency: "Often a year", diy: "None" },
+    { label: "Missed-call text-back", us: "In Get Booked and up", agency: "Often extra", diy: "You set it up" },
+    { label: "Time to launch", us: "7 days", agency: "Varies", diy: "Whenever you find time" },
+    { label: "Built by", us: "A former tree service owner", agency: "Marketers", diy: "You, after work" },
   ],
 };
 
 export const guarantee = {
   eyebrow: "The guarantee",
-  headline: "More calls in 90 days, or we work free until you get them.",
-  body: "Day one, we measure where you stand: your Google ranking, reviews, site speed, and every call and lead. At 90 days, you get the same report side by side. If your calls and leads aren't up, you don't pay another dime until they are.",
-  smallPrint:
-    "You just answer or call back leads within one business day and send review requests after jobs. We handle everything else.",
-  exampleLabel: "Example report — not real client results",
-  reports: [
-    {
-      title: "Day 1",
-      metrics: [
-        { label: "Google ranking", prefix: "#", value: 14, suffix: "" },
-        { label: "Reviews", prefix: "", value: 23, suffix: "" },
-        { label: "Site speed", prefix: "", value: 38, suffix: "/100" },
-        { label: "Calls & leads / mo", prefix: "", value: 19, suffix: "" },
-      ],
-    },
-    {
-      title: "Day 90",
-      metrics: [
-        { label: "Google ranking", prefix: "#", value: 3, suffix: "" },
-        { label: "Reviews", prefix: "", value: 61, suffix: "" },
-        { label: "Site speed", prefix: "", value: 94, suffix: "/100" },
-        { label: "Calls & leads / mo", prefix: "", value: 47, suffix: "" },
-      ],
-    },
+  headline: "Two promises we can keep.",
+  items: [
+    { label: "Guarantee 1", text: "Live in 7 days — or your first month is free." },
+    { label: "Guarantee 2", text: "Every missed call gets a text back within 60 seconds — or that month is free." },
   ],
+  note: "We don't promise a magic number of calls. We promise the work gets done, fast, and we show you the results every month.",
+};
+
+export const ownership = {
+  eyebrow: "Ownership",
+  headline: "What's yours stays yours.",
+  body: "Your domain, Google profile, and reviews are always yours. Your website is yours after 6 months — or right away with the $495 setup.",
+  points: ["Your domain", "Your Google profile", "Your reviews"],
 };
 
 export const about = {
@@ -319,48 +305,54 @@ export const about = {
   placeholderTag: "Placeholder",
 };
 
+/** Keep answers to things we can back up. No result or ranking promises. */
 export const faq = {
   headline: "Straight answers.",
   items: [
     {
       q: "Do I need to change my phone?",
-      a: "No. You keep your number and your phone. We set up text-back to work with what you already have.",
+      a: "No. You keep your number and your phone. We handle the setup.",
     },
     {
       q: "How fast do you launch?",
-      a: "7 days from the day you give us the green light. You look it over, we launch it.",
+      a: "Live in 7 days — or your first month is free.",
     },
     {
       q: "Do I own my site?",
-      a: "Yes. Your domain, your content, your site. If you leave after your term, it goes with you.",
+      a: "Your domain, Google profile, and reviews are always yours. Your website is yours after 6 months — or right away with the $495 setup.",
     },
     {
       q: "What's the commitment?",
-      a: "Two ways to start. $0 down with a 6-month plan, or $495 one-time and go month-to-month. After your term, cancel anytime.",
+      a: "Two ways to start: $0 down with a 6-month commitment, or a $495 one-time setup, then month-to-month.",
+    },
+    {
+      q: "What if I cancel early?",
+      a: "You can buy out your site for $495, or we take it down. Your domain, Google profile, and reviews stay yours either way.",
     },
     {
       q: "What if I already have a website?",
-      a: "Start with the free analysis. We'll show you what it's costing you. If it's good, we keep what works. If it's not, the rebuild is included.",
+      a: "Start with the free analysis. We'll show you what we'd fix and why. A modern website is part of every plan.",
     },
     {
       q: "How is this hands-off?",
-      a: "We build it, run it, and update it. You answer or call back your leads within one business day and send review requests after jobs. That's it.",
+      a: "We build it, run it, and keep it working. You answer your leads and run your crews.",
     },
     {
       q: "How does the guarantee work?",
-      a: "Day one, we measure your Google ranking, reviews, site speed, and every call and lead. At 90 days you get the same report side by side. If calls and leads aren't up, you don't pay another dime until they are.",
+      a: "Two guarantees. Live in 7 days — or your first month is free. And every missed call gets a text back within 60 seconds — or that month is free. We don't promise a magic number of calls.",
     },
   ],
 };
 
-export const finalCta = {
-  headline: "More tree jobs. Zero extra work.",
-  sub: "See what your site is costing you. Free. Takes 30 seconds.",
-};
-
 export const footer = {
-  copyright: "Arbor Leads. All rights reserved.",
+  line: "Built for tree service companies. More booked jobs, less chasing.",
+  copyright: "© 2026 Arbor Leads.",
   links: [
+    { label: "Pricing", href: "/#pricing" },
+    { label: "Free Analysis", href: "/#analyzer" },
+    { label: "FAQ", href: "/#faq" },
+  ],
+  legalLinks: [
     { label: "Privacy", href: "/privacy" },
     { label: "Terms", href: "/terms" },
   ],

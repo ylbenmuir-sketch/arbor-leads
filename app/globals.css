@@ -1,29 +1,37 @@
 @import "tailwindcss";
 
-/* ── Brand tokens. Change the accent here and the whole site follows. ── */
+/* ── Brand palette. Change a color here and the whole site follows. ── */
 :root {
-  --accent: #3ddc84;
-  --bg: #0a0a0a;
+  --bg: #13201a; /* deep forest, main page background */
+  --bg-raised: #1b2b22; /* cards/panels on dark */
+  --bg-deep: #0d1712; /* footer, alternating sections */
+  --line: #2a3d31; /* borders, dividers */
+  --sage: #9bbf9b; /* accent: icons, highlights, the tree */
+  --forest: #2f5a3f; /* secondary buttons, badges */
+  --cream: #f4f1ea; /* headings and main text on dark */
+  --muted: #b9c2b6; /* body text on dark */
+  --blaze: #e07a2e; /* ONLY main call-to-action buttons + the sale tag */
+
+  /* Barely-there wood grain for dark sections. */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='600'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5 0.0034' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.96 0 0 0 0 0.95 0 0 0 0 0.92 0.05 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 
 @theme inline {
-  --color-accent: var(--accent);
-  --color-ink: var(--bg);
-  --color-panel: #111111;
-  --color-line: rgb(255 255 255 / 0.1);
-  --color-mute: #a3a3a3;
+  --color-bg: var(--bg);
+  --color-raised: var(--bg-raised);
+  --color-deep: var(--bg-deep);
+  --color-line: var(--line);
+  --color-sage: var(--sage);
+  --color-forest: var(--forest);
+  --color-cream: var(--cream);
+  --color-muted: var(--muted);
+  --color-blaze: var(--blaze);
   --font-sans: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
-}
-
-@property --angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
 }
 
 html {
   background: var(--bg);
-  color: #fff;
+  color: var(--cream);
   -webkit-text-size-adjust: 100%;
   scroll-padding-top: 6rem;
 }
@@ -32,16 +40,26 @@ html:not(.lenis) {
 }
 body {
   font-family: var(--font-sans);
+  background-color: var(--bg);
+  background-image: var(--grain);
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
 }
 ::selection {
-  background: var(--accent);
-  color: #0a0a0a;
+  background: var(--sage);
+  color: var(--bg);
 }
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 3px solid var(--sage);
   outline-offset: 3px;
+}
+.on-cream :focus-visible {
+  outline-color: var(--forest);
+}
+
+/* Wood grain on any dark section that sets its own background color. */
+.grain {
+  background-image: var(--grain);
 }
 
 /* Lenis */
@@ -59,16 +77,86 @@ html.lenis body {
 /* ── Type ── */
 .display {
   font-weight: 800;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.045em;
   line-height: 0.95;
   text-wrap: balance;
 }
 .eyebrow {
   font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--sage);
+}
+.on-cream .eyebrow {
+  color: var(--forest);
+}
+
+/* ── Buttons: square-ish, thick, no pills ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 3.25rem;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: 0.9375rem;
+  line-height: 1.15;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+.btn:hover {
+  transform: translateY(-2px);
+}
+.btn:active {
+  transform: translateY(0);
+}
+.btn-sm {
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+}
+.btn-lg {
+  min-height: 3.75rem;
+  padding: 1rem 2rem;
+  font-size: 1.0625rem;
+}
+/* Main call to action — the only place blaze orange is used on buttons. */
+.btn-blaze {
+  background: var(--blaze);
+  border-color: var(--blaze);
+  color: var(--bg);
+}
+.btn-blaze:hover {
+  background: #ea8a42;
+  border-color: #ea8a42;
+}
+.btn-forest {
+  background: var(--forest);
+  border-color: var(--forest);
+  color: var(--cream);
+}
+.btn-forest:hover {
+  background: #386b4b;
+  border-color: #386b4b;
+}
+.btn-outline {
+  background: transparent;
+  border-color: var(--muted);
+  color: var(--cream);
+}
+.btn-outline:hover {
+  border-color: var(--cream);
 }
 
 /* ── Hero word reveal (CSS so it runs before JS loads) ── */
@@ -76,14 +164,14 @@ html.lenis body {
   display: inline-block;
   overflow: hidden;
   vertical-align: bottom;
-  padding-bottom: 0.08em;
-  margin-bottom: -0.08em;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
 }
 .word {
   display: inline-block;
   transform: translateY(105%);
-  animation: word-up 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-  animation-delay: calc(var(--i) * 70ms + 80ms);
+  animation: word-up 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  animation-delay: calc(var(--i) * 80ms + 80ms);
 }
 @keyframes word-up {
   to {
@@ -93,7 +181,7 @@ html.lenis body {
 .fade-up {
   opacity: 0;
   transform: translateY(14px);
-  animation: fade-up 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  animation: fade-up 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
   animation-delay: var(--d, 0.5s);
 }
 @keyframes fade-up {
@@ -107,7 +195,7 @@ html.lenis body {
 .marquee-track {
   display: flex;
   width: max-content;
-  animation: marquee 32s linear infinite;
+  animation: marquee 44s linear infinite;
 }
 @keyframes marquee {
   to {
@@ -115,105 +203,49 @@ html.lenis body {
   }
 }
 
-/* ── Primary button glow ── */
-.btn-primary {
-  background: var(--accent);
-  color: #0a0a0a;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent);
-  transition: box-shadow 0.3s ease, filter 0.2s ease;
-}
-.btn-primary:hover,
-.btn-primary:focus-visible {
-  box-shadow:
-    0 0 28px color-mix(in srgb, var(--accent) 50%, transparent),
-    0 0 80px color-mix(in srgb, var(--accent) 22%, transparent);
-  filter: brightness(1.06);
-}
-
-/* ── Featured pricing card: slowly rotating gradient border ── */
-.gradient-border {
-  position: relative;
-  isolation: isolate;
-}
-.gradient-border::before {
-  content: "";
-  position: absolute;
-  inset: -1.5px;
-  z-index: -1;
-  border-radius: inherit;
-  background: conic-gradient(
-    from var(--angle),
-    var(--accent),
-    transparent 25%,
-    color-mix(in srgb, var(--accent) 45%, transparent) 50%,
-    transparent 75%,
-    var(--accent)
-  );
-  animation: spin-angle 7s linear infinite;
-}
-.gradient-border::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  background: #101010;
-}
-@keyframes spin-angle {
-  to {
-    --angle: 360deg;
-  }
-}
-
-/* ── Range sliders ── */
+/* ── Range sliders (ROI calculator, on cream) ── */
 .range {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 2.75rem;
+  height: 3rem;
   background: transparent;
   cursor: pointer;
 }
 .range::-webkit-slider-runnable-track {
-  height: 6px;
-  border-radius: 999px;
-  background: linear-gradient(
-    to right,
-    var(--accent) var(--fill, 50%),
-    rgb(255 255 255 / 0.14) var(--fill, 50%)
-  );
+  height: 8px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--forest) var(--fill, 50%), #d3d2c6 var(--fill, 50%));
 }
 .range::-moz-range-track {
-  height: 6px;
-  border-radius: 999px;
-  background: rgb(255 255 255 / 0.14);
+  height: 8px;
+  border-radius: 2px;
+  background: #d3d2c6;
 }
 .range::-moz-range-progress {
-  height: 6px;
-  border-radius: 999px;
-  background: var(--accent);
+  height: 8px;
+  border-radius: 2px;
+  background: var(--forest);
 }
 .range::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   margin-top: -11px;
-  border-radius: 50%;
-  background: #fff;
-  border: 6px solid var(--accent);
-  box-shadow: 0 0 24px color-mix(in srgb, var(--accent) 50%, transparent);
+  border-radius: 6px;
+  background: var(--bg);
+  border: 3px solid var(--cream);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.3);
 }
 .range::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #fff;
-  border: 6px solid var(--accent);
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 3px solid var(--cream);
 }
 
-/* ── Analyzer scan line ── */
+/* ── Analyzer ── */
 @keyframes scan {
   0% {
     transform: translateX(-100%);
@@ -226,12 +258,10 @@ html.lenis body {
   0%,
   60%,
   100% {
-    opacity: 0.25;
-    transform: translateY(0);
+    opacity: 0.3;
   }
   30% {
     opacity: 1;
-    transform: translateY(-3px);
   }
 }
 
@@ -257,8 +287,6 @@ html.lenis body {
   --radius-sm: calc(var(--spacing) * 1);
   --radius-md: calc(var(--spacing) * 1.5);
   --radius-lg: calc(var(--spacing) * 2);
-  --radius-xl: calc(var(--spacing) * 3);
-  --radius-2xl: calc(var(--spacing) * 4);
   font-size: var(--text-base);
 }
 @container (max-width: 671px) {
@@ -283,9 +311,6 @@ html.lenis body {
     transform: none;
   }
   .marquee-track {
-    animation: none;
-  }
-  .gradient-border::before {
     animation: none;
   }
   *,

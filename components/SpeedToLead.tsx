@@ -1,36 +1,37 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, m, useInView, useReducedMotion } from "framer-motion";
+import { m, useInView, useReducedMotion } from "framer-motion";
+import { CalendarCheck, PhoneMissed, RotateCcw } from "lucide-react";
 import { mock, speedToLead as copy } from "@/content";
-import { Item, Reveal } from "./ui";
+import { Item, Reveal, ease } from "./ui";
 
 /**
  * Timeline (ms from start). Each entry reveals the next thing on screen.
  * 0: missed call · 1: auto-text · 2: customer typing · 3: customer reply
  * 4: auto-reply with link · 5: booked confirmation
  */
-const TIMELINE = [500, 1900, 3600, 5000, 6700, 8700];
+const TIMELINE = [600, 2200, 4000, 5600, 7400, 9400];
 const LAST = TIMELINE.length;
 
-const pop = {
-  initial: { opacity: 0, y: 14, scale: 0.96 },
-  animate: { opacity: 1, y: 0, scale: 1 },
-  transition: { type: "spring" as const, stiffness: 380, damping: 28 },
+const rise = {
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.6, ease },
 };
 
 function Bubble({ from, children, tag }: { from: "business" | "customer"; children: React.ReactNode; tag?: string }) {
   const mine = from === "business";
   return (
-    <m.div {...pop} className={`flex flex-col ${mine ? "items-end" : "items-start"}`}>
+    <m.div {...rise} className={`flex flex-col ${mine ? "items-end" : "items-start"}`}>
       <div
-        className={`max-w-[84%] rounded-[1.25rem] px-3.5 py-2.5 text-[0.9rem] leading-snug ${
-          mine ? "rounded-br-md bg-accent font-medium text-black" : "rounded-bl-md bg-[#26262a] text-white"
+        className={`max-w-[84%] rounded-xl px-3.5 py-2.5 text-[0.9rem] leading-snug ${
+          mine ? "rounded-br-sm bg-sage font-medium text-bg" : "rounded-bl-sm bg-raised text-cream"
         }`}
       >
         {children}
       </div>
-      {tag && <span className="mt-1 px-1 text-[0.65rem] font-semibold text-white/45">{tag}</span>}
+      {tag && <span className="mt-1 px-1 text-[0.65rem] font-semibold text-muted">{tag}</span>}
     </m.div>
   );
 }
@@ -56,7 +57,7 @@ export default function SpeedToLead() {
   const [first, reply, link] = copy.messages;
 
   return (
-    <section className="relative overflow-hidden border-y border-line bg-[#0d0d0d] py-24 md:py-36">
+    <section className="relative overflow-hidden py-24 md:py-36">
       <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 md:px-8 lg:grid-cols-[1.15fr_1fr] lg:gap-10">
         <Reveal>
           <Item as="p" className="eyebrow mb-5">
@@ -65,53 +66,44 @@ export default function SpeedToLead() {
           <Item as="h2" className="display text-[clamp(2.25rem,5.4vw,4.25rem)]">
             {copy.headline}
           </Item>
-          <Item as="p" className="mt-8 max-w-xl border-l-2 border-accent pl-5 text-xl font-semibold leading-snug text-white/90 md:text-2xl">
+          <Item as="p" className="mt-8 max-w-xl border-l-4 border-sage pl-5 text-xl font-semibold leading-snug text-cream md:text-2xl">
             {copy.caption}
           </Item>
         </Reveal>
 
         {/* phone */}
         <div ref={ref} className="relative mx-auto w-full max-w-[21rem]">
-          <div
-            className="pointer-events-none absolute inset-6 rounded-full opacity-25 blur-[80px]"
-            style={{ background: "var(--accent)" }}
-            aria-hidden="true"
-          />
-          <div className="relative rounded-[3rem] border border-white/15 bg-[#161618] p-2.5 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.9)]">
+          <div className="relative rounded-[2.75rem] border-2 border-line bg-deep p-2.5 shadow-[0_30px_60px_-25px_rgba(0,0,0,0.8)]">
             <div
-              className="relative flex h-[37rem] flex-col overflow-hidden rounded-[2.4rem] bg-black"
+              className="relative flex h-[37rem] flex-col overflow-hidden rounded-[2.2rem] border-2 border-line bg-bg"
               role="img"
               aria-label={`Text conversation demo. A call to ${mock.company} is missed. An automatic text goes out: "${first.text}" The homeowner replies: "${reply.text}" An automatic reply sends a booking link. Result: ${copy.booked}.`}
             >
-              <div className="absolute left-1/2 top-2.5 z-20 h-6 w-24 -translate-x-1/2 rounded-full bg-[#161618]" />
+              <div className="absolute left-1/2 top-2.5 z-20 h-5 w-24 -translate-x-1/2 rounded-full bg-deep" />
 
               {/* thread header */}
-              <div className="flex flex-col items-center border-b border-white/10 bg-[#101012] pb-2.5 pt-11">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-sm font-bold">H</span>
-                <span className="mt-1 text-[0.7rem] font-semibold text-white/70">{copy.contactName}</span>
+              <div className="flex flex-col items-center border-b-2 border-line bg-deep pb-2.5 pt-10">
+                <span className="flex h-9 w-9 items-center justify-center rounded-md bg-line text-sm font-bold text-cream">H</span>
+                <span className="mt-1 text-[0.7rem] font-semibold text-muted">{copy.contactName}</span>
               </div>
 
               {/* missed-call notification */}
-              <AnimatePresence>
-                {shown >= 1 && (
-                  <m.div
-                    initial={{ opacity: 0, y: -30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 24 }}
-                    className="mx-3 mt-3 flex items-center gap-3 rounded-2xl border border-[#ff5a4d]/30 bg-[#2a1614] px-3.5 py-2.5"
-                  >
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#ff5a4d]">
-                      <svg viewBox="0 0 24 24" className="h-4.5 w-4.5" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M16 3l5 5m0-5l-5 5M5 4h4l2 5-2.500 1.500a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" />
-                      </svg>
-                    </span>
-                    <span className="leading-tight">
-                      <span className="block text-sm font-bold text-white">{copy.missedCall.title}</span>
-                      <span className="block text-xs text-white/60">{copy.missedCall.detail}</span>
-                    </span>
-                  </m.div>
-                )}
-              </AnimatePresence>
+              {shown >= 1 && (
+                <m.div
+                  initial={{ opacity: 0, y: -14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, ease }}
+                  className="mx-3 mt-3 flex items-center gap-3 rounded-lg border-2 border-cream bg-raised px-3.5 py-2.5"
+                >
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-cream text-bg">
+                    <PhoneMissed className="h-4.5 w-4.5" strokeWidth={2.5} />
+                  </span>
+                  <span className="leading-tight">
+                    <span className="block text-sm font-bold text-cream">{copy.missedCall.title}</span>
+                    <span className="block text-xs text-muted">{copy.missedCall.detail}</span>
+                  </span>
+                </m.div>
+              )}
 
               {/* messages */}
               <div className="flex flex-1 flex-col gap-2.5 px-3 pt-4" aria-hidden="true">
@@ -121,12 +113,12 @@ export default function SpeedToLead() {
                   </Bubble>
                 )}
                 {shown === 3 && (
-                  <m.div {...pop} className="flex w-fit gap-1 rounded-[1.25rem] rounded-bl-md bg-[#26262a] px-4 py-3.5">
+                  <m.div {...rise} className="flex w-fit gap-1 rounded-xl rounded-bl-sm bg-raised px-4 py-3.5">
                     {[0, 1, 2].map((d) => (
                       <span
                         key={d}
-                        className="h-1.5 w-1.5 rounded-full bg-white"
-                        style={{ animation: `typing 1s ${d * 0.15}s infinite` }}
+                        className="h-1.5 w-1.5 rounded-full bg-cream"
+                        style={{ animation: `typing 1.2s ${d * 0.18}s infinite` }}
                       />
                     ))}
                   </m.div>
@@ -139,12 +131,10 @@ export default function SpeedToLead() {
                 )}
                 {shown >= 6 && (
                   <m.div
-                    {...pop}
-                    className="mt-1 flex items-center justify-center gap-2 rounded-2xl border border-accent/40 bg-accent/10 px-3 py-3 text-sm font-extrabold text-accent"
+                    {...rise}
+                    className="mt-1 flex items-center justify-center gap-2 rounded-lg border-2 border-sage px-3 py-3 text-sm font-extrabold text-sage"
                   >
-                    <svg viewBox="0 0 20 20" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M4 10.500l4 4 8-9" />
-                    </svg>
+                    <CalendarCheck className="h-5 w-5" strokeWidth={2.25} />
                     {copy.booked}
                   </m.div>
                 )}
@@ -152,14 +142,15 @@ export default function SpeedToLead() {
             </div>
           </div>
 
-          <div className="mt-5 flex h-8 justify-center">
+          <div className="mt-4 flex h-11 justify-center">
             {shown >= LAST && !reduce && (
               <button
                 type="button"
                 onClick={() => setRun((r) => r + 1)}
-                className="cursor-pointer rounded-full border border-white/20 px-4 py-1.5 text-sm font-semibold text-white/80 transition-colors hover:border-accent hover:text-accent"
+                className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-md border-2 border-line px-4 text-sm font-bold uppercase tracking-[0.1em] text-muted transition-colors duration-300 hover:border-sage hover:text-cream"
               >
-                ↻ {copy.replay}
+                <RotateCcw className="h-4 w-4" strokeWidth={2.25} aria-hidden="true" />
+                {copy.replay}
               </button>
             )}
           </div>

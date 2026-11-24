@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import Logo from "./Logo";
 import { CtaButton } from "./ui";
 import { site } from "@/content";
@@ -17,19 +18,27 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color,backdrop-filter] duration-300 ${
-        scrolled ? "border-line bg-ink/70 backdrop-blur-xl" : "border-transparent bg-transparent"
+      className={`fixed inset-x-0 top-0 z-50 border-b-2 transition-[background-color,border-color] duration-500 ${
+        scrolled ? "border-line bg-bg" : "border-transparent bg-transparent"
       }`}
     >
       <div
-        className={`mx-auto flex max-w-7xl items-center justify-between px-5 transition-[padding] duration-300 md:px-8 ${
+        className={`mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 transition-[padding] duration-500 md:px-8 ${
           scrolled ? "py-2.5" : "py-5"
         }`}
       >
-        <a href="#top" aria-label={`${site.name} — home`} className="rounded-sm">
-          <Logo compact={scrolled} />
-        </a>
-        <CtaButton size="sm" />
+        <Link href="/" className="shrink-0 rounded-sm">
+          <Logo className={`w-auto transition-[height] duration-500 ${scrolled ? "h-7" : "h-8 md:h-9"}`} />
+        </Link>
+        <CtaButton
+          size="sm"
+          label={
+            <>
+              <span className="sm:hidden">{site.ctaShort}</span>
+              <span className="hidden sm:inline">{site.cta}</span>
+            </>
+          }
+        />
       </div>
     </header>
   );

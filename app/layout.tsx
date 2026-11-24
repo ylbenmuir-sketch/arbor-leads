@@ -6,7 +6,7 @@ import Providers from "@/components/Providers";
 
 const interTight = Inter_Tight({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-inter-tight",
   display: "swap",
 });
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0A0A0A",
+  themeColor: "#13201A",
   width: "device-width",
   initialScale: 1,
 };
@@ -43,7 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-accent focus:px-4 focus:py-2 focus:font-bold focus:text-black"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-cream focus:px-4 focus:py-2 focus:font-bold focus:text-bg"
         >
           Skip to content
         </a>

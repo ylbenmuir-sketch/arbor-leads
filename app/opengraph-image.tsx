@@ -5,7 +5,9 @@ export const alt = site.seo.title;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const ACCENT = "#3DDC84";
+const SAGE = "#9BBF9B";
+const CREAM = "#F4F1EA";
+const TREE = "M24 2 36 18H30L40 32H33L44 48H28V56H20V48H4L15 32H8L18 18H12Z";
 
 /** Try to load Inter Tight 800 for the image; fall back to the default font if offline. */
 async function loadFont(text: string) {
@@ -35,27 +37,25 @@ export default async function OgImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#0A0A0A",
-          color: "#fff",
+          background: "#13201A",
+          color: CREAM,
           padding: 72,
           fontFamily: font ? "Inter Tight" : "sans-serif",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <svg width="56" height="56" viewBox="0 0 32 32" fill="none">
-            <circle cx="16" cy="16" r="14" stroke={ACCENT} strokeWidth="2.6" />
-            <circle cx="16" cy="16" r="8.6" stroke={ACCENT} strokeWidth="2.6" strokeDasharray="42 12" transform="rotate(-50 16 16)" />
-            <circle cx="16" cy="16" r="3.2" fill={ACCENT} />
+          <svg width="56" height="65" viewBox="0 0 48 56">
+            <path d={TREE} fill={SAGE} />
           </svg>
-          <div style={{ fontSize: 40, fontWeight: 800, letterSpacing: -1 }}>ARBOR LEADS</div>
+          <div style={{ fontSize: 40, fontWeight: 800, letterSpacing: 2 }}>ARBOR LEADS</div>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", fontSize: 118, fontWeight: 800, letterSpacing: -5, lineHeight: 1 }}>
+        <div style={{ display: "flex", flexDirection: "column", fontSize: 104, fontWeight: 800, letterSpacing: -5, lineHeight: 1 }}>
           <div>{line1}</div>
-          <div style={{ color: ACCENT }}>{line2}</div>
+          <div style={{ color: SAGE }}>{line2}</div>
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 30, color: "#a3a3a3" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 30, color: "#B9C2B6" }}>
           <div>{sub}</div>
-          <div style={{ color: "#fff" }}>{site.domain}</div>
+          <div style={{ color: CREAM }}>{site.domain}</div>
         </div>
       </div>
     ),

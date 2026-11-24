@@ -6,7 +6,7 @@ import SpeedToLead from "@/components/SpeedToLead";
 import { HowItWorks, RoiCalculator } from "@/components/Roi";
 import Pricing from "@/components/Pricing";
 import Faq from "@/components/Faq";
-import { About, Comparison, FinalCta, Footer, Guarantee } from "@/components/Sections";
+import { About, AnalyzerSection, Comparison, Footer, Guarantee, Ownership } from "@/components/Sections";
 
 export default function Home() {
   const jsonLd = [
@@ -44,9 +44,10 @@ export default function Home() {
         <Pricing />
         <Comparison />
         <Guarantee />
+        <Ownership />
         <About />
         <Faq />
-        <FinalCta />
+        <AnalyzerSection />
       </main>
       <Footer />
     </>

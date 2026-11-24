@@ -25,8 +25,8 @@ export default function BeforeAfter() {
   // Subtle nudge the first time it's seen, so people know it drags.
   useEffect(() => {
     if (!inView || reduce || touched.current) return;
-    const controls = animate(pos, [50, 62, 40, 50], {
-      duration: 1.8,
+    const controls = animate(pos, [50, 60, 42, 50], {
+      duration: 2.4,
       delay: 0.4,
       ease: "easeInOut",
       times: [0, 0.35, 0.75, 1],
@@ -65,30 +65,23 @@ export default function BeforeAfter() {
   }
 
   return (
-    <section className="relative overflow-x-clip py-24 md:py-36">
+    <section className="grain relative overflow-x-clip border-y-2 border-line bg-deep py-24 md:py-36">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <SectionHead eyebrow={copy.eyebrow} title={copy.headline} sub={copy.sub} center />
 
         <Reveal className="mt-10 md:mt-16">
           <Item>
-            {/* glow under the frame */}
             <div className="relative mx-auto max-w-6xl">
-              <div
-                className="pointer-events-none absolute -inset-x-6 -bottom-10 top-1/3 rounded-[4rem] opacity-25 blur-[90px]"
-                style={{ background: "var(--accent)" }}
-                aria-hidden="true"
-              />
-
               {/* browser chrome */}
-              <div className="relative overflow-hidden rounded-2xl border border-white/15 bg-[#1b1b1b] shadow-[0_50px_120px_-30px_rgba(0,0,0,0.9)] md:rounded-3xl">
-                <div className="flex items-center gap-3 border-b border-white/10 px-3.5 py-2.5 md:px-5 md:py-3.5">
+              <div className="relative overflow-hidden rounded-lg border-2 border-line bg-raised shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)]">
+                <div className="flex items-center gap-3 border-b-2 border-line px-3.5 py-2.5 md:px-5 md:py-3.5">
                   <div className="flex gap-1.5 md:gap-2" aria-hidden="true">
-                    <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57] md:h-3 md:w-3" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e] md:h-3 md:w-3" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-[#28c840] md:h-3 md:w-3" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-muted/40 md:h-3 md:w-3" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-muted/40 md:h-3 md:w-3" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-muted/40 md:h-3 md:w-3" />
                   </div>
-                  <div className="mx-auto flex w-full max-w-md items-center justify-center gap-2 rounded-full bg-black/40 px-4 py-1.5 text-xs text-white/60 md:text-sm">
-                    <svg viewBox="0 0 16 16" className="h-3 w-3 text-accent" fill="currentColor" aria-hidden="true">
+                  <div className="mx-auto flex w-full max-w-md items-center justify-center gap-2 rounded-md bg-deep px-4 py-1.5 text-xs text-muted md:text-sm">
+                    <svg viewBox="0 0 16 16" className="h-3 w-3 text-sage" fill="currentColor" aria-hidden="true">
                       <path d="M8 1a3.500 3.500 0 0 0-3.500 3.500V6H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-.5V4.500A3.500 3.500 0 0 0 8 1zm2 5H6V4.500a2 2 0 1 1 4 0z" />
                     </svg>
                     <span className="truncate">ridgelinetree.com</span>
@@ -130,7 +123,7 @@ export default function BeforeAfter() {
 
                   {/* divider + handle */}
                   <m.div className="absolute inset-y-0 z-10 w-0" style={{ left }}>
-                    <div className="absolute inset-y-0 -left-px w-0.5 bg-white shadow-[0_0_18px_rgba(0,0,0,0.6)]" />
+                    <div className="absolute inset-y-0 -left-0.5 w-1 bg-cream" />
                     <div
                       role="slider"
                       tabIndex={0}
@@ -141,7 +134,7 @@ export default function BeforeAfter() {
                       aria-valuenow={value}
                       aria-valuetext={`${value}% before, ${100 - value}% after`}
                       onKeyDown={onKeyDown}
-                      className={`absolute left-0 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-[3px] border-white bg-accent text-black shadow-[0_8px_30px_rgba(0,0,0,0.55)] transition-transform duration-200 focus-visible:outline-offset-4 md:h-16 md:w-16 ${
+                      className={`absolute left-0 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-md border-[3px] border-bg bg-cream text-bg shadow-[0_6px_20px_rgba(0,0,0,0.45)] transition-transform duration-300 focus-visible:outline-offset-4 md:h-16 md:w-16 ${
                         dragging ? "scale-110" : "hover:scale-105"
                       }`}
                     >
@@ -153,18 +146,18 @@ export default function BeforeAfter() {
                 </div>
 
                 {/* labels */}
-                <div className="flex items-center justify-between border-t border-white/10 px-3.5 py-2.5 md:px-5 md:py-3">
-                  <span className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.18em] text-white/70 md:text-sm">
+                <div className="flex items-center justify-between border-t-2 border-line px-3.5 py-2.5 md:px-5 md:py-3">
+                  <span className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.18em] text-muted md:text-sm">
                     <span aria-hidden="true">←</span> {copy.before}
                   </span>
-                  <span className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.18em] text-accent md:text-sm">
+                  <span className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.18em] text-sage md:text-sm">
                     {copy.after} <span aria-hidden="true">→</span>
                   </span>
                 </div>
               </div>
             </div>
           </Item>
-          <Item as="p" className="mt-8 text-center text-sm text-mute">
+          <Item as="p" className="mt-8 text-center text-sm text-muted">
             {copy.caption}
           </Item>
         </Reveal>

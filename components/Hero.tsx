@@ -1,32 +1,7 @@
-import { hero, marquee, problem } from "@/content";
-import Analyzer from "./Analyzer";
-import { Counter, Item, PlaceholderTag, Reveal, SectionHead } from "./ui";
-
-/** Big tree-ring motif behind the hero. */
-function Rings() {
-  const rings = Array.from({ length: 13 }, (_, i) => 46 + i * 44 + (i % 3) * 7);
-  return (
-    <svg
-      viewBox="-640 -640 1280 1280"
-      className="pointer-events-none absolute -right-[38%] -top-[18%] h-[130%] min-h-[720px] w-auto opacity-70 md:-right-[12%]"
-      style={{ maskImage: "radial-gradient(closest-side, #000 20%, transparent 100%)" }}
-      fill="none"
-      aria-hidden="true"
-    >
-      {rings.map((r, i) => (
-        <ellipse
-          key={r}
-          rx={r}
-          ry={r * (0.94 + (i % 4) * 0.015)}
-          stroke={i === 4 ? "var(--accent)" : "#fff"}
-          strokeOpacity={i === 4 ? 0.5 : 0.09}
-          strokeWidth={i === 4 ? 2 : 1.5}
-          transform={`rotate(${i * 17})`}
-        />
-      ))}
-    </svg>
-  );
-}
+import Image from "next/image";
+import { Clock, MonitorX, PhoneMissed, Star } from "lucide-react";
+import { hero, marquee, problem, site } from "@/content";
+import { CtaButton, Item, Reveal, SectionHead } from "./ui";
 
 function Words({ text, start = 0, className = "" }: { text: string; start?: number; className?: string }) {
   return (
@@ -44,41 +19,57 @@ function Words({ text, start = 0, className = "" }: { text: string; start?: numb
 }
 
 export function Hero() {
-  // "More tree jobs. Zero extra work." → two lines, second in the accent color.
+  // "More booked jobs. Less chasing leads." → two lines, second in sage.
   const [first, ...rest] = hero.headline.split(". ");
   const line1 = rest.length ? first + "." : first;
   const line2 = rest.join(". ");
   const n1 = line1.split(" ").length;
 
   return (
-    <section id="top" className="relative overflow-hidden pb-16 pt-32 md:pb-24 md:pt-44">
-      <Rings />
+    <section id="top" className="relative overflow-hidden border-b-2 border-line pb-16 pt-32 md:pb-28 md:pt-48">
+      {/* Darkened, desaturated forest photo, faded into the page background. */}
       <div
-        className="pointer-events-none absolute -left-40 top-1/3 h-[480px] w-[480px] rounded-full opacity-[0.13] blur-[120px]"
-        style={{ background: "var(--accent)" }}
+        className="pointer-events-none absolute inset-0"
+        style={{ maskImage: "linear-gradient(to bottom, #000 35%, transparent 100%)" }}
         aria-hidden="true"
-      />
+      >
+        <Image
+          src="/images/hero-forest.jpg"
+          alt=""
+          fill
+          priority
+          quality={55}
+          sizes="100vw"
+          className="object-cover opacity-[0.24] grayscale-[0.7]"
+        />
+      </div>
+
       <div className="relative mx-auto max-w-7xl px-5 md:px-8">
-        <h1 className="display text-[clamp(3.1rem,11.5vw,9.5rem)]" aria-label={hero.headline}>
+        <h1 className="display text-[clamp(2.9rem,10.5vw,8.75rem)]" aria-label={hero.headline}>
           <span className="block" aria-hidden="true">
             <Words text={line1} />
           </span>
           {line2 && (
             <span className="block" aria-hidden="true">
-              <Words text={line2} start={n1} className="text-accent" />
+              <Words text={line2} start={n1} className="text-sage" />
             </span>
           )}
         </h1>
         <p
-          className="fade-up mt-7 max-w-2xl text-xl leading-snug text-white/80 md:mt-9 md:text-2xl"
-          style={{ "--d": "0.55s" } as React.CSSProperties}
+          className="fade-up mt-7 max-w-2xl text-xl leading-snug text-muted md:mt-9 md:text-2xl"
+          style={{ "--d": "0.6s" } as React.CSSProperties}
         >
           {hero.subhead}
         </p>
-        <div className="fade-up mt-8 max-w-3xl md:mt-10" style={{ "--d": "0.7s" } as React.CSSProperties}>
-          <Analyzer id="analyzer" />
-          <p className="mt-5 flex items-start gap-2.5 text-sm font-semibold text-white/75 md:text-base">
-            <span className="mt-[0.45em] h-2 w-2 shrink-0 rounded-full bg-accent" aria-hidden="true" />
+        <div className="fade-up mt-9 md:mt-11" style={{ "--d": "0.75s" } as React.CSSProperties}>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <CtaButton size="lg" arrow />
+            <a href="#pricing" className="btn btn-outline btn-lg">
+              {site.secondaryCta}
+            </a>
+          </div>
+          <p className="mt-7 flex items-start gap-3 text-sm font-semibold text-muted md:text-base">
+            <span className="mt-[0.45em] h-2 w-2 shrink-0 bg-sage" aria-hidden="true" />
             {hero.trustLine}
           </p>
         </div>
@@ -91,15 +82,15 @@ export function Marquee() {
   const row = (hidden: boolean) => (
     <ul className="flex shrink-0 items-center" aria-hidden={hidden || undefined}>
       {marquee.map((t) => (
-        <li key={t} className="flex items-center whitespace-nowrap text-lg font-extrabold uppercase tracking-tight md:text-2xl">
+        <li key={t} className="flex items-center whitespace-nowrap text-base font-extrabold uppercase tracking-[0.08em] md:text-xl">
           <span className="px-6 md:px-9">{t}</span>
-          <span className="text-accent" aria-hidden="true">•</span>
+          <span className="h-2 w-2 rotate-45 bg-sage" aria-hidden="true" />
         </li>
       ))}
     </ul>
   );
   return (
-    <div className="overflow-hidden border-y border-line py-5 md:py-6">
+    <div className="grain overflow-hidden border-b-2 border-line bg-deep py-5 md:py-6">
       <div className="marquee-track">
         {row(false)}
         {row(true)}
@@ -110,27 +101,29 @@ export function Marquee() {
   );
 }
 
+const problemIcons = { phone: PhoneMissed, clock: Clock, site: MonitorX, star: Star };
+
 export function Problem() {
   return (
     <section className="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-36">
       <SectionHead eyebrow={problem.eyebrow} title={problem.headline} />
-      <Reveal as="ul" className="mt-12 grid gap-4 md:mt-16 md:grid-cols-3 md:gap-5">
-        {problem.cards.map((c, i) => (
-          <Item as="li" key={c.title} className="flex flex-col rounded-3xl border border-line bg-panel p-7 md:p-9">
-            <span className="text-sm font-bold text-white/40">0{i + 1}</span>
-            <h3 className="mt-5 text-2xl font-extrabold leading-[1.05] tracking-tight md:text-3xl">{c.title}</h3>
-            <p className="mt-3 text-lg text-mute">{c.body}</p>
-            <div className="mt-auto pt-9">
-              <Counter to={c.stat.value} suffix={c.stat.suffix} className="display block text-6xl text-accent" />
-              <p className="mt-2 text-sm font-semibold text-white/80">{c.stat.label}</p>
-              {c.stat.placeholder && (
-                <p className="mt-2">
-                  <PlaceholderTag>{problem.placeholderNote}</PlaceholderTag>
-                </p>
-              )}
-            </div>
-          </Item>
-        ))}
+      <Reveal as="ul" className="mt-12 grid gap-4 sm:grid-cols-2 md:mt-16 md:gap-5 lg:grid-cols-4">
+        {problem.cards.map((c, i) => {
+          const Icon = problemIcons[c.icon];
+          return (
+            <Item as="li" key={c.title} className="flex flex-col rounded-lg border-2 border-line bg-raised p-7 md:p-8">
+              <div className="flex items-center justify-between">
+                <Icon className="h-9 w-9 text-sage" strokeWidth={1.75} aria-hidden="true" />
+                <span className="text-sm font-bold tracking-[0.2em] text-muted" aria-hidden="true">
+                  0{i + 1}
+                </span>
+              </div>
+              <h3 className="mt-10 text-2xl font-extrabold leading-[1.08] tracking-[-0.03em] md:text-[1.7rem]">
+                {c.title}
+              </h3>
+            </Item>
+          );
+        })}
       </Reveal>
     </section>
   );

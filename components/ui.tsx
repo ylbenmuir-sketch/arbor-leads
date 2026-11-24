@@ -1,42 +1,39 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import {
-  m,
-  animate,
-  useInView,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-  type Variants,
-} from "framer-motion";
+import { m, animate, useInView, useMotionValue, useReducedMotion, useSpring, type Variants } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { site } from "@/content";
 import { goToAnalyzer } from "./Providers";
 
-const ease = [0.2, 0.8, 0.2, 1] as const;
+/** Calm, heavy ease. No springs, no bounce. */
+export const ease = [0.22, 0.61, 0.36, 1] as const;
 
 const container: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.09, delayChildren: 0.05 } },
+  show: { transition: { staggerChildren: 0.11, delayChildren: 0.05 } },
 };
 const item: Variants = {
-  hidden: { opacity: 0, y: 28 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease } },
+  hidden: { opacity: 0, y: 22 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.85, ease } },
 };
 
-/** Fades/slides its <Item> children up, staggered, the first time it scrolls into view. */
+/** Fades and rises its <Item> children, staggered, the first time it scrolls into view. */
 export function Reveal({
   children,
   className,
   as = "div",
+  role,
 }: {
   children: React.ReactNode;
   className?: string;
   as?: "div" | "ul" | "ol" | "section";
+  role?: string;
 }) {
   const Tag = m[as] as typeof m.div;
   return (
     <Tag
+      role={role}
       className={className}
       variants={container}
       initial="hidden"
@@ -52,14 +49,16 @@ export function Item({
   children,
   className,
   as = "div",
+  role,
 }: {
   children: React.ReactNode;
   className?: string;
   as?: "div" | "li" | "h2" | "p";
+  role?: string;
 }) {
   const Tag = m[as] as typeof m.div;
   return (
-    <Tag className={className} variants={item}>
+    <Tag role={role} className={className} variants={item}>
       {children}
     </Tag>
   );
@@ -88,7 +87,7 @@ export function SectionHead({
         {title}
       </Item>
       {sub && (
-        <Item as="p" className="mt-5 text-lg text-mute md:text-xl">
+        <Item as="p" className="mt-5 text-lg opacity-80 md:text-xl">
           {sub}
         </Item>
       )}
@@ -118,8 +117,8 @@ export function Counter({
     const el = ref.current;
     if (!el || !inView || reduce) return;
     const controls = animate(0, to, {
-      duration: 1.4,
-      ease: [0.16, 1, 0.3, 1],
+      duration: 1.6,
+      ease,
       onUpdate: (v) => (el.textContent = prefix + fmt(v) + suffix),
     });
     return () => controls.stop();
@@ -132,12 +131,13 @@ export function Counter({
   );
 }
 
-/** A number that springs to its new value whenever it changes (ROI calculator). */
+/** A number that eases to its new value whenever it changes (ROI calculator). */
 export function SpringNumber({ value, prefix = "" }: { value: number; prefix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const reduce = useReducedMotion();
   const mv = useMotionValue(value);
-  const spring = useSpring(mv, { stiffness: 140, damping: 22 });
+  // Over-damped on purpose: settles without any bounce.
+  const spring = useSpring(mv, { stiffness: 120, damping: 34 });
 
   useEffect(() => {
     if (reduce) {
@@ -162,83 +162,45 @@ export function SpringNumber({ value, prefix = "" }: { value: number; prefix?: s
   );
 }
 
-/** Wraps a button so it leans toward the cursor. Mouse only. */
-export function Magnetic({ children, className }: { children: React.ReactNode; className?: string }) {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const sx = useSpring(x, { stiffness: 220, damping: 16, mass: 0.4 });
-  const sy = useSpring(y, { stiffness: 220, damping: 16, mass: 0.4 });
-  const reduce = useReducedMotion();
-
-  return (
-    <m.span
-      className={`inline-block ${className ?? ""}`}
-      style={{ x: sx, y: sy }}
-      onPointerMove={(e) => {
-        if (reduce || e.pointerType !== "mouse") return;
-        const r = e.currentTarget.getBoundingClientRect();
-        x.set((e.clientX - (r.left + r.width / 2)) * 0.22);
-        y.set((e.clientY - (r.top + r.height / 2)) * 0.3);
-      }}
-      onPointerLeave={() => {
-        x.set(0);
-        y.set(0);
-      }}
-    >
-      {children}
-    </m.span>
-  );
-}
-
-/** The one call to action. Scrolls to the hero analyzer. */
+/**
+ * The call to action. Scrolls to the free analyzer.
+ * `blaze` (orange) is the main CTA; `forest` is the quieter version for repeated spots.
+ */
 export function CtaButton({
   size = "md",
   full = false,
-  variant = "primary",
+  variant = "blaze",
+  label = site.cta,
+  arrow = false,
+  className = "",
 }: {
   size?: "sm" | "md" | "lg";
   full?: boolean;
-  variant?: "primary" | "outline";
+  variant?: "blaze" | "forest";
+  label?: React.ReactNode;
+  arrow?: boolean;
+  className?: string;
 }) {
-  const sizes = {
-    sm: "px-4 py-2.5 text-sm",
-    md: "px-6 py-3.5 text-base",
-    lg: "px-8 py-4 text-lg",
-  };
+  const sizes = { sm: "btn-sm", md: "", lg: "btn-lg" };
   return (
-    <Magnetic className={full ? "w-full" : ""}>
-      <a
-        href="#analyzer"
-        onClick={(e) => {
-          e.preventDefault();
-          goToAnalyzer();
-        }}
-        className={`inline-flex items-center justify-center rounded-full whitespace-nowrap ${sizes[size]} ${
-          full ? "w-full" : ""
-        } ${
-          variant === "primary"
-            ? "btn-primary"
-            : "border border-white/25 font-bold text-white transition-colors hover:border-accent hover:text-accent"
-        }`}
-      >
-        {site.cta}
-      </a>
-    </Magnetic>
-  );
-}
-
-export function Check({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 20 20" className={`h-5 w-5 shrink-0 ${className}`} aria-hidden="true">
-      <circle cx="10" cy="10" r="10" fill="currentColor" opacity="0.15" />
-      <path d="M5.5 10.5l3 3 6-7" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+    <a
+      href="/#analyzer"
+      onClick={(e) => {
+        if (!document.getElementById("analyzer")) return;
+        e.preventDefault();
+        goToAnalyzer();
+      }}
+      className={`btn btn-${variant} ${sizes[size]} ${full ? "w-full" : ""} ${className}`}
+    >
+      {label}
+      {arrow && <ArrowRight className="h-5 w-5 shrink-0" strokeWidth={2.5} aria-hidden="true" />}
+    </a>
   );
 }
 
 export function PlaceholderTag({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-block rounded border border-dashed border-amber-300/60 px-1.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wider text-amber-300">
+    <span className="inline-block rounded-sm border border-dashed border-muted px-1.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wider text-cream">
       {children}
     </span>
   );
