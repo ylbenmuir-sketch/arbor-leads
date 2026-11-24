@@ -27,10 +27,10 @@ export default function BeforeAfter() {
   useEffect(() => {
     if (!inView || touched.current) return;
     if (reduce) {
-      pos.set(8);
+      pos.set(3);
       return;
     }
-    const controls = animate(pos, 8, { duration: 1.4, delay: 0.25, ease: [0.22, 0.61, 0.36, 1] });
+    const controls = animate(pos, 3, { duration: 1.4, delay: 0.25, ease: [0.22, 0.61, 0.36, 1] });
     const stop = () => controls.stop();
     const el = frame.current;
     el?.addEventListener("pointerdown", stop, { once: true });

@@ -8,8 +8,8 @@
  *    Don't add other numbers or percentages.
  *  - The only guarantees are the two in `guarantee.items`.
  *  - No ranking, call-volume or results promises.
- *  - Missed-call text-back, review requests and the monthly report are
- *    Get Booked & up. Ads and extra service-area pages are Dominate.
+ *  - Missed-call text-back and review requests are Get Booked & up.
+ *    Every plan gets a monthly report. Ads and extra service-area pages are Dominate.
  *    Don't write copy that implies every plan includes them.
  *  - Never name or link the case-study client.
  * ─────────────────────────────────────────────────────────────
@@ -27,7 +27,7 @@ export const site = {
       "Websites, Google Maps and ads for tree service companies, so homeowners in your town find you, trust you, and call. Built by a former tree service owner.",
   },
   /** The main call to action (orange buttons). */
-  cta: "Show Me Where I Rank",
+  cta: "Show Me What I'm Missing",
   /** Short version for the header on phones and the sticky bar. */
   ctaShort: "Free Audit",
   secondaryCta: "See Pricing",
@@ -59,7 +59,7 @@ export const hero = {
   /** These closing words go on their own line with the orange underline. Must match the headline exactly. */
   highlight: "it should be you.",
   subhead:
-    "We build your website, push your Google profile up the map, and run ads when you want more work, so homeowners find you, trust you, and call. Live in 7 days or your first month is free.",
+    "We build your website, work your Google profile every month so you show up on the map, and run ads when you want more work, so homeowners find you, trust you, and call. Live in 7 days or your first month is free.",
   micro: "Free audit · 60 seconds · No call required",
   /** The number itself comes from `caseStudy.giant`. */
   proofText: "Google clicks in 30 days, our most recent website build",
@@ -76,14 +76,14 @@ export const mapPack = {
   marker: "#1",
   top: { name: "Ridgeline Tree Service", rating: "4.9", count: "(212)", hours: "Open 24 hours", call: "Call", website: "Website" },
   others: ["Tree Company", "Tree & Stump Co."],
-  caption: "Example.",
+  caption: "Example of what we aim for.",
 };
 
 export const analyzer = {
   eyebrow: "Free audit",
   /** Short line above the headline. */
   vibe: "Next storm, your phone's going to ring. Make sure it's yours.",
-  headline: "See where you show up on Google, and who's beating you.",
+  headline: "See what's holding your site back on Google.",
   sub: "Free. 60 seconds. We'll email your report and show you exactly what we'd fix.",
   fields: {
     business: "Business name",
@@ -287,7 +287,7 @@ export const offer = {
     { icon: "text", text: "Every missed call texted back in under 60 seconds.", tag: "Get Booked & up" },
     { icon: "ads", text: "Google and Facebook ads, managed for you.", tag: "Dominate" },
     { icon: "wrench", text: "Hosting, updates and fixes. Never your problem.", tag: "" },
-    { icon: "report", text: "A one-page report every month: what came in and what's working.", tag: "Get Booked & up" },
+    { icon: "report", text: "A one-page report every month: what came in and what's working.", tag: "" },
   ] as { icon: "site" | "map" | "search" | "star" | "text" | "ads" | "wrench" | "report"; text: string; tag: string }[],
   closing: { lead: "You do:", text: "answer the leads and run your crews." },
   steps: ["Free audit", "Live in 7 days", "We run it. You run crews."],
@@ -345,6 +345,7 @@ export const pricing = {
         "Google Business Profile setup + optimization",
         "Local SEO basics",
         "Hosting and updates",
+        "Simple monthly report",
       ],
     },
     {
@@ -603,6 +604,10 @@ export const legal = {
       {
         h: "Limit of liability",
         p: ["Our services are provided as-is. To the extent the law allows, we aren't liable for indirect or lost-profit damages, and our total liability is limited to what you paid us in the 3 months before the claim."],
+      },
+      {
+        h: "Governing law",
+        p: ["These terms are governed by the laws of the State of Tennessee. Any dispute will be handled in the courts of Maury County, Tennessee."],
       },
       {
         h: "Contact",

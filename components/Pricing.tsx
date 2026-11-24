@@ -119,7 +119,7 @@ export default function Pricing() {
                   type="button"
                   aria-pressed={annual === o.on}
                   onClick={() => setAnnual(o.on)}
-                  className={`flex min-h-11 cursor-pointer items-center gap-2 rounded-md px-3 text-[0.8125rem] font-extrabold md:min-h-12 uppercase tracking-[0.05em] sm:px-5 sm:text-base transition-colors duration-300 ${
+                  className={`flex min-h-12 cursor-pointer items-center gap-2 rounded-md px-3 text-[0.8125rem] font-extrabold uppercase tracking-[0.05em] sm:px-5 sm:text-base transition-colors duration-300 ${
                     annual === o.on ? "bg-cream text-bg" : "text-muted hover:text-cream"
                   }`}
                 >
