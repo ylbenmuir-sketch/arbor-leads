@@ -88,7 +88,7 @@ export default function Pricing() {
   return (
     <section id="pricing" className="grain overflow-x-clip bg-deep">
       <div className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-28">
-        <SectionHead eyebrow={pricing.eyebrow} title={pricing.headline} center />
+        <SectionHead eyebrow={pricing.eyebrow} title={pricing.headline} sub={pricing.sub} center />
 
         <Reveal className="mt-6 md:mt-14">
           {/* year-end sale tag + countdown */}

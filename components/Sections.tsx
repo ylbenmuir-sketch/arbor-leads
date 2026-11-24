@@ -262,16 +262,7 @@ export function About() {
 
   return (
     <section className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-28">
-      <div className={`grid gap-8 lg:items-center lg:gap-16 ${photo ? "lg:grid-cols-[0.7fr_1.3fr]" : "lg:grid-cols-[1.15fr_0.85fr]"}`}>
-        {photo && (
-          <Reveal>
-            <Item>
-              <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-lg border-2 border-line bg-raised lg:max-w-none">
-                <Image src={photo} alt={about.headshot.alt} fill sizes="(max-width: 1024px) 384px, 480px" className="object-cover" />
-              </div>
-            </Item>
-          </Reveal>
-        )}
+      <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
         <Reveal>
           <Item as="p" className="eyebrow mb-4 md:mb-5">
             {about.eyebrow}
@@ -280,27 +271,31 @@ export function About() {
             {about.title}
           </Item>
           {photo && (
-            <>
-              <Item as="p" className="mt-6 text-xl leading-snug text-muted md:text-2xl">
-                {about.copy}
-              </Item>
-              <Item as="p" className="mt-5 text-lg font-extrabold tracking-tight text-cream">
-                {about.signature}
-              </Item>
-            </>
+            <Item className="mt-8">
+              <div className="relative aspect-[4/5] w-full max-w-sm overflow-hidden rounded-lg border-2 border-line bg-raised">
+                <Image src={photo} alt={about.headshot.alt} fill sizes="384px" className="object-cover" />
+              </div>
+            </Item>
           )}
         </Reveal>
-        {!photo && (
-          <Reveal className="border-l-4 border-sage pl-5 md:pl-8">
-            <Item as="p" className="text-xl leading-snug text-cream md:text-2xl">
-              {about.copy}
+        <Reveal className="border-l-4 border-sage pl-5 md:pl-8">
+          {about.copy.map((para, i) => (
+            <Item as="p" key={para} className={`text-lg leading-snug text-cream md:text-xl md:leading-relaxed ${i > 0 ? "mt-4 md:mt-5" : ""}`}>
+              {para}
             </Item>
-            <Item as="p" className="mt-5 text-base font-extrabold uppercase tracking-[0.1em] text-muted">
-              {about.signature}
-            </Item>
-          </Reveal>
-        )}
+          ))}
+          <Item as="p" className="mt-5 text-base font-extrabold uppercase tracking-[0.1em] text-muted">
+            {about.signature}
+          </Item>
+        </Reveal>
       </div>
+
+      {/* pull quote: one big statement on its own */}
+      <Reveal className="mt-12 border-y-2 border-cream py-8 md:mt-20 md:py-14">
+        <Item>
+          <blockquote className="display-xl mx-auto max-w-6xl md:text-center">&ldquo;{about.pullQuote}&rdquo;</blockquote>
+        </Item>
+      </Reveal>
 
       {stats.length > 0 && (
         <Reveal className="mt-12 grid divide-y-2 divide-line rounded-lg border-2 border-line sm:grid-flow-col sm:auto-cols-fr sm:divide-x-2 sm:divide-y-0 md:mt-20">
