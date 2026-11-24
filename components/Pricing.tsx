@@ -8,7 +8,8 @@ import { CtaButton, Item, Reveal, SectionHead, ease } from "./ui";
 
 const usd = (n: number) => "$" + n.toLocaleString("en-US");
 
-function Countdown() {
+/** Milliseconds until the pricing deadline (null until the browser has loaded). */
+function useTimeLeft() {
   const [left, setLeft] = useState<number | null>(null);
 
   useEffect(() => {
@@ -19,6 +20,11 @@ function Countdown() {
     return () => clearInterval(t);
   }, []);
 
+  return left;
+}
+
+/** Desktop: four boxes. */
+function Countdown({ left }: { left: number | null }) {
   if (left === 0) return <span className="font-bold">{pricing.ended}</span>;
 
   const s = Math.floor((left ?? 0) / 1000);
@@ -33,14 +39,26 @@ function Countdown() {
   return (
     <div className="flex gap-2" role="timer" aria-label={label}>
       {parts.map((p) => (
-        <div key={p.l} className="w-[3.25rem] rounded-md border-2 border-line bg-bg px-1 py-1.5 text-center md:w-16 md:py-2" aria-hidden="true">
-          <div className="text-2xl font-extrabold leading-none tracking-tight md:text-3xl" style={{ fontVariantNumeric: "tabular-nums" }}>
+        <div key={p.l} className="w-16 rounded-md border-2 border-line bg-bg px-1 py-2 text-center" aria-hidden="true">
+          <div className="text-3xl font-extrabold leading-none tracking-tight" style={{ fontVariantNumeric: "tabular-nums" }}>
             {left === null ? "––" : String(p.v).padStart(2, "0")}
           </div>
           <div className="mt-1 text-[0.6rem] font-bold uppercase tracking-widest text-muted">{p.l}</div>
         </div>
       ))}
     </div>
+  );
+}
+
+/** Phones: one row inside the sale tag, e.g. "Ends Dec 31 · 37d 13h left". */
+function CountdownRow({ left }: { left: number | null }) {
+  if (left === 0) return <>{pricing.ended}</>;
+  const s = Math.floor((left ?? 0) / 1000);
+  return (
+    <span style={{ fontVariantNumeric: "tabular-nums" }}>
+      {pricing.endsShort}
+      {left !== null && ` · ${Math.floor(s / 86400)}d ${Math.floor((s % 86400) / 3600)}h ${pricing.leftShort}`}
+    </span>
   );
 }
 
@@ -63,6 +81,7 @@ function Struck({ children }: { children: React.ReactNode }) {
 
 export default function Pricing() {
   const [annual, setAnnual] = useState(false);
+  const left = useTimeLeft();
   const paidMonths = 12 - pricing.annualMonthsFree;
 
   return (
@@ -70,18 +89,27 @@ export default function Pricing() {
       <div className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-28">
         <SectionHead eyebrow={pricing.eyebrow} title={pricing.headline} center />
 
-        <Reveal className="mt-7 md:mt-14">
+        <Reveal className="mt-6 md:mt-14">
           {/* year-end sale tag + countdown */}
-          <Item className="flex flex-col items-center justify-between gap-2.5 rounded-lg border-2 border-line bg-raised px-3 py-3 text-center md:flex-row md:gap-5 md:px-7 md:py-5 md:text-left">
-            <p className="rounded-sm bg-blaze px-3.5 py-2 text-sm font-extrabold uppercase leading-snug tracking-[0.06em] text-bg md:text-base">
-              {pricing.saleTag}
+          <Item>
+            {/* phones: tag and countdown in one small block */}
+            <p className="rounded-sm bg-blaze px-3 py-2 text-center text-[0.8125rem] font-extrabold uppercase leading-snug tracking-[0.05em] text-bg md:hidden">
+              <span className="block">{pricing.saleTagShort}</span>
+              <span className="block">
+                <CountdownRow left={left} />
+              </span>
             </p>
-            <Countdown />
+            <div className="hidden items-center justify-between gap-5 rounded-lg border-2 border-line bg-raised px-7 py-5 md:flex">
+              <p className="rounded-sm bg-blaze px-3.5 py-2 text-base font-extrabold uppercase leading-snug tracking-[0.06em] text-bg">
+                {pricing.saleTag}
+              </p>
+              <Countdown left={left} />
+            </div>
           </Item>
 
           {/* monthly / annual toggle */}
-          <Item className="mt-4 flex justify-center md:mt-10">
-            <div role="group" aria-label="Billing period" className="inline-flex rounded-lg border-2 border-line bg-raised p-1.5">
+          <Item className="mt-3 flex justify-center md:mt-10">
+            <div role="group" aria-label="Billing period" className="inline-flex rounded-lg border-2 border-line bg-raised p-1 md:p-1.5">
               {[
                 { on: false, label: pricing.toggle.monthly },
                 { on: true, label: pricing.toggle.annual },
@@ -91,7 +119,7 @@ export default function Pricing() {
                   type="button"
                   aria-pressed={annual === o.on}
                   onClick={() => setAnnual(o.on)}
-                  className={`flex min-h-12 cursor-pointer items-center gap-2 rounded-md px-3 text-sm font-extrabold uppercase tracking-[0.05em] sm:px-5 sm:text-base transition-colors duration-300 ${
+                  className={`flex min-h-11 cursor-pointer items-center gap-2 rounded-md px-3 text-[0.8125rem] font-extrabold md:min-h-12 uppercase tracking-[0.05em] sm:px-5 sm:text-base transition-colors duration-300 ${
                     annual === o.on ? "bg-cream text-bg" : "text-muted hover:text-cream"
                   }`}
                 >
@@ -110,7 +138,7 @@ export default function Pricing() {
         {/* plans: a swipeable row on phones (Most Popular first), a 3-up grid on desktop */}
         <Reveal
           as="ul"
-          className="no-scrollbar -mx-5 mt-2 flex snap-x snap-mandatory items-stretch gap-3.5 overflow-x-auto px-5 pb-3 pt-6 lg:mx-0 lg:mt-10 lg:grid lg:grid-cols-3 lg:gap-6 lg:overflow-visible lg:px-0 lg:pb-6 lg:pt-8"
+          className="no-scrollbar -mx-5 mt-2 flex snap-x snap-mandatory items-stretch gap-3.5 overflow-x-auto px-5 pb-3 pt-5 lg:mx-0 lg:mt-10 lg:grid lg:grid-cols-3 lg:gap-6 lg:overflow-visible lg:px-0 lg:pb-6 lg:pt-8"
         >
           {pricing.plans.map((p) => {
             // Annual = pay for 10 months, shown as the per-month price.
@@ -189,7 +217,10 @@ export default function Pricing() {
             <ShieldCheck className="h-9 w-9 shrink-0 text-sage md:h-11 md:w-11" strokeWidth={1.75} aria-hidden="true" />
             <ul className="grid gap-1.5 text-base font-extrabold leading-snug tracking-[-0.01em] md:grid-cols-2 md:gap-8 md:text-xl">
               {guarantee.items.map((g) => (
-                <li key={g.text}>{g.text}</li>
+                <li key={g.text}>
+                  {g.text}
+                  {g.planNote && <span className="block text-sm font-bold text-muted md:text-base">{g.planNote}</span>}
+                </li>
               ))}
             </ul>
           </Item>

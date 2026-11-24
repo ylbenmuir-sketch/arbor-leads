@@ -8,7 +8,7 @@ import PhotoBand from "@/components/PhotoBand";
 import StickyCta from "@/components/StickyCta";
 import Pricing from "@/components/Pricing";
 import Faq from "@/components/Faq";
-import { About, AnalyzerSection, CaseStudy, Comparison, Footer, Guarantee } from "@/components/Sections";
+import { About, AnalyzerSection, CaseStudy, Comparison, Footer, Guarantee, Pillars } from "@/components/Sections";
 
 export default function Home() {
   const jsonLd = [
@@ -39,11 +39,12 @@ export default function Home() {
         <Hero />
         <Marquee />
         <Pain />
-        <SpeedToLead />
-        <BeforeAfter />
         <CaseStudy />
-        <PhotoBand />
+        <Pillars />
+        <BeforeAfter />
         <OfferStack />
+        <SpeedToLead />
+        <PhotoBand />
         <RoiCalculator />
         <Pricing />
         <Guarantee />

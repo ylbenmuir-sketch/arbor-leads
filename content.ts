@@ -7,6 +7,10 @@
  *  - The only real stats are the Recent Website Case numbers.
  *    Don't add other numbers or percentages.
  *  - The only guarantees are the two in `guarantee.items`.
+ *  - No ranking, call-volume or results promises.
+ *  - Missed-call text-back, review requests and the monthly report are
+ *    Get Booked & up. Ads and extra service-area pages are Dominate.
+ *    Don't write copy that implies every plan includes them.
  *  - Never name or link the case-study client.
  * ─────────────────────────────────────────────────────────────
  */
@@ -20,10 +24,10 @@ export const site = {
   seo: {
     title: "Arbor Leads | Websites, SEO & Lead Systems for Tree Service Companies",
     description:
-      "We build your tree service website, get you showing up on Google, and text back every missed call in under 60 seconds. Built by a former tree service owner.",
+      "Websites, Google Maps and ads for tree service companies, so homeowners in your town find you, trust you, and call. Built by a former tree service owner.",
   },
   /** The main call to action (orange buttons). */
-  cta: "Show Me What I'm Missing",
+  cta: "Show Me Where I Rank",
   /** Short version for the header on phones and the sticky bar. */
   ctaShort: "Free Audit",
   secondaryCta: "See Pricing",
@@ -42,28 +46,44 @@ export const announcement = {
 };
 
 export const marquee = [
-  "Live in 7 days, or your first month is free",
-  "$0 down",
-  "Every missed call texted back in 60 seconds, or that month is free",
+  "Websites that get calls",
+  "Google & Maps",
+  "Review growth",
+  "Ads when you want more work",
   "Live in 7 days",
+  "$0 down option",
 ];
 
 export const hero = {
-  headline: "Stop losing tree jobs to the guy who called back first.",
-  /** These words get the orange underline. Must appear in the headline exactly. */
-  highlight: "called back first.",
+  headline: "When your town searches “tree service near me,” it should be you.",
+  /** These closing words go on their own line with the orange underline. Must match the headline exactly. */
+  highlight: "it should be you.",
   subhead:
-    "We build your website, get you showing up on Google, and text back every missed call in under 60 seconds, even while you're still in the bucket. Live in 7 days or your first month is free.",
+    "We build your website, push your Google profile up the map, and run ads when you want more work, so homeowners find you, trust you, and call. Live in 7 days or your first month is free.",
   micro: "Free audit · 60 seconds · No call required",
   /** The number itself comes from `caseStudy.giant`. */
   proofText: "Google clicks in 30 days, our most recent website build",
   proofHref: "#case",
-  chips: ["Live in 7 days", "60-second text-back", "$0 down option"],
+  chips: ["Website live in 7 days", "Google Maps optimized", "$0 down option"],
+};
+
+/**
+ * The made-up Google Maps result shown beside the hero. It uses the same
+ * fictional company as the before/after slider and is captioned "Example."
+ */
+export const mapPack = {
+  query: "tree service near me",
+  marker: "#1",
+  top: { name: "Ridgeline Tree Service", rating: "4.9", count: "(212)", hours: "Open 24 hours", call: "Call", website: "Website" },
+  others: ["Tree Company", "Tree & Stump Co."],
+  caption: "Example.",
 };
 
 export const analyzer = {
   eyebrow: "Free audit",
-  headline: "Next storm, your phone's going to ring. Be ready to answer it.",
+  /** Short line above the headline. */
+  vibe: "Next storm, your phone's going to ring. Make sure it's yours.",
+  headline: "See where you show up on Google, and who's beating you.",
   sub: "Free. 60 seconds. We'll email your report and show you exactly what we'd fix.",
   fields: {
     business: "Business name",
@@ -75,6 +95,11 @@ export const analyzer = {
   planLabel: "Plan you picked:",
   planClear: "Clear",
   button: "Run My Free Audit",
+  /** Small print under the button. The link goes to /privacy. */
+  consent: {
+    text: "By submitting, you agree to be contacted by Arbor Leads by email, phone or text about your audit. Msg & data rates may apply. Reply STOP to opt out. See our",
+    link: "Privacy Policy",
+  },
   scanSteps: [
     "Checking speed…",
     "Checking Google profile…",
@@ -92,12 +117,42 @@ export const analyzer = {
 
 /** Cream band right under the hero. Plain statements only, no stats. */
 export const pain = {
-  headline: "Every missed call is a job you already paid to get.",
+  headline: "If they can't find you, they can't hire you.",
   lines: [
-    "You're 40 feet up. The phone rings. You can't answer.",
-    "They don't leave a voicemail. They call the next guy on Google.",
-    "He picks up. He gets the job. You never even knew.",
+    "Someone in your town just searched “tree removal near me.”",
+    "Three companies showed up on the map. You weren't one of them.",
+    "They called the first one. He's booked through next week.",
   ],
+};
+
+/** "How we grow you": the three pillars. `tag` says which plans include it. */
+export const pillars = {
+  eyebrow: "How we grow you",
+  headline: "Get found. Get chosen. Get the call.",
+  items: [
+    {
+      icon: "site",
+      title: "A website that sells.",
+      body: "Built to turn a search into a phone call. Fast on mobile, clear prices and services, one-tap call. Live in 7 days.",
+      tag: "All plans",
+    },
+    {
+      icon: "map",
+      title: "Google & Maps.",
+      body: "Your Google Business Profile set up and worked every month, plus local SEO and service-area pages, so you show up where your town is looking.",
+      tag: "All plans",
+    },
+    {
+      icon: "ads",
+      title: "Ads when you want more work.",
+      body: "Google and Facebook ads managed for you. You set the budget; ad spend goes straight to Google and Meta.",
+      tag: "Dominate plan",
+    },
+  ] as { icon: "site" | "map" | "ads"; title: string; body: string; tag: string }[],
+  also: {
+    text: "And no lead slips through: every missed call texted back in under 60 seconds, plus automatic review requests.",
+    tag: "Get Booked & up",
+  },
 };
 
 export const beforeAfter = {
@@ -197,11 +252,12 @@ export const mock = {
 };
 
 export const speedToLead = {
-  eyebrow: "Speed to lead",
+  eyebrow: "And when they call",
   headline: "You're on the saw. We're on the phone.",
   caption: "Missed call → automatic text in under 60 seconds → they book an estimate. You call back when you're on the ground.",
   /** Big label beside the phone. */
   bigLabel: ["Under 60 seconds.", "Guaranteed."],
+  planNote: "On Get Booked & Dominate.",
   replay: "Replay",
   contactName: "Homeowner",
   missedCall: { title: "Missed call", detail: "(615) 555-0188 · just now" },
@@ -222,14 +278,17 @@ export const photoBand = {
 export const offer = {
   eyebrow: "What you get",
   headline: "Here's everything we take off your plate.",
+  /** `tag` marks anything that isn't in every plan. Leave it "" for all plans. */
   items: [
-    { icon: "site", text: "A site built to get calls. Live in 7 days." },
-    { icon: "map", text: "Your Google profile set up so you show up in Maps." },
-    { icon: "text", text: "Every missed call texted back in under 60 seconds." },
-    { icon: "star", text: "Review requests sent after every job, automatically." },
-    { icon: "wrench", text: "Hosting, updates and fixes. Never your problem." },
-    { icon: "report", text: "A one-page report every month: what came in and what's working." },
-  ] as { icon: "site" | "map" | "text" | "star" | "wrench" | "report"; text: string }[],
+    { icon: "site", text: "A site built to get calls. Live in 7 days.", tag: "" },
+    { icon: "map", text: "Your Google profile set up so you show up in Maps.", tag: "" },
+    { icon: "search", text: "Local SEO basics built in. Extra service-area pages on Dominate.", tag: "" },
+    { icon: "star", text: "Review requests sent after every job, automatically.", tag: "Get Booked & up" },
+    { icon: "text", text: "Every missed call texted back in under 60 seconds.", tag: "Get Booked & up" },
+    { icon: "ads", text: "Google and Facebook ads, managed for you.", tag: "Dominate" },
+    { icon: "wrench", text: "Hosting, updates and fixes. Never your problem.", tag: "" },
+    { icon: "report", text: "A one-page report every month: what came in and what's working.", tag: "Get Booked & up" },
+  ] as { icon: "site" | "map" | "search" | "star" | "text" | "ads" | "wrench" | "report"; text: string; tag: string }[],
   closing: { lead: "You do:", text: "answer the leads and run your crews." },
   steps: ["Free audit", "Live in 7 days", "We run it. You run crews."],
 };
@@ -256,6 +315,10 @@ export const pricing = {
   headline: "Pays for itself with one extra job.",
   /** The orange "sale" tag. */
   saleTag: "Year-end pricing, locked in for life. Ends Dec 31.",
+  /** Phone version: the tag and the countdown share one small block. */
+  saleTagShort: "Year-end pricing, locked in for life.",
+  endsShort: "Ends Dec 31",
+  leftShort: "left",
   /** Countdown target (visitor's local time). Regular prices start then. */
   deadline: "2027-01-01T00:00:00",
   ended: "Year-end pricing has ended.",
@@ -272,7 +335,7 @@ export const pricing = {
   plans: [
     {
       name: "Get Found",
-      blurb: "Show up when they search.",
+      blurb: "Get found on Google.",
       regular: 249,
       price: 149,
       priceSuffix: "",
@@ -286,7 +349,7 @@ export const pricing = {
     },
     {
       name: "Get Booked",
-      blurb: "Never lose a lead to voicemail again.",
+      blurb: "Get found, then book every lead.",
       regular: 499,
       price: 349,
       priceSuffix: "",
@@ -301,7 +364,7 @@ export const pricing = {
     },
     {
       name: "Dominate",
-      blurb: "Own your whole service area.",
+      blurb: "Own your service area.",
       regular: 999,
       price: 749,
       priceSuffix: "+ ad spend",
@@ -344,8 +407,8 @@ export const guarantee = {
   eyebrow: "The guarantee",
   headline: "Two promises. In writing.",
   items: [
-    { text: "Live in 7 days, or your first month is free." },
-    { text: "Every missed call texted back in 60 seconds, or that month is free." },
+    { text: "Live in 7 days, or your first month is free.", planNote: "" },
+    { text: "Every missed call texted back in 60 seconds, or that month is free.", planNote: "On Get Booked & Dominate." },
   ],
   stamp: "Arbor Leads guarantee",
   note: "We won't promise you a magic number of calls. Anyone who does is guessing. We promise the work gets done, fast, and you see the numbers every month.",
@@ -413,7 +476,7 @@ export const faq = {
     },
     {
       q: "How does the guarantee work?",
-      a: "Two promises. Live in 7 days, or your first month is free. Every missed call texted back in 60 seconds, or that month is free. We won't promise you a magic number of calls.",
+      a: "Two promises. Live in 7 days, or your first month is free. Every missed call texted back in 60 seconds, or that month is free (on Get Booked & Dominate). We won't promise you a magic number of calls.",
     },
   ],
 };
@@ -432,14 +495,119 @@ export const footer = {
   ],
 };
 
+/**
+ * PRIVACY POLICY + TERMS
+ * Generic template — have it reviewed before relying on it.
+ * Each section is a heading and a list of paragraphs.
+ */
 export const legal = {
+  effectiveLabel: "Effective",
+  effective: "November 24, 2026",
+  back: "← Back to home",
   privacy: {
     title: "Privacy Policy",
-    body: "Placeholder page. Your privacy policy goes here before launch.",
+    intro: "This is the plain-English version of how Arbor Leads handles your information.",
+    sections: [
+      {
+        h: "Who we are",
+        p: ["Arbor Leads builds and runs websites, Google profiles, ads and lead follow-up for tree service companies. You can reach us at hello@arborleads.co."],
+      },
+      {
+        h: "What we collect",
+        p: [
+          "What you give us: your business name, website URL, name, email, phone number, and which plan you're interested in.",
+          "What the site collects on its own: basic analytics and cookies, like which pages were visited and what kind of device was used.",
+        ],
+      },
+      {
+        h: "Why we collect it",
+        p: ["To send you the free audit you asked for, to contact you about it, and to provide our services if you become a customer."],
+      },
+      {
+        h: "We don't sell your information",
+        p: ["We do not sell your personal information."],
+      },
+      {
+        h: "Service providers",
+        p: ["We use other companies for hosting, email, text messaging and analytics. They get only what they need to run the service for us, and they may use it only for that."],
+      },
+      {
+        h: "Text messages (SMS)",
+        p: [
+          "We will not share your mobile number or SMS opt-in consent with third parties or affiliates for marketing purposes. Message frequency varies. Msg & data rates may apply. Reply STOP to opt out, HELP for help.",
+        ],
+      },
+      {
+        h: "How long we keep it",
+        p: ["We keep your information for as long as we need it for the reasons above, or as long as the law requires. After that we delete it."],
+      },
+      {
+        h: "Seeing or deleting your information",
+        p: ["Email hello@arborleads.co and ask. We'll show you what we have, or delete it."],
+      },
+      {
+        h: "Children",
+        p: ["This site is for businesses. It is not directed to children under 13, and we don't knowingly collect their information."],
+      },
+      {
+        h: "Changes",
+        p: ["If we change this policy, we'll post the new version here and update the effective date."],
+      },
+    ],
   },
   terms: {
     title: "Terms of Service",
-    body: "Placeholder page. Your terms of service go here before launch.",
+    intro: "These terms cover your use of this site and the services you buy from Arbor Leads.",
+    sections: [
+      {
+        h: "What we do",
+        p: ["Depending on your plan, we build and host your website, set up and manage your Google Business Profile, handle local SEO, text back missed calls, send review requests, send a monthly report, and manage ads. Your plan lists exactly what's included."],
+      },
+      {
+        h: "Two ways to start",
+        p: [
+          "$0 down with a 6-month commitment, or a $495 one-time setup and then month-to-month.",
+          "Plans are billed monthly, or yearly at the annual price shown on the pricing page.",
+        ],
+      },
+      {
+        h: "What you own",
+        p: ["Your domain, Google Business Profile and reviews are always yours. Your website is yours after 6 months, or from day one with the $495 setup."],
+      },
+      {
+        h: "Our two guarantees",
+        p: [
+          "Live in 7 days, or your first month is free. The 7 days start once you've given us the information and access we ask for at signup.",
+          "Every missed call texted back in 60 seconds, or that month is free. This applies to the Get Booked and Dominate plans once text-back is switched on for your number. It doesn't cover calls from numbers that can't receive texts, or outages at phone carriers.",
+        ],
+      },
+      {
+        h: "What we don't guarantee",
+        p: ["We don't guarantee rankings, a number of calls or leads, or revenue. Results depend on your market, season and competition."],
+      },
+      {
+        h: "Ad spend",
+        p: ["On the Dominate plan you set the ad budget. Ad spend is paid by you directly to Google and Meta, and is separate from our fee."],
+      },
+      {
+        h: "Cancelling",
+        p: [
+          "Month-to-month plans can be cancelled at any time, effective at the end of the current billing period.",
+          "If you cancel a 6-month commitment early, you can buy out your site for $495, or we take it down. Your domain, Google Business Profile and reviews stay yours either way.",
+        ],
+      },
+      {
+        h: "Text messages (SMS)",
+        p: ["If you give us your number, we may text you about your audit or your account. Message frequency varies. Msg & data rates may apply. Reply STOP to opt out, HELP for help. See the Privacy Policy for how we handle your number."],
+      },
+      {
+        h: "Limit of liability",
+        p: ["Our services are provided as-is. To the extent the law allows, we aren't liable for indirect or lost-profit damages, and our total liability is limited to what you paid us in the 3 months before the claim."],
+      },
+      {
+        h: "Contact",
+        p: ["Questions about these terms? Email hello@arborleads.co."],
+      },
+    ],
   },
-  back: "← Back to home",
 };

@@ -13,6 +13,7 @@ import { CtaButton } from "./ui";
 export default function StickyCta() {
   const [pastHero, setPastHero] = useState(false);
   const [atForm, setAtForm] = useState(false);
+  const [atPricing, setAtPricing] = useState(false);
 
   useEffect(() => {
     const hero = document.getElementById("top");
@@ -20,11 +21,15 @@ export default function StickyCta() {
     if (!hero || !form) return;
     const a = new IntersectionObserver(([e]) => setPastHero(!e.isIntersecting));
     const b = new IntersectionObserver(([e]) => setAtForm(e.isIntersecting || e.boundingClientRect.top < 0));
+    const c = new IntersectionObserver(([e]) => setAtPricing(e.isIntersecting));
     a.observe(hero);
     b.observe(form);
+    const pricing = document.getElementById("pricing");
+    if (pricing) c.observe(pricing);
     return () => {
       a.disconnect();
       b.disconnect();
+      c.disconnect();
     };
   }, []);
 
@@ -47,9 +52,11 @@ export default function StickyCta() {
             </>
           }
         />
-        <a href="#pricing" className="btn btn-outline btn-bar flex-1">
-          {site.pricingShort}
-        </a>
+        {!atPricing && (
+          <a href="#pricing" className="btn btn-outline btn-bar flex-1">
+            {site.pricingShort}
+          </a>
+        )}
       </div>
     </div>
   );

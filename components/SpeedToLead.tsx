@@ -78,6 +78,7 @@ export default function SpeedToLead() {
                   {l}
                 </span>
               ))}
+              <span className="mt-2 block text-sm font-bold uppercase tracking-[0.14em] text-muted md:mt-3 md:text-base">{copy.planNote}</span>
             </p>
           </Item>
         </Reveal>

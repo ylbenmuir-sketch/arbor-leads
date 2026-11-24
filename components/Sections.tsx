@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Award, Check, Gauge, KeyRound, PhoneCall, Search } from "lucide-react";
-import { about, analyzer, caseStudy, comparison, footer, guarantee, site } from "@/content";
+import { Award, Check, Gauge, KeyRound, MapPinned, Megaphone, MessageSquareText, MonitorSmartphone, PhoneCall, Search } from "lucide-react";
+import { about, analyzer, caseStudy, comparison, footer, guarantee, pillars, site } from "@/content";
 import Analyzer from "./Analyzer";
 import Logo from "./Logo";
 import { Counter, Item, Reveal, SectionHead } from "./ui";
@@ -80,13 +80,66 @@ export function CaseStudy() {
   );
 }
 
+/* ───────────── How we grow you: three pillars ─────────────
+   Each pillar carries a plan badge so nothing implies a plan includes more than it does. */
+const pillarIcons = { site: MonitorSmartphone, map: MapPinned, ads: Megaphone };
+const badge = "inline-block rounded-sm border-2 border-sage px-2 py-1 text-xs font-extrabold uppercase leading-none tracking-[0.1em] text-cream";
+
+export function Pillars() {
+  return (
+    <section className="grain border-y-2 border-line bg-deep">
+      <div className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-28">
+        <SectionHead eyebrow={pillars.eyebrow} title={pillars.headline} />
+
+        <Reveal as="ol" className="mt-8 grid gap-3 md:mt-16 lg:grid-cols-3 lg:gap-0">
+          {pillars.items.map((p, i) => {
+            const Icon = pillarIcons[p.icon];
+            return (
+              <Item
+                as="li"
+                key={p.title}
+                className={`flex flex-col rounded-lg border-2 border-line bg-raised p-5 lg:rounded-none lg:border-0 lg:bg-transparent lg:px-10 lg:py-2 ${
+                  i > 0 ? "lg:border-l-2" : "lg:pl-0"
+                } ${i === pillars.items.length - 1 ? "lg:pr-0" : ""}`}
+              >
+                <div className="flex items-center justify-between lg:items-start">
+                  <span className="text-5xl font-extrabold leading-[0.8] tracking-[-0.05em] text-cream lg:text-[7.5rem]" aria-hidden="true">
+                    {i + 1}
+                  </span>
+                  <Icon className="h-9 w-9 text-sage lg:h-14 lg:w-14" strokeWidth={1.5} aria-hidden="true" />
+                </div>
+                <h3 className="mt-4 text-2xl font-extrabold leading-[1.05] tracking-[-0.03em] lg:mt-9 lg:text-4xl">{p.title}</h3>
+                <p className="mb-4 mt-2 text-base leading-snug text-muted lg:mb-7 lg:mt-4 lg:text-lg lg:leading-relaxed">{p.body}</p>
+                <p className="mt-auto">
+                  <span className={badge}>{p.tag}</span>
+                </p>
+              </Item>
+            );
+          })}
+        </Reveal>
+
+        <Reveal className="mt-3 lg:mt-16">
+          <Item className="flex flex-col gap-3 rounded-lg border-2 border-line bg-raised px-5 py-4 md:flex-row md:items-center md:gap-5 md:px-7 md:py-5">
+            <MessageSquareText className="hidden h-8 w-8 shrink-0 text-sage md:block" strokeWidth={1.75} aria-hidden="true" />
+            <p className="text-base font-semibold leading-snug text-cream md:text-xl">{pillars.also.text}</p>
+            <p className="shrink-0 md:ml-auto">
+              <span className={badge}>{pillars.also.tag}</span>
+            </p>
+          </Item>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 /* ───────────── Comparison (light section) ─────────────
    Arbor Leads vs typical agency vs doing it yourself.
    The Arbor Leads column is filled forest. Built as an ARIA table on a CSS grid so the row label can sit
    above its three cells on phones. */
 export function Comparison() {
   const { columns, rows } = comparison;
-  const cols = "grid grid-cols-3 md:grid-cols-[1fr_1.25fr_1fr_1fr]";
+  // Phones show two columns (us vs. agency); the do-it-yourself column joins from 640px up.
+  const cols = "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-[1fr_1.25fr_1fr_1fr]";
   return (
     <section className="on-cream bg-cream text-bg">
       <div className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-28">
@@ -102,7 +155,7 @@ export function Comparison() {
                 <span role="columnheader" className="border-b-2 border-bg px-3 py-4 text-sm font-extrabold uppercase tracking-[0.06em] md:px-6 md:py-5 md:text-base">
                   {columns.agency}
                 </span>
-                <span role="columnheader" className="border-b-2 border-l-2 border-bg border-l-bg/15 px-3 py-4 text-sm font-extrabold uppercase tracking-[0.06em] md:px-6 md:py-5 md:text-base">
+                <span role="columnheader" className="border-b-2 border-l-2 border-bg border-l-bg/15 max-sm:hidden px-3 py-4 text-sm font-extrabold uppercase tracking-[0.06em] md:px-6 md:py-5 md:text-base">
                   {columns.diy}
                 </span>
               </div>
@@ -112,7 +165,7 @@ export function Comparison() {
                   <div role="row" key={r.label} className={cols}>
                     <span
                       role="rowheader"
-                      className={`col-span-3 bg-bg/[0.07] px-3 py-2 text-xs font-extrabold uppercase tracking-[0.14em] md:col-span-1 md:bg-transparent md:px-6 md:py-5 md:text-sm ${line} max-md:border-b-0`}
+                      className={`col-span-2 bg-bg/[0.07] sm:col-span-3 px-3 py-2 text-xs font-extrabold uppercase tracking-[0.14em] md:col-span-1 md:bg-transparent md:px-6 md:py-5 md:text-sm ${line} max-md:border-b-0`}
                     >
                       {r.label}
                     </span>
@@ -123,7 +176,7 @@ export function Comparison() {
                     <span role="cell" className={`px-3 py-3 text-sm leading-snug md:px-6 md:py-5 md:text-base ${line}`}>
                       {r.agency}
                     </span>
-                    <span role="cell" className={`border-l-2 border-l-bg/15 px-3 py-3 text-sm leading-snug md:px-6 md:py-5 md:text-base ${line}`}>
+                    <span role="cell" className={`border-l-2 border-l-bg/15 px-3 py-3 max-sm:hidden text-sm leading-snug md:px-6 md:py-5 md:text-base ${line}`}>
                       {r.diy}
                     </span>
                   </div>
@@ -170,7 +223,10 @@ export function Guarantee() {
                 <Award className="h-12 w-12 text-sage md:h-16 md:w-16" strokeWidth={1.4} aria-hidden="true" />
               </div>
               <p className="mt-5 text-[1.6rem] font-extrabold leading-[1.05] tracking-[-0.035em] md:mt-8 md:text-[2.5rem]">{g.text}</p>
-              <p className="mt-4 text-xs font-bold uppercase tracking-[0.18em] text-muted md:mt-6">{guarantee.stamp}</p>
+              <p className="mt-4 text-xs font-bold uppercase tracking-[0.18em] text-muted md:mt-6">
+                {guarantee.stamp}
+                {g.planNote && <span className="text-cream"> · {g.planNote}</span>}
+              </p>
             </Item>
           ))}
         </Reveal>
@@ -279,6 +335,9 @@ export function AnalyzerSection() {
       <Reveal className="relative mx-auto max-w-5xl px-5 py-16 text-center md:px-8 md:py-28">
         <Item as="p" className="eyebrow mb-4 md:mb-5">
           {analyzer.eyebrow}
+        </Item>
+        <Item as="p" className="mx-auto mb-5 max-w-xl text-lg font-extrabold leading-snug tracking-[-0.02em] text-cream md:mb-7 md:text-2xl">
+          {analyzer.vibe}
         </Item>
         <Item as="h2" className="display-xl">
           {analyzer.headline}

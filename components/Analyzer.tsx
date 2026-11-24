@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import { Check, CircleCheck, Flag, X } from "lucide-react";
 import { analyzer as copy } from "@/content";
@@ -142,6 +143,13 @@ export default function Analyzer() {
             <button type="submit" className="btn btn-blaze btn-lg mt-5 w-full">
               {copy.button}
             </button>
+            <p className="mt-3 text-xs leading-relaxed text-muted">
+              {copy.consent.text}{" "}
+              <Link href="/privacy" className="font-bold text-cream underline underline-offset-2">
+                {copy.consent.link}
+              </Link>
+              .
+            </p>
           </m.form>
         )}
 

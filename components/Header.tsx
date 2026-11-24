@@ -7,7 +7,7 @@ import { CtaButton } from "./ui";
 import { announcement, pricing, site } from "@/content";
 
 /** Thin orange bar above the header. Hides itself once the pricing deadline passes. */
-function AnnouncementBar() {
+function AnnouncementBar({ hidden }: { hidden: boolean }) {
   const [days, setDays] = useState<number | null>(null);
   const [ended, setEnded] = useState(false);
 
@@ -24,7 +24,8 @@ function AnnouncementBar() {
   return (
     <a
       href={announcement.href}
-      className="relative flex h-9 items-center justify-center gap-x-2 bg-blaze px-3 text-[0.8125rem] font-extrabold tracking-[0.01em] text-bg after:absolute after:inset-x-0 after:-bottom-3 after:top-0"
+      tabIndex={hidden ? -1 : undefined}
+      className="relative flex h-9 items-center justify-center gap-x-2 border-b border-blaze bg-deep px-3 text-[0.8125rem] font-extrabold tracking-[0.01em] text-blaze after:absolute after:inset-x-0 after:-bottom-3 after:top-0"
     >
       <span>{announcement.text}</span>
       <span className="max-sm:hidden" aria-hidden="true">·</span>
@@ -42,17 +43,22 @@ function AnnouncementBar() {
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
+  // Phones: the announcement bar slides away after 120px so it stops eating screen.
+  const [tucked, setTucked] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 24);
+      setTucked(window.scrollY > 120);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
-      <AnnouncementBar />
+    <header className={`fixed inset-x-0 top-0 z-50 transition-transform duration-300 ${tucked ? "max-md:-translate-y-9" : ""}`}>
+      <AnnouncementBar hidden={tucked} />
       <div
         className={`border-b-2 transition-[background-color,border-color] duration-300 ${
           scrolled ? "border-line bg-bg" : "border-transparent bg-transparent"

@@ -90,6 +90,19 @@ html.lenis body {
   text-wrap: balance;
   font-size: clamp(2.75rem, 12.5vw, 3.25rem);
 }
+/* The hero shares its row with the map example on desktop, so it runs a step smaller there. */
+.display-hero {
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  text-wrap: balance;
+  font-size: clamp(2.5rem, 11.6vw, 3rem);
+}
+@media (min-width: 768px) {
+  .display-hero {
+    font-size: clamp(3.5rem, 5.7vw, 5.75rem);
+  }
+}
 /* Regular section headlines. */
 .display-lg {
   font-weight: 800;

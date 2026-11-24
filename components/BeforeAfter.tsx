@@ -22,15 +22,15 @@ export default function BeforeAfter() {
 
   useEffect(() => pos.on("change", (v) => setValue(Math.round(v))), [pos]);
 
-  // First time it's seen: sweep once from all-before to mostly-after, so the reveal happens
+  // First time it's seen: sweep once from all-before to almost all-after, so the reveal happens
   // without anyone having to find the handle. Reduced motion: just land on the end position.
   useEffect(() => {
     if (!inView || touched.current) return;
     if (reduce) {
-      pos.set(30);
+      pos.set(8);
       return;
     }
-    const controls = animate(pos, 30, { duration: 1.4, delay: 0.25, ease: [0.22, 0.61, 0.36, 1] });
+    const controls = animate(pos, 8, { duration: 1.4, delay: 0.25, ease: [0.22, 0.61, 0.36, 1] });
     const stop = () => controls.stop();
     const el = frame.current;
     el?.addEventListener("pointerdown", stop, { once: true });
@@ -65,7 +65,7 @@ export default function BeforeAfter() {
   }
 
   return (
-    <section className="grain relative overflow-x-clip bg-deep py-16 md:py-28">
+    <section className="relative overflow-x-clip py-16 md:py-28">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <SectionHead eyebrow={copy.eyebrow} title={copy.headline} sub={copy.sub} center />
 

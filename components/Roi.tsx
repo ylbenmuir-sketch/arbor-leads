@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
-import { FileChartColumn, MapPinned, MessageSquareText, MonitorSmartphone, Star, Wrench } from "lucide-react";
+import { FileChartColumn, MapPinned, Megaphone, MessageSquareText, MonitorSmartphone, Search, Star, Wrench } from "lucide-react";
 import { offer, roi } from "@/content";
 import { Item, Reveal, SectionHead, SpringNumber } from "./ui";
 
@@ -99,6 +99,8 @@ export function RoiCalculator() {
 const offerIcons = {
   site: MonitorSmartphone,
   map: MapPinned,
+  search: Search,
+  ads: Megaphone,
   text: MessageSquareText,
   star: Star,
   wrench: Wrench,
@@ -116,11 +118,18 @@ export function OfferStack() {
           {offer.items.map((it) => {
             const Icon = offerIcons[it.icon];
             return (
-              <Item as="li" key={it.text} className="flex items-center gap-4 border-b-2 border-bg/15 py-3.5 md:gap-5 md:py-6">
+              <Item as="li" key={it.text} className="flex items-center gap-4 border-b-2 border-bg/15 py-3 md:gap-5 md:py-6">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-forest text-cream md:h-14 md:w-14">
                   <Icon className="h-5 w-5 md:h-7 md:w-7" strokeWidth={2} aria-hidden="true" />
                 </span>
-                <span className="text-[1.0625rem] font-extrabold leading-[1.15] tracking-[-0.02em] md:text-2xl">{it.text}</span>
+                <span>
+                  <span className="block text-[1.0625rem] font-extrabold leading-[1.15] tracking-[-0.02em] md:text-2xl">{it.text}</span>
+                  {it.tag && (
+                    <span className="mt-1.5 inline-block rounded-sm border-2 border-forest px-1.5 py-0.5 text-[0.6875rem] font-extrabold uppercase leading-none tracking-[0.1em] text-forest">
+                      {it.tag}
+                    </span>
+                  )}
+                </span>
               </Item>
             );
           })}
