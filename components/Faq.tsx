@@ -13,7 +13,7 @@ export default function Faq() {
 
   return (
     <section id="faq" className="on-cream bg-cream text-bg">
-      <div className="mx-auto max-w-4xl px-5 py-16 md:px-8 md:py-28">
+      <div className="mx-auto max-w-4xl px-5 py-20 md:px-8 md:py-28">
         <SectionHead title={faq.headline} size="md" />
         <Reveal className="mt-7 border-t-2 border-bg md:mt-12">
           {faq.items.map((f, i) => {

@@ -53,10 +53,8 @@ export default function Home() {
         <Faq />
         <AnalyzerSection />
       </main>
-      {/* Room at the bottom on phones so the sticky bar never covers the footer. */}
-      <div className="bg-deep max-md:pb-[calc(3.75rem+env(safe-area-inset-bottom))]">
-        <Footer />
-      </div>
+      {/* The phone sticky bar is hidden from the audit form down, so the footer needs no extra room. */}
+      <Footer />
       <StickyCta />
     </>
   );

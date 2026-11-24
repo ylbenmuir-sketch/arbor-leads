@@ -44,7 +44,45 @@ export function CaseStudy() {
   const g = caseStudy.giant;
   return (
     <section id="case" className="grain relative overflow-hidden border-y-2 border-line bg-deep">
-      <div className="relative mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-28">
+      {/* PHONES ONLY: one idea, one number. */}
+      <Reveal className="relative px-5 py-20 md:hidden">
+        <Item as="p" className="eyebrow mb-5">
+          {caseStudy.phone.eyebrow}
+        </Item>
+        <Item as="h2" className="display-lg !text-[2.5rem]">
+          {caseStudy.phone.headline}
+        </Item>
+        <Item className="relative mt-12">
+          <div
+            className="pointer-events-none absolute -left-16 top-1/2 h-[26rem] w-[150vw] -translate-y-1/2"
+            style={{ background: "radial-gradient(closest-side, rgba(141,184,154,0.12), rgba(141,184,154,0))" }}
+            aria-hidden="true"
+          />
+          <Counter
+            to={g.value}
+            prefix={g.prefix}
+            suffix={g.suffix}
+            decimals={g.decimals}
+            className="relative -ml-1 block whitespace-nowrap text-[28vw] font-extrabold leading-[0.8] tracking-[-0.07em] text-sage"
+          />
+          <p className="relative mt-6 text-[2rem] font-extrabold leading-none tracking-[-0.03em] text-cream">{caseStudy.phone.line}</p>
+          <p className="relative mt-3 text-2xl font-extrabold text-cream" style={{ fontVariantNumeric: "tabular-nums" }}>
+            <BeforeAfterLine text={g.detail} />
+          </p>
+        </Item>
+        <Item as="p" className="mt-12 border-l-[3px] border-sage pl-4 text-lg font-bold leading-snug text-cream">
+          {caseStudy.phone.note}
+        </Item>
+        <Item as="p" className="mt-5 text-base leading-snug text-muted">
+          {caseStudy.phone.how}
+        </Item>
+        <Item as="p" className="mt-5 text-[0.6875rem] leading-relaxed text-muted">
+          {caseStudy.finePrint}
+        </Item>
+      </Reveal>
+
+      {/* TABLET AND UP: the full case file. */}
+      <div className="relative mx-auto max-w-7xl px-5 py-20 max-md:hidden md:px-8 md:py-28">
         {/* case-file header */}
         <Reveal className="max-w-4xl">
           <Item as="p" className="mb-4 md:mb-5">
@@ -184,8 +222,8 @@ const badge = "inline-block rounded-sm border-2 border-sage px-2 py-1 text-xs fo
 
 export function Pillars() {
   return (
-    <section>
-      <div className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-28">
+    <section className="max-md:hidden">
+      <div className="mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">
         <SectionHead eyebrow={pillars.eyebrow} title={pillars.headline} />
 
         <Reveal as="ol" className="mt-8 grid gap-3 md:mt-16 lg:grid-cols-3 lg:gap-0">
@@ -238,8 +276,8 @@ export function Comparison() {
   // Phones show two columns (us vs. agency); the do-it-yourself column joins from 640px up.
   const cols = "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-[1fr_1.25fr_1fr_1fr]";
   return (
-    <section className="on-cream bg-cream text-bg">
-      <div className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-28">
+    <section className="on-cream bg-cream text-bg max-md:hidden">
+      <div className="mx-auto max-w-6xl px-5 py-20 md:px-8 md:py-28">
         <SectionHead title={comparison.headline} center size="md" />
         <Reveal className="mt-8 md:mt-14">
           <Item as="p" className="mb-3 rounded-lg bg-forest px-5 py-4 text-center text-lg font-extrabold leading-snug tracking-[-0.02em] text-cream md:mb-4 md:px-8 md:py-6 md:text-2xl">
@@ -297,8 +335,8 @@ export function Comparison() {
    The two promises as stamped certificates, then the "you're never trapped" ownership row. */
 export function Guarantee() {
   return (
-    <section className="grain bg-forest text-cream">
-      <div className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-28">
+    <section className="grain bg-forest text-cream max-md:hidden">
+      <div className="mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">
         <Reveal className="mx-auto max-w-4xl text-center">
           <Item as="p" className="eyebrow mb-4 !text-cream md:mb-5">
             {guarantee.eyebrow}
@@ -358,10 +396,33 @@ export function About() {
   const quotes = about.testimonials.filter((t) => t.quote && t.name);
 
   return (
-    <section className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-28">
-      <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+    <section className="max-md:bg-forest">
+      <div className="mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">
+      {/* PHONES ONLY: the short version. It also carries the agency numbers, since the table is hidden there. */}
+      <Reveal className="md:hidden">
+        <Item as="p" className="eyebrow mb-5 !text-cream">
+          {about.eyebrow}
+        </Item>
+        <Item as="h2" className="display-lg">
+          {about.title}
+        </Item>
+        <Item as="p" className="mt-7 text-lg leading-snug text-cream">
+          {about.phone.body}
+        </Item>
+        <Item as="p" className="mt-5 text-xl font-extrabold leading-[1.2] tracking-[-0.02em] text-cream">
+          {about.phone.close}
+        </Item>
+        <Item as="p" className="mt-6 text-base font-extrabold uppercase tracking-[0.1em] text-cream">
+          {about.signature}
+        </Item>
+        <Item as="p" className="mt-7 text-xs leading-relaxed text-cream/75">
+          {about.phone.source}
+        </Item>
+      </Reveal>
+
+      <div className="grid gap-8 max-md:hidden lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
         <Reveal>
-          <Item as="p" className="eyebrow mb-4 md:mb-5">
+          <Item as="p" className="eyebrow mb-5">
             {about.eyebrow}
           </Item>
           <Item as="h2" className="display-lg">
@@ -375,9 +436,9 @@ export function About() {
             </Item>
           )}
         </Reveal>
-        <Reveal className="border-l-4 border-sage pl-5 md:pl-8">
+        <Reveal className="border-l-4 border-sage pl-8">
           {about.copy.map((para, i) => (
-            <Item as="p" key={para} className={`text-lg leading-snug text-cream md:text-xl md:leading-relaxed ${i > 0 ? "mt-4 md:mt-5" : ""}`}>
+            <Item as="p" key={para} className={`text-xl leading-relaxed text-cream ${i > 0 ? "mt-5" : ""}`}>
               {para}
             </Item>
           ))}
@@ -387,10 +448,10 @@ export function About() {
         </Reveal>
       </div>
 
-      {/* pull quote: one big statement on its own */}
-      <Reveal className="mt-12 border-y-2 border-cream py-8 md:mt-20 md:py-14">
+      {/* pull quote: one big statement on its own (desktop only; the phone story already says it) */}
+      <Reveal className="mt-20 border-y-2 border-cream py-14 max-md:hidden">
         <Item>
-          <blockquote className="display-xl mx-auto max-w-6xl md:text-center">&ldquo;{about.pullQuote}&rdquo;</blockquote>
+          <blockquote className="display-xl mx-auto max-w-6xl text-center">&ldquo;{about.pullQuote}&rdquo;</blockquote>
         </Item>
       </Reveal>
 
@@ -422,6 +483,7 @@ export function About() {
           ))}
         </Reveal>
       )}
+      </div>
     </section>
   );
 }
@@ -434,14 +496,15 @@ export function AnalyzerSection() {
         <Item as="p" className="eyebrow mb-4 md:mb-5">
           {analyzer.eyebrow}
         </Item>
-        <Item as="p" className="mx-auto mb-5 max-w-xl text-lg font-extrabold leading-snug tracking-[-0.02em] text-cream md:mb-7 md:text-2xl">
+        <Item as="p" className="mx-auto mb-7 max-w-xl text-2xl font-extrabold leading-snug tracking-[-0.02em] text-cream max-md:hidden">
           {analyzer.vibe}
         </Item>
         <Item as="h2" className="display-xl">
           {analyzer.headline}
         </Item>
         <Item as="p" className="mx-auto mt-5 max-w-xl text-lg leading-snug text-muted md:mt-6 md:text-2xl">
-          {analyzer.sub}
+          <span className="md:hidden">{analyzer.subShort}</span>
+          <span className="max-md:hidden">{analyzer.sub}</span>
         </Item>
         <Item className="mx-auto mt-8 max-w-3xl md:mt-10">
           <Analyzer />
@@ -455,18 +518,18 @@ export function AnalyzerSection() {
 export function Footer() {
   return (
     <footer className="grain border-t-2 border-line bg-deep">
-      <div className="mx-auto max-w-7xl px-5 py-14 md:px-8">
-        <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
+      <div className="mx-auto max-w-7xl px-5 py-9 md:px-8 md:py-14">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-10">
           <div className="max-w-sm">
             <Link href="/" className="inline-block rounded-sm">
               <Logo className="h-9 w-auto" />
             </Link>
-            <p className="mt-5 text-base text-muted">{footer.line}</p>
-            <a href={`mailto:${site.email}`} className="mt-3 inline-flex min-h-12 items-center font-bold text-cream underline-offset-4 hover:underline">
+            <p className="mt-4 text-base text-muted md:mt-5">{footer.line}</p>
+            <a href={`mailto:${site.email}`} className="mt-1 inline-flex min-h-12 items-center font-bold text-cream underline-offset-4 hover:underline md:mt-3">
               {site.email}
             </a>
           </div>
-          <nav aria-label="Footer" className="flex flex-col gap-1 md:items-end">
+          <nav aria-label="Footer" className="flex flex-wrap gap-x-6 md:flex-col md:items-end md:gap-1">
             {footer.links.map((l) => (
               <Link
                 key={l.href}
@@ -478,7 +541,7 @@ export function Footer() {
             ))}
           </nav>
         </div>
-        <div className="mt-10 flex flex-col gap-3 border-t-2 border-line pt-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-4 flex items-center justify-between gap-3 border-t-2 border-line pt-3 text-sm text-muted md:mt-10 md:pt-6">
           <p>{footer.copyright}</p>
           <nav aria-label="Legal" className="flex gap-5">
             {footer.legalLinks.map((l) => (

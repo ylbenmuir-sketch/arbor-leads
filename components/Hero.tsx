@@ -165,7 +165,7 @@ export function Hero() {
               <span className="max-md:hidden">{hero.micro}</span>
             </p>
 
-            {/* phones: a quiet proof card (links to the case section), then one muted row of trust points */}
+            {/* phones: a quiet proof card that links to the case section */}
             <a
               href={hero.proofHref}
               className="mt-7 flex items-center gap-4 rounded-md border border-l-[3px] border-line border-l-sage bg-deep px-4 py-3.5 md:hidden"
@@ -183,8 +183,6 @@ export function Hero() {
               </span>
               <ArrowRight className="ml-auto h-5 w-5 shrink-0 text-sage" strokeWidth={2.5} aria-hidden="true" />
             </a>
-            <p className="mt-5 text-center text-[0.8125rem] font-semibold text-muted md:hidden">{hero.chipsShort.join("  ·  ")}</p>
-
             {/* desktop: proof strip and chips sit under the button */}
             <ProofCard text={hero.proofText} className="mt-8 max-md:!hidden" />
             <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-base font-bold text-cream max-md:hidden">
@@ -218,7 +216,7 @@ export function Marquee() {
     </ul>
   );
   return (
-    <div className="grain overflow-hidden bg-forest py-3.5 text-cream md:py-5">
+    <div className="grain overflow-hidden bg-forest py-5 text-cream max-md:hidden">
       <div className="marquee-track">
         {row(false)}
         {row(true)}
@@ -231,7 +229,7 @@ export function Marquee() {
 export function Pain() {
   return (
     <section className="on-cream bg-cream text-bg">
-      <div className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-32">
+      <div className="mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-32">
         <Reveal>
           <Item as="h2" className="display-xl max-w-6xl">
             {pain.headline}

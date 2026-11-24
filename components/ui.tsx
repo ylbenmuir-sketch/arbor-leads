@@ -74,7 +74,7 @@ export function SectionHead({
 }: {
   eyebrow?: string;
   title: string;
-  sub?: string;
+  sub?: React.ReactNode;
   center?: boolean;
   /** xl = statement, lg = normal section, md = utility section. */
   size?: "xl" | "lg" | "md";

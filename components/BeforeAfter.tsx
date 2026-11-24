@@ -65,9 +65,19 @@ export default function BeforeAfter() {
   }
 
   return (
-    <section className="grain relative overflow-x-clip border-y-2 border-line bg-deep py-16 md:py-28">
+    <section className="grain relative overflow-x-clip border-y-2 border-line bg-deep py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
-        <SectionHead eyebrow={copy.eyebrow} title={copy.headline} sub={copy.sub} center />
+        <SectionHead
+          eyebrow={copy.eyebrow}
+          title={copy.headline}
+          sub={
+            <>
+              <span className="md:hidden">{copy.subShort}</span>
+              <span className="max-md:hidden">{copy.sub}</span>
+            </>
+          }
+          center
+        />
 
         <Reveal className="mt-8 md:mt-14">
           <Item>
@@ -159,6 +169,18 @@ export default function BeforeAfter() {
           </Item>
           <Item as="p" className="mt-5 text-center text-sm text-muted md:mt-8">
             {copy.caption}
+          </Item>
+        </Reveal>
+
+        {/* PHONES ONLY: what you get, in three lines. Desktop tells this in its own sections. */}
+        <Reveal className="mt-14 md:hidden">
+          {copy.phoneLines.map((l) => (
+            <Item as="p" key={l} className="border-t-2 border-line py-5 text-[1.6rem] font-extrabold leading-[1.1] tracking-[-0.03em] text-cream">
+              {l}
+            </Item>
+          ))}
+          <Item as="p" className="border-t-2 border-line pt-5 text-base leading-snug text-muted">
+            {copy.phoneNote}
           </Item>
         </Reveal>
       </div>

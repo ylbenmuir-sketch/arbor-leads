@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { m } from "framer-motion";
 import { ArrowRight, Check, ShieldCheck } from "lucide-react";
-import { guarantee, pricing } from "@/content";
+import { guarantee, pricing, roi } from "@/content";
 import { goToAnalyzer } from "./Providers";
 import { CtaButton, Item, Reveal, SectionHead, ease } from "./ui";
 
@@ -87,8 +87,19 @@ export default function Pricing() {
 
   return (
     <section id="pricing" className="grain overflow-x-clip bg-deep">
-      <div className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-28">
-        <SectionHead eyebrow={pricing.eyebrow} title={pricing.headline} sub={pricing.sub} center />
+      <div className="mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">
+        <SectionHead
+          eyebrow={pricing.eyebrow}
+          title={pricing.headline}
+          sub={
+            <>
+              {/* phones: the calculator is hidden, so its payoff line lives here */}
+              <span className="md:hidden">{roi.note}</span>
+              <span className="max-md:hidden">{pricing.sub}</span>
+            </>
+          }
+          center
+        />
 
         <Reveal className="mt-6 md:mt-14">
           {/* year-end sale tag + countdown */}
@@ -252,6 +263,16 @@ export default function Pricing() {
                 ))}
               </div>
             </div>
+          </Item>
+
+          {/* PHONES ONLY: the guarantee section is hidden there, so ownership and the honest note sit here once. */}
+          <Item className="mt-10 md:hidden">
+            {guarantee.ownershipShort.map((l, i) => (
+              <p key={l} className={i === 0 ? "text-[1.6rem] font-extrabold leading-[1.1] tracking-[-0.03em] text-cream" : "mt-3 text-lg leading-snug text-cream"}>
+                {l}
+              </p>
+            ))}
+            <p className="mt-7 text-sm leading-relaxed text-muted">{guarantee.note}</p>
           </Item>
         </Reveal>
       </div>

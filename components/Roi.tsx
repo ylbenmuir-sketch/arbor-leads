@@ -62,8 +62,8 @@ export function RoiCalculator() {
   const usd = (n: number) => "$" + n.toLocaleString("en-US");
 
   return (
-    <section className="on-cream border-t-2 border-bg/15 bg-[var(--cream-deep)] text-bg">
-      <div className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-28">
+    <section className="on-cream border-t-2 border-bg/15 bg-[var(--cream-deep)] text-bg max-md:hidden">
+      <div className="mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">
         <SectionHead eyebrow={roi.eyebrow} title={roi.headline} />
         <Reveal className="mt-8 grid gap-4 md:mt-14 md:gap-5 lg:grid-cols-2">
           <Item className="flex flex-col justify-center gap-6 rounded-lg border-2 border-bg bg-cream p-5 md:gap-10 md:p-10">
@@ -110,8 +110,8 @@ const offerIcons = {
 /* "What you get": a plain ruled list (no cards), a big closing line, and the 3-step strip. */
 export function OfferStack() {
   return (
-    <section className="on-cream bg-cream text-bg">
-      <div className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-28">
+    <section className="on-cream bg-cream text-bg max-md:hidden">
+      <div className="mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">
         <SectionHead eyebrow={offer.eyebrow} title={offer.headline} />
 
         <Reveal as="ul" className="mt-8 grid border-t-[3px] border-bg md:mt-14 md:grid-cols-2 md:gap-x-14">

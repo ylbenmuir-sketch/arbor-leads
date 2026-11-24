@@ -7,8 +7,8 @@ import { CtaButton } from "./ui";
 
 /**
  * Phone-only bar pinned to the bottom of the screen.
- * Shows after the hero scrolls away, and gets out of the way once the
- * free audit form is on screen so it never covers the fields.
+ * One full-width button. Shows after the hero scrolls away, and gets out of the way
+ * over pricing and the free audit form, so two orange buttons are never stacked.
  */
 export default function StickyCta() {
   const [pastHero, setPastHero] = useState(false);
@@ -33,7 +33,8 @@ export default function StickyCta() {
     };
   }, []);
 
-  const show = pastHero && !atForm;
+  // Hidden over pricing and the form: both have their own orange button.
+  const show = pastHero && !atForm && !atPricing;
 
   return (
     <div
@@ -42,22 +43,16 @@ export default function StickyCta() {
         show ? "translate-y-0" : "translate-y-full"
       }`}
     >
-      <div className="flex gap-2">
-        <CtaButton
-          className="btn-bar flex-[2.2] whitespace-nowrap"
-          label={
-            <>
-              {site.ctaShort}
-              <ArrowRight className="h-5 w-5 shrink-0" strokeWidth={2.5} aria-hidden="true" />
-            </>
-          }
-        />
-        {!atPricing && (
-          <a href="#pricing" className="btn btn-outline btn-bar flex-1">
-            {site.pricingShort}
-          </a>
-        )}
-      </div>
+      <CtaButton
+        full
+        className="btn-bar whitespace-nowrap"
+        label={
+          <>
+            {site.ctaShort}
+            <ArrowRight className="h-5 w-5 shrink-0" strokeWidth={2.5} aria-hidden="true" />
+          </>
+        }
+      />
     </div>
   );
 }

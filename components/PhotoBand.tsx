@@ -31,7 +31,7 @@ export default function PhotoBand() {
             </span>
           ))}
         </Item>
-        <Item className="mt-8 md:mt-10">
+        <Item className="mt-10 max-md:hidden">
           <CtaButton size="lg" arrow />
         </Item>
       </Reveal>

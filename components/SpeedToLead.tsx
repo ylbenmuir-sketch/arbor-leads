@@ -57,7 +57,7 @@ export default function SpeedToLead() {
   const [first, reply, link] = copy.messages;
 
   return (
-    <section className="relative overflow-hidden py-16 md:py-28">
+    <section className="relative overflow-hidden py-20 max-md:hidden md:py-28">
       <div className="mx-auto grid max-w-7xl items-center gap-7 px-5 md:px-8 lg:grid-cols-[1.15fr_1fr] lg:gap-10">
         <Reveal>
           <Item as="p" className="eyebrow mb-4 md:mb-5">

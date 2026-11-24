@@ -69,7 +69,6 @@ export const hero = {
   /** The phone proof card: small label, then the number with this line. */
   proofEyebrow: "Recent project",
   proofTextShort: "Google clicks in 30 days",
-  chipsShort: ["Live in 7 days", "Google Maps", "$0 down"],
   /** The number itself comes from `caseStudy.giant`. */
   proofText: "Google clicks in 30 days, our most recent website build",
   proofHref: "#case",
@@ -94,6 +93,8 @@ export const analyzer = {
   vibe: "Next storm, your phone's going to ring. Make sure it's yours.",
   headline: "See who's beating you on Google, and how to pass them.",
   sub: "Free. 60 seconds. We'll email your report and show you exactly what we'd fix.",
+  /** Phone version of the line above. */
+  subShort: "Free. 60 seconds. We'll email your report.",
   fields: {
     business: "Business name",
     website: "Website URL",
@@ -170,6 +171,18 @@ export const beforeAfter = {
   eyebrow: "Before / After",
   headline: "Your truck looks like a pro. Does your website?",
   sub: "Same company. Left is what most tree sites look like. Right is what we build. Drag it.",
+  /** Phone version of the line above. */
+  subShort: "Same company. Left is what most tree sites look like. Right is what we build.",
+  /**
+   * PHONES ONLY: three short lines under the slider. On phones these replace the
+   * "How we grow you", "What you get" and missed-call sections, which stay on desktop.
+   */
+  phoneLines: [
+    "A website built to get the call. Live in 7 days.",
+    "Google and Maps set up so your town can find you.",
+    "You stay on the saw. We handle the rest.",
+  ],
+  phoneNote: "On Get Booked and up, every missed call is texted back in 60 seconds.",
   before: { tag: "Before", text: "what most tree sites look like" },
   after: { tag: "After", text: "what we build" },
   caption: "Ridgeline is a made-up company, and its review is a sample. Shown as an example of our work.",
@@ -207,6 +220,14 @@ export const caseStudy = {
     { prefix: "+", value: 70, decimals: 0, suffix: "%", text: "Visitors from Google per day", detail: "16 → 28" },
     { prefix: "", value: 98, decimals: 0, suffix: "–100", text: "Mobile speed score", detail: "Google Lighthouse" },
   ],
+  /** PHONES ONLY: the case section is cut down to one idea and one number. */
+  phone: {
+    eyebrow: "Recent project · 30 days",
+    headline: "One recent project. Here's what changed in 30 days.",
+    line: "more Google clicks",
+    note: "Past results from this project, not a promise.",
+    how: "We rebuilt the structure, pages, speed and Google setup, not just the look.",
+  },
   /** Tiny label at the bottom of each stat card. */
   cardLabel: "This project",
   changesLabel: "What we changed",
@@ -446,6 +467,12 @@ export const guarantee = {
   ],
   stamp: "Arbor Leads guarantee",
   note: "We won't promise you a magic number of calls. Anyone who does is guessing. We promise the work gets done, fast, and you see the numbers every month.",
+  /** PHONES ONLY: the ownership promise as short lines under the plans. */
+  ownershipShort: [
+    "You're never trapped.",
+    "Your domain, Google profile and reviews are always yours.",
+    "Your site is yours after 6 months, or day one with the $495 setup.",
+  ],
   ownership: {
     lead: "And you're never trapped.",
     body: "Your domain, Google profile and reviews are always yours. Your site is yours after 6 months, or day one with the $495 setup.",
@@ -462,6 +489,12 @@ export const about = {
     "So I built what I wished I could have bought: a website and Google setup that actually gets found, at a price that makes sense for a tree company, without trapping you in a year-long contract.",
   ],
   signature: "— Ben Muir, Founder",
+  /** PHONES ONLY: the same story, shorter. The comparison table is hidden on phones, so the source line sits here. */
+  phone: {
+    body: "I owned a tree service, and I know how tight the margins are. I hired multiple tree marketing companies, and most produced nothing. The one that did cost $4,000+ for the site, up to $3,450 a month, and a 12-month contract.",
+    close: "So I built what I wished I could have bought, starting at $0 down and $149 a month, with no year-long lock-in.",
+    source: "Agency figures based on what our founder paid tree-service marketing companies.",
+  },
   /** Big statement under the story. */
   pullQuote: "Nobody produced results. The one that did wanted 12 months of my money up front.",
   /**
