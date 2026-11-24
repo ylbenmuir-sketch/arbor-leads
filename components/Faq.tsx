@@ -8,14 +8,14 @@ import { Item, Reveal, SectionHead, ease } from "./ui";
 
 /* Light section: cream background, dark text, forest accents. */
 export default function Faq() {
-  const [open, setOpen] = useState<number | null>(0);
+  const [open, setOpen] = useState<number | null>(null);
   const uid = useId();
 
   return (
     <section id="faq" className="on-cream bg-cream text-bg">
-      <div className="mx-auto max-w-4xl px-5 py-24 md:px-8 md:py-36">
-        <SectionHead title={faq.headline} />
-        <Reveal className="mt-10 border-t-2 border-bg md:mt-14">
+      <div className="mx-auto max-w-4xl px-5 py-16 md:px-8 md:py-28">
+        <SectionHead title={faq.headline} size="md" />
+        <Reveal className="mt-7 border-t-2 border-bg md:mt-12">
           {faq.items.map((f, i) => {
             const isOpen = open === i;
             return (
@@ -27,7 +27,7 @@ export default function Faq() {
                     aria-expanded={isOpen}
                     aria-controls={`${uid}-a${i}`}
                     onClick={() => setOpen(isOpen ? null : i)}
-                    className="flex w-full cursor-pointer items-center justify-between gap-6 py-6 text-left text-xl font-extrabold tracking-[-0.03em] md:py-7 md:text-2xl"
+                    className="flex w-full cursor-pointer items-center justify-between gap-5 py-4 text-left text-lg font-extrabold leading-tight tracking-[-0.03em] md:py-6 md:text-2xl"
                   >
                     {f.q}
                     <span
@@ -52,7 +52,7 @@ export default function Faq() {
                       transition={{ duration: 0.45, ease }}
                       className="overflow-hidden"
                     >
-                      <p className="max-w-2xl pb-7 text-lg leading-relaxed text-bg/85 md:text-xl">{f.a}</p>
+                      <p className="max-w-2xl pb-6 text-base leading-relaxed text-bg/85 md:text-xl">{f.a}</p>
                     </m.div>
                   )}
                 </AnimatePresence>

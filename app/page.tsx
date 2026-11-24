@@ -1,12 +1,14 @@
 import { faq, site } from "@/content";
 import Header from "@/components/Header";
-import { Hero, Marquee, Problem } from "@/components/Hero";
+import { Hero, Marquee, Pain } from "@/components/Hero";
 import BeforeAfter from "@/components/BeforeAfter";
 import SpeedToLead from "@/components/SpeedToLead";
-import { HowItWorks, RoiCalculator } from "@/components/Roi";
+import { OfferStack, RoiCalculator } from "@/components/Roi";
+import PhotoBand from "@/components/PhotoBand";
+import StickyCta from "@/components/StickyCta";
 import Pricing from "@/components/Pricing";
 import Faq from "@/components/Faq";
-import { About, AnalyzerSection, CaseStudy, Comparison, Footer, Guarantee, Ownership } from "@/components/Sections";
+import { About, AnalyzerSection, CaseStudy, Comparison, Footer, Guarantee } from "@/components/Sections";
 
 export default function Home() {
   const jsonLd = [
@@ -36,21 +38,25 @@ export default function Home() {
       <main id="main">
         <Hero />
         <Marquee />
-        <Problem />
+        <Pain />
+        <SpeedToLead />
         <BeforeAfter />
         <CaseStudy />
-        <SpeedToLead />
+        <PhotoBand />
+        <OfferStack />
         <RoiCalculator />
-        <HowItWorks />
         <Pricing />
-        <Comparison />
         <Guarantee />
-        <Ownership />
+        <Comparison />
         <About />
         <Faq />
         <AnalyzerSection />
       </main>
-      <Footer />
+      {/* Room at the bottom on phones so the sticky bar never covers the footer. */}
+      <div className="bg-deep max-md:pb-[calc(3.75rem+env(safe-area-inset-bottom))]">
+        <Footer />
+      </div>
+      <StickyCta />
     </>
   );
 }

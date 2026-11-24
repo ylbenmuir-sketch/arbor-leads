@@ -11,11 +11,11 @@ export const ease = [0.22, 0.61, 0.36, 1] as const;
 
 const container: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.11, delayChildren: 0.05 } },
+  show: { transition: { staggerChildren: 0.06, delayChildren: 0 } },
 };
 const item: Variants = {
-  hidden: { opacity: 0, y: 22 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.85, ease } },
+  hidden: { opacity: 0, y: 12 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease } },
 };
 
 /** Fades and rises its <Item> children, staggered, the first time it scrolls into view. */
@@ -38,7 +38,7 @@ export function Reveal({
       variants={container}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, margin: "0px 0px -12% 0px" }}
+      viewport={{ once: true, margin: "0px 0px -8% 0px" }}
     >
       {children}
     </Tag>
@@ -70,24 +70,27 @@ export function SectionHead({
   title,
   sub,
   center = false,
+  size = "lg",
 }: {
   eyebrow?: string;
   title: string;
   sub?: string;
   center?: boolean;
+  /** xl = statement, lg = normal section, md = utility section. */
+  size?: "xl" | "lg" | "md";
 }) {
   return (
     <Reveal className={center ? "mx-auto max-w-4xl text-center" : "max-w-4xl"}>
       {eyebrow && (
-        <Item as="p" className="eyebrow mb-5">
+        <Item as="p" className="eyebrow mb-4 md:mb-5">
           {eyebrow}
         </Item>
       )}
-      <Item as="h2" className="display text-[clamp(2.25rem,6vw,4.5rem)]">
+      <Item as="h2" className={`display-${size}`}>
         {title}
       </Item>
       {sub && (
-        <Item as="p" className="mt-5 text-lg opacity-80 md:text-xl">
+        <Item as="p" className="mt-4 text-lg leading-snug opacity-80 md:mt-5 md:text-xl">
           {sub}
         </Item>
       )}
@@ -169,7 +172,8 @@ export function SpringNumber({ value, prefix = "" }: { value: number; prefix?: s
 }
 
 /**
- * The call to action. Scrolls to the free analyzer.
+ * The call to action. Scrolls to the free audit form.
+ * Pass `plan` to pre-select a pricing plan in the form.
  * `blaze` (orange) is the main CTA; `forest` is the quieter version for repeated spots.
  */
 export function CtaButton({
@@ -178,6 +182,7 @@ export function CtaButton({
   variant = "blaze",
   label = site.cta,
   arrow = false,
+  plan,
   className = "",
 }: {
   size?: "sm" | "md" | "lg";
@@ -185,6 +190,7 @@ export function CtaButton({
   variant?: "blaze" | "forest";
   label?: React.ReactNode;
   arrow?: boolean;
+  plan?: string;
   className?: string;
 }) {
   const sizes = { sm: "btn-sm", md: "", lg: "btn-lg" };
@@ -194,20 +200,12 @@ export function CtaButton({
       onClick={(e) => {
         if (!document.getElementById("analyzer")) return;
         e.preventDefault();
-        goToAnalyzer();
+        goToAnalyzer(plan);
       }}
       className={`btn btn-${variant} ${sizes[size]} ${full ? "w-full" : ""} ${className}`}
     >
       {label}
       {arrow && <ArrowRight className="h-5 w-5 shrink-0" strokeWidth={2.5} aria-hidden="true" />}
     </a>
-  );
-}
-
-export function PlaceholderTag({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="inline-block rounded-sm border border-dashed border-muted px-1.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wider text-cream">
-      {children}
-    </span>
   );
 }

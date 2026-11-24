@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useState } from "react";
 import { AnimatePresence, m, useReducedMotion } from "framer-motion";
-import { Check, CircleCheck, Flag } from "lucide-react";
+import { Check, CircleCheck, Flag, X } from "lucide-react";
 import { analyzer as copy } from "@/content";
 import { Counter, ease } from "./ui";
 
@@ -38,6 +38,17 @@ export default function Analyzer() {
   const [url, setUrl] = useState("");
   const [step, setStep] = useState(0);
   const [score, setScore] = useState(0);
+  // Set when a "Start with <plan>" pricing button sends someone here.
+  const [plan, setPlan] = useState("");
+
+  useEffect(() => {
+    const onPlan = (e: Event) => {
+      setPlan((e as CustomEvent<string>).detail ?? "");
+      setStage((s) => (s === "done" ? "idle" : s));
+    };
+    window.addEventListener("arbor:plan", onPlan);
+    return () => window.removeEventListener("arbor:plan", onPlan);
+  }, []);
 
   // Scanning sequence: tick through the steps, then show the score.
   useEffect(() => {
@@ -61,6 +72,7 @@ export default function Analyzer() {
       website,
       email: String(data.get("email") ?? ""),
       phone: String(data.get("phone") ?? ""),
+      plan: String(data.get("plan") ?? ""),
       mockScore: mock,
       submittedAt: new Date().toISOString(),
     };
@@ -87,14 +99,30 @@ export default function Analyzer() {
   ];
 
   return (
-    <div className="rounded-lg border-2 border-line bg-raised p-5 text-left sm:p-8" aria-live="polite">
+    <div data-audit-form className="rounded-lg border-2 border-line bg-raised p-5 text-left sm:p-8" aria-live="polite">
       <AnimatePresence mode="wait" initial={false}>
         {stage === "idle" && (
           <m.form key="idle" {...swap} onSubmit={submit}>
+            <input type="hidden" name="plan" value={plan} />
+            {plan && (
+              <p className="mb-4 flex items-center justify-between gap-3 rounded-md border-2 border-line bg-bg py-1 pl-4 pr-1 text-base text-muted">
+                <span>
+                  {copy.planLabel} <span className="font-extrabold text-cream">{plan}</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setPlan("")}
+                  aria-label={`${copy.planClear} ${plan}`}
+                  className="flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-md text-muted hover:text-cream"
+                >
+                  <X className="h-5 w-5" strokeWidth={2.5} aria-hidden="true" />
+                </button>
+              </p>
+            )}
             <div className="grid gap-4 sm:grid-cols-2">
               {fields.map((f) => (
                 <div key={f.name}>
-                  <label htmlFor={`${uid}-${f.name}`} className="mb-2 block text-xs font-bold uppercase tracking-[0.16em] text-sage">
+                  <label htmlFor={`${uid}-${f.name}`} className="mb-2 block text-xs font-bold uppercase tracking-[0.16em] text-cream">
                     {f.label}
                   </label>
                   <input
@@ -212,7 +240,7 @@ export default function Analyzer() {
             <button
               type="button"
               onClick={() => setStage("idle")}
-              className="mt-6 inline-flex min-h-11 cursor-pointer items-center text-sm font-bold text-muted underline underline-offset-4 hover:text-cream"
+              className="mt-6 inline-flex min-h-12 cursor-pointer items-center text-sm font-bold text-muted underline underline-offset-4 hover:text-cream"
             >
               {copy.startOver}
             </button>

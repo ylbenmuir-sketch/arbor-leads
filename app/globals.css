@@ -2,15 +2,16 @@
 
 /* ── Brand palette. Change a color here and the whole site follows. ── */
 :root {
-  --bg: #13201a; /* deep forest, main page background */
-  --bg-raised: #1b2b22; /* cards/panels on dark */
-  --bg-deep: #0d1712; /* footer, alternating sections */
-  --line: #2a3d31; /* borders, dividers */
-  --sage: #9bbf9b; /* accent: icons, highlights, the tree */
-  --forest: #2f5a3f; /* secondary buttons, badges */
-  --cream: #f4f1ea; /* headings and main text on dark */
-  --muted: #b9c2b6; /* body text on dark */
-  --blaze: #e07a2e; /* ONLY main call-to-action buttons + the sale tag */
+  --bg: #0e2418; /* deep forest, main page background */
+  --bg-raised: #14301f; /* cards/panels on dark */
+  --bg-deep: #091a10; /* footer, alternating sections */
+  --line: #244331; /* borders, dividers */
+  --sage: #8db89a; /* accent: icons, highlights, the tree */
+  --forest: #1f4d35; /* secondary buttons, badges */
+  --cream: #f6f4ee; /* headings and main text on dark */
+  --muted: #b7c3b8; /* body text on dark */
+  --blaze: #e07a2e; /* ONLY calls to action and sale/urgency marks */
+  --cream-deep: #e9e5d8; /* second light tone, so two cream sections in a row differ */
 
   /* Barely-there wood grain for dark sections. */
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='600'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5 0.0034' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.96 0 0 0 0 0.95 0 0 0 0 0.92 0.05 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
@@ -33,7 +34,7 @@ html {
   background: var(--bg);
   color: var(--cream);
   -webkit-text-size-adjust: 100%;
-  scroll-padding-top: 6rem;
+  scroll-padding-top: 7rem;
 }
 html:not(.lenis) {
   scroll-behavior: smooth;
@@ -81,10 +82,42 @@ html.lenis body {
   line-height: 0.95;
   text-wrap: balance;
 }
+/* Statement headlines: hero, pain band, photo band, final CTA. */
+.display-xl {
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  text-wrap: balance;
+  font-size: clamp(2.75rem, 12.5vw, 3.25rem);
+}
+/* Regular section headlines. */
+.display-lg {
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.97;
+  text-wrap: balance;
+  font-size: clamp(2.25rem, 5vw, 4.25rem);
+}
+/* Utility sections: comparison, FAQ. Deliberately quieter. */
+.display-md {
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  text-wrap: balance;
+  font-size: 2.1rem;
+}
+@media (min-width: 768px) {
+  .display-xl {
+    font-size: clamp(3.5rem, 7vw, 7.5rem);
+  }
+  .display-md {
+    font-size: 3rem;
+  }
+}
 .eyebrow {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 700;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--sage);
 }
@@ -122,14 +155,30 @@ html.lenis body {
   transform: translateY(0);
 }
 .btn-sm {
-  min-height: 2.75rem;
+  min-height: 3rem;
   padding: 0.5rem 1rem;
   font-size: 0.8125rem;
 }
+/* Phone sticky bar buttons: 48px tall inside a 56px bar. */
+.btn-bar {
+  min-height: 3rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.9375rem;
+}
+.btn-bar:hover {
+  transform: none;
+}
 .btn-lg {
   min-height: 3.75rem;
-  padding: 1rem 2rem;
-  font-size: 1.0625rem;
+  padding: 1rem 1.25rem;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+}
+@media (min-width: 480px) {
+  .btn-lg {
+    padding: 1rem 2rem;
+    font-size: 1.0625rem;
+  }
 }
 /* Main call to action — the only place blaze orange is used on buttons. */
 .btn-blaze {
@@ -147,8 +196,8 @@ html.lenis body {
   color: var(--cream);
 }
 .btn-forest:hover {
-  background: #386b4b;
-  border-color: #386b4b;
+  background: #27603f;
+  border-color: #27603f;
 }
 .btn-outline {
   background: transparent;
@@ -166,6 +215,25 @@ html.lenis body {
   vertical-align: bottom;
   padding-bottom: 0.1em;
   margin-bottom: -0.1em;
+}
+/* Orange underline under the highlighted hero words. Draws in after the words land. */
+.hl {
+  background: linear-gradient(var(--blaze), var(--blaze)) no-repeat 0 88% / 0% 0.075em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  animation: hl-draw 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 1.15s forwards;
+}
+@keyframes hl-draw {
+  to {
+    background-size: 100% 0.075em;
+  }
+}
+/* Horizontal carousels (pricing on phones). */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 .word {
   display: inline-block;
@@ -215,12 +283,12 @@ html.lenis body {
 .range::-webkit-slider-runnable-track {
   height: 8px;
   border-radius: 2px;
-  background: linear-gradient(to right, var(--forest) var(--fill, 50%), #d3d2c6 var(--fill, 50%));
+  background: linear-gradient(to right, var(--forest) var(--fill, 50%), #cfcbbd var(--fill, 50%));
 }
 .range::-moz-range-track {
   height: 8px;
   border-radius: 2px;
-  background: #d3d2c6;
+  background: #cfcbbd;
 }
 .range::-moz-range-progress {
   height: 8px;
@@ -312,6 +380,10 @@ html.lenis body {
   }
   .marquee-track {
     animation: none;
+  }
+  .hl {
+    animation: none;
+    background-size: 100% 0.075em;
   }
   *,
   *::before,

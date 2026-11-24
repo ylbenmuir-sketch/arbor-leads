@@ -1,62 +1,77 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Check, Gauge, Globe, MapPin, PhoneCall, Search, Star, UserRound } from "lucide-react";
-import { about, analyzer, caseStudy, comparison, footer, guarantee, ownership, site } from "@/content";
+import { Award, Check, Gauge, KeyRound, PhoneCall, Search } from "lucide-react";
+import { about, analyzer, caseStudy, comparison, footer, guarantee, site } from "@/content";
 import Analyzer from "./Analyzer";
 import Logo from "./Logo";
-import { Counter, Item, PlaceholderTag, Reveal, SectionHead } from "./ui";
+import { Counter, Item, Reveal, SectionHead } from "./ui";
 
 /* ───────────── Recent website case (proof) ─────────────
-   Real numbers from one client build. The client is never named. */
+   Real numbers from one client build. The client is never named.
+   One giant number, then the rest as a compact strip. */
 const changeIcons = [Search, Gauge, PhoneCall];
 
 export function CaseStudy() {
+  const g = caseStudy.giant;
   return (
-    <section className="border-b-2 border-line">
-      <div className="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-36">
+    <section id="case">
+      <div className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-28">
         <SectionHead eyebrow={caseStudy.eyebrow} title={caseStudy.headline} sub={caseStudy.sub} />
 
-        <Reveal className="mt-10 md:mt-14">
-          <Item as="p" className="text-xs font-bold uppercase tracking-[0.22em] text-muted">
-            {caseStudy.changesLabel}
-          </Item>
+        <Reveal className="mt-6 grid gap-x-10 gap-y-2 md:mt-14 lg:grid-cols-[auto_1fr] lg:items-end">
           <Item>
-            <ul className="mt-4 flex flex-wrap gap-3">
-              {caseStudy.changes.map((c, i) => {
-                const Icon = changeIcons[i % changeIcons.length];
-                return (
-                  <li key={c} className="flex items-center gap-2.5 rounded-md border-2 border-line px-4 py-2.5 text-sm font-bold md:text-base">
-                    <Icon className="h-5 w-5 shrink-0 text-sage" strokeWidth={2} aria-hidden="true" />
-                    {c}
-                  </li>
-                );
-              })}
-            </ul>
+            <Counter
+              to={g.value}
+              prefix={g.prefix}
+              suffix={g.suffix}
+              decimals={g.decimals}
+              className="block whitespace-nowrap text-[clamp(6rem,27vw,12rem)] font-extrabold leading-[0.82] tracking-[-0.06em] text-cream"
+            />
+          </Item>
+          <Item className="lg:pb-3">
+            <p className="max-w-xl text-2xl font-extrabold leading-[1.05] tracking-[-0.03em] md:text-[2.75rem]">{g.line}</p>
+            <p className="mt-2 text-base font-bold text-muted md:mt-3 md:text-xl" style={{ fontVariantNumeric: "tabular-nums" }}>
+              {g.detail}
+            </p>
           </Item>
         </Reveal>
 
-        <Reveal as="ul" className="mt-8 grid grid-cols-2 gap-3 md:gap-5 lg:grid-cols-3">
-          {caseStudy.stats.map((s) => (
-            <Item as="li" key={s.label} className="flex flex-col rounded-lg border-2 border-line bg-raised p-4 md:p-8">
+        <Reveal as="ul" className="mt-7 grid grid-cols-2 gap-x-5 gap-y-5 md:mt-16 md:gap-x-8 lg:grid-cols-4">
+          {caseStudy.strip.map((s) => (
+            <Item as="li" key={s.text} className="border-t-[3px] border-cream pt-3 md:pt-5">
               <Counter
                 to={s.value}
                 prefix={s.prefix}
                 suffix={s.suffix}
                 decimals={s.decimals}
-                className="block whitespace-nowrap text-[clamp(1.5rem,8.4vw,4.75rem)] font-extrabold leading-[0.95] tracking-[-0.045em] text-cream"
+                className="block whitespace-nowrap text-[2rem] font-extrabold leading-none tracking-[-0.04em] text-cream md:text-5xl"
               />
-              <p className="mb-4 mt-3 text-xs font-bold uppercase leading-snug tracking-[0.12em] text-sage md:mb-6 md:mt-4 md:text-sm md:tracking-[0.16em]">
-                {s.label}
-              </p>
-              <p className="mt-auto border-t-2 border-line pt-3 text-xs leading-snug text-muted md:pt-4 md:text-sm">
+              <p className="mt-2 text-sm font-semibold leading-snug text-cream md:mt-3 md:text-base">{s.text}</p>
+              <p className="mt-1 text-sm text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>
                 {s.detail}
               </p>
             </Item>
           ))}
         </Reveal>
 
-        <Reveal>
-          <Item as="p" className="mt-8 max-w-4xl text-xs leading-relaxed text-muted md:text-sm">
+        <Reveal className="mt-7 md:mt-14">
+          <Item>
+            <ul className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-bold text-cream md:text-base" aria-label={caseStudy.changesLabel}>
+              <li className="text-xs font-bold uppercase tracking-[0.18em] text-muted" aria-hidden="true">
+                {caseStudy.changesLabel}
+              </li>
+              {caseStudy.changes.map((c, i) => {
+                const Icon = changeIcons[i % changeIcons.length];
+                return (
+                  <li key={c} className="flex items-center gap-2">
+                    <Icon className="h-4 w-4 shrink-0 text-sage md:h-5 md:w-5" strokeWidth={2} aria-hidden="true" />
+                    {c}
+                  </li>
+                );
+              })}
+            </ul>
+          </Item>
+          <Item as="p" className="mt-5 max-w-4xl text-xs leading-relaxed text-muted md:text-sm">
             {caseStudy.finePrint}
           </Item>
         </Reveal>
@@ -67,21 +82,21 @@ export function CaseStudy() {
 
 /* ───────────── Comparison (light section) ─────────────
    Arbor Leads vs typical agency vs doing it yourself.
-   Built as an ARIA table on a CSS grid so the row label can sit
+   The Arbor Leads column is filled forest. Built as an ARIA table on a CSS grid so the row label can sit
    above its three cells on phones. */
 export function Comparison() {
   const { columns, rows } = comparison;
   const cols = "grid grid-cols-3 md:grid-cols-[1fr_1.25fr_1fr_1fr]";
   return (
     <section className="on-cream bg-cream text-bg">
-      <div className="mx-auto max-w-6xl px-5 py-24 md:px-8 md:py-36">
-        <SectionHead title={comparison.headline} center />
-        <Reveal className="mt-12 md:mt-16">
+      <div className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-28">
+        <SectionHead title={comparison.headline} center size="md" />
+        <Reveal className="mt-8 md:mt-14">
           <Item>
             <div role="table" aria-label={comparison.headline} className="overflow-hidden rounded-lg border-2 border-bg">
               <div role="row" className={cols}>
                 <span role="columnheader" className="hidden border-b-2 border-bg md:block" />
-                <span role="columnheader" className="border-b-2 border-bg bg-bg px-3 py-4 text-sm font-extrabold uppercase tracking-[0.08em] text-cream md:px-6 md:py-5 md:text-lg">
+                <span role="columnheader" className="border-b-2 border-bg bg-forest px-3 py-4 text-sm font-extrabold uppercase tracking-[0.08em] text-cream md:px-6 md:py-5 md:text-lg">
                   {columns.us}
                 </span>
                 <span role="columnheader" className="border-b-2 border-bg px-3 py-4 text-sm font-extrabold uppercase tracking-[0.06em] md:px-6 md:py-5 md:text-base">
@@ -101,14 +116,14 @@ export function Comparison() {
                     >
                       {r.label}
                     </span>
-                    <span role="cell" className={`flex gap-2 bg-bg px-3 py-4 text-sm font-extrabold leading-snug text-cream md:gap-3 md:px-6 md:py-5 md:text-lg ${i < rows.length - 1 ? "border-b-2 border-line" : ""}`}>
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-sage md:h-5 md:w-5" strokeWidth={3} aria-hidden="true" />
+                    <span role="cell" className={`flex gap-2 bg-forest px-3 py-3 text-sm font-extrabold leading-snug text-cream md:gap-3 md:px-6 md:py-5 md:text-lg ${i < rows.length - 1 ? "border-b-2 border-cream/20" : ""}`}>
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-cream md:h-5 md:w-5" strokeWidth={3} aria-hidden="true" />
                       {r.us}
                     </span>
-                    <span role="cell" className={`px-3 py-4 text-sm leading-snug md:px-6 md:py-5 md:text-base ${line}`}>
+                    <span role="cell" className={`px-3 py-3 text-sm leading-snug md:px-6 md:py-5 md:text-base ${line}`}>
                       {r.agency}
                     </span>
-                    <span role="cell" className={`border-l-2 border-l-bg/15 px-3 py-4 text-sm leading-snug md:px-6 md:py-5 md:text-base ${line}`}>
+                    <span role="cell" className={`border-l-2 border-l-bg/15 px-3 py-3 text-sm leading-snug md:px-6 md:py-5 md:text-base ${line}`}>
                       {r.diy}
                     </span>
                   </div>
@@ -122,74 +137,53 @@ export function Comparison() {
   );
 }
 
-/* ───────────── Guarantee: flat panel + one dark card ───────────── */
+/* ───────────── Guarantee (forest) ─────────────
+   The two promises as stamped certificates, then the "you're never trapped" ownership row. */
 export function Guarantee() {
   return (
-    <section className="px-3 pt-24 md:px-6 md:pt-36">
-      <div className="grain relative mx-auto max-w-[90rem] overflow-hidden rounded-lg border-2 border-forest bg-forest text-cream">
-        <div className="mx-auto grid max-w-7xl gap-12 px-6 py-20 md:px-10 md:py-28 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-16">
-          <Reveal>
-            <Item as="p" className="mb-5 text-xs font-bold uppercase tracking-[0.22em] text-cream">
-              {guarantee.eyebrow}
-            </Item>
-            <Item as="h2" className="display text-[clamp(2.5rem,6vw,4.75rem)]">
-              {guarantee.headline}
-            </Item>
-            <Item as="p" className="mt-7 max-w-xl border-t-2 border-cream/30 pt-6 text-lg font-medium leading-relaxed md:text-xl">
-              {guarantee.note}
-            </Item>
-          </Reveal>
-
-          <Reveal className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-            {guarantee.items.map((g, i) => (
-              <Item
-                key={g.label}
-                className={`flex flex-col rounded-lg border-2 p-6 md:p-8 ${
-                  i === 0 ? "border-cream/40 bg-transparent" : "border-deep bg-deep shadow-[0_24px_50px_-24px_rgba(0,0,0,0.7)]"
-                }`}
-              >
-                <p className={`text-xs font-bold uppercase tracking-[0.22em] ${i === 0 ? "text-cream" : "text-sage"}`}>{g.label}</p>
-                <p className="mt-5 text-2xl font-extrabold leading-[1.1] tracking-[-0.03em] md:text-[1.75rem]">{g.text}</p>
-              </Item>
-            ))}
-          </Reveal>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ───────────── Ownership ───────────── */
-const ownershipIcons = [Globe, MapPin, Star];
-
-export function Ownership() {
-  return (
-    <section className="mx-auto max-w-7xl px-5 pt-24 md:px-8 md:pt-36">
-      <div className="grid gap-10 border-y-2 border-line py-14 md:py-20 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-16">
-        <Reveal>
-          <Item as="p" className="eyebrow mb-5">
-            {ownership.eyebrow}
+    <section className="grain bg-forest text-cream">
+      <div className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-28">
+        <Reveal className="mx-auto max-w-4xl text-center">
+          <Item as="p" className="eyebrow mb-4 !text-cream md:mb-5">
+            {guarantee.eyebrow}
           </Item>
-          <Item as="h2" className="display text-[clamp(2.25rem,5vw,3.75rem)]">
-            {ownership.headline}
+          <Item as="h2" className="display-lg">
+            {guarantee.headline}
           </Item>
         </Reveal>
-        <Reveal>
-          <Item as="p" className="text-xl leading-relaxed text-cream md:text-2xl">
-            {ownership.body}
+
+        <Reveal as="ol" className="mt-8 grid gap-4 md:mt-14 md:grid-cols-2 md:gap-8">
+          {guarantee.items.map((g, i) => (
+            <Item
+              as="li"
+              key={g.text}
+              className={`relative rounded-lg border-4 border-cream bg-deep p-6 shadow-[0_24px_50px_-28px_rgba(0,0,0,0.8)] md:p-10 ${
+                i % 2 ? "md:rotate-[0.5deg]" : "md:-rotate-[0.5deg]"
+              }`}
+            >
+              {/* inner dashed rule, like a printed certificate */}
+              <span className="pointer-events-none absolute inset-1.5 rounded-[3px] border border-dashed border-cream/35" aria-hidden="true" />
+              <div className="flex items-start justify-between">
+                <span className="text-6xl font-extrabold leading-[0.8] tracking-[-0.05em] text-cream md:text-8xl" aria-hidden="true">
+                  {i + 1}
+                </span>
+                <Award className="h-12 w-12 text-sage md:h-16 md:w-16" strokeWidth={1.4} aria-hidden="true" />
+              </div>
+              <p className="mt-5 text-[1.6rem] font-extrabold leading-[1.05] tracking-[-0.035em] md:mt-8 md:text-[2.5rem]">{g.text}</p>
+              <p className="mt-4 text-xs font-bold uppercase tracking-[0.18em] text-muted md:mt-6">{guarantee.stamp}</p>
+            </Item>
+          ))}
+        </Reveal>
+
+        <Reveal className="mx-auto mt-8 max-w-4xl md:mt-14">
+          <Item as="p" className="text-center text-lg font-medium leading-snug md:text-2xl">
+            {guarantee.note}
           </Item>
-          <Item>
-            <ul className="mt-7 flex flex-wrap gap-3">
-              {ownership.points.map((p, i) => {
-                const Icon = ownershipIcons[i % ownershipIcons.length];
-                return (
-                  <li key={p} className="flex items-center gap-2.5 rounded-md border-2 border-line bg-raised px-4 py-2.5 text-base font-bold">
-                    <Icon className="h-5 w-5 text-sage" strokeWidth={2} aria-hidden="true" />
-                    {p}
-                  </li>
-                );
-              })}
-            </ul>
+          <Item className="mt-7 flex items-start gap-4 border-t-2 border-cream/30 pt-6 md:mt-10 md:gap-6 md:pt-8">
+            <KeyRound className="mt-1 h-8 w-8 shrink-0 text-cream md:h-11 md:w-11" strokeWidth={1.75} aria-hidden="true" />
+            <p className="text-lg leading-snug md:text-2xl">
+              <span className="font-extrabold">{guarantee.ownership.lead}</span> {guarantee.ownership.body}
+            </p>
           </Item>
         </Reveal>
       </div>
@@ -197,63 +191,72 @@ export function Ownership() {
   );
 }
 
-/* ───────────── About ───────────── */
+/* ───────────── About ─────────────
+   The headshot, stats and testimonials only render once real ones are added in content.ts. */
 export function About() {
+  const photo = about.headshot.src;
+  const stats = about.stats.filter((s) => !s.placeholder && s.value > 0);
+  const quotes = about.testimonials.filter((t) => t.quote && t.name);
+
   return (
-    <section className="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-36">
-      <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:gap-20">
+    <section className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-28">
+      <div className={`grid gap-8 lg:items-center lg:gap-16 ${photo ? "lg:grid-cols-[0.7fr_1.3fr]" : "lg:grid-cols-[1.15fr_0.85fr]"}`}>
+        {photo && (
+          <Reveal>
+            <Item>
+              <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-lg border-2 border-line bg-raised lg:max-w-none">
+                <Image src={photo} alt={about.headshot.alt} fill sizes="(max-width: 1024px) 384px, 480px" className="object-cover" />
+              </div>
+            </Item>
+          </Reveal>
+        )}
         <Reveal>
-          <Item>
-            <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-lg border-2 border-line bg-raised lg:max-w-none">
-              {about.headshot.src ? (
-                <Image src={about.headshot.src} alt={about.headshot.alt} fill sizes="(max-width: 1024px) 384px, 480px" className="object-cover" />
-              ) : (
-                <div className="flex h-full flex-col items-center justify-center gap-4 text-center">
-                  <UserRound className="h-24 w-24 text-line" strokeWidth={1.25} aria-hidden="true" />
-                  <PlaceholderTag>{about.headshot.placeholderText}</PlaceholderTag>
-                </div>
-              )}
-            </div>
-          </Item>
-        </Reveal>
-        <Reveal>
-          <Item as="p" className="eyebrow mb-5">
+          <Item as="p" className="eyebrow mb-4 md:mb-5">
             {about.eyebrow}
           </Item>
-          <Item as="h2" className="display text-[clamp(2.25rem,5.5vw,4.25rem)]">
+          <Item as="h2" className="display-lg">
             {about.title}
           </Item>
-          <Item as="p" className="mt-7 text-xl leading-relaxed text-muted md:text-2xl">
-            {about.copy}
-          </Item>
-          <Item as="p" className="mt-6 text-xl font-extrabold tracking-tight text-sage">
-            {about.signature}
-          </Item>
+          {photo && (
+            <>
+              <Item as="p" className="mt-6 text-xl leading-snug text-muted md:text-2xl">
+                {about.copy}
+              </Item>
+              <Item as="p" className="mt-5 text-lg font-extrabold tracking-tight text-cream">
+                {about.signature}
+              </Item>
+            </>
+          )}
         </Reveal>
+        {!photo && (
+          <Reveal className="border-l-4 border-sage pl-5 md:pl-8">
+            <Item as="p" className="text-xl leading-snug text-cream md:text-2xl">
+              {about.copy}
+            </Item>
+            <Item as="p" className="mt-5 text-base font-extrabold uppercase tracking-[0.1em] text-muted">
+              {about.signature}
+            </Item>
+          </Reveal>
+        )}
       </div>
 
-      {/* stat strip */}
-      <Reveal className="mt-16 grid divide-y-2 divide-line rounded-lg border-2 border-line sm:grid-cols-3 sm:divide-x-2 sm:divide-y-0 md:mt-24">
-        {about.stats.map((s) => (
-          <Item key={s.label} className="px-7 py-8 text-center">
-            <p className="display text-6xl md:text-7xl">
-              {s.placeholder ? <span className="text-muted/60">000</span> : <Counter to={s.value} suffix={s.suffix} />}
-            </p>
-            <p className="mt-2 text-base font-semibold text-cream">{s.label}</p>
-            {s.placeholder && (
-              <p className="mt-2">
-                <PlaceholderTag>{about.placeholderTag}</PlaceholderTag>
+      {stats.length > 0 && (
+        <Reveal className="mt-12 grid divide-y-2 divide-line rounded-lg border-2 border-line sm:grid-flow-col sm:auto-cols-fr sm:divide-x-2 sm:divide-y-0 md:mt-20">
+          {stats.map((s) => (
+            <Item key={s.label} className="px-7 py-8 text-center">
+              <p className="display text-6xl md:text-7xl">
+                <Counter to={s.value} suffix={s.suffix} />
               </p>
-            )}
-          </Item>
-        ))}
-      </Reveal>
+              <p className="mt-2 text-base font-semibold text-cream">{s.label}</p>
+            </Item>
+          ))}
+        </Reveal>
+      )}
 
-      {/* testimonial slots */}
-      <Reveal as="ul" className="mt-5 grid gap-5 md:grid-cols-3">
-        {about.testimonials.map((t, i) => (
-          <Item as="li" key={i}>
-            {t.quote ? (
+      {quotes.length > 0 && (
+        <Reveal as="ul" className="mt-5 grid gap-5 md:grid-cols-3">
+          {quotes.map((t) => (
+            <Item as="li" key={t.quote}>
               <figure className="flex h-full flex-col rounded-lg border-2 border-line bg-raised p-7">
                 <blockquote className="text-lg font-medium leading-snug">&ldquo;{t.quote}&rdquo;</blockquote>
                 <figcaption className="mt-auto pt-6 text-sm text-muted">
@@ -261,34 +264,29 @@ export function About() {
                   {t.company && <> · {t.company}</>}
                 </figcaption>
               </figure>
-            ) : (
-              <div className="flex h-full min-h-40 flex-col items-start justify-center gap-3 rounded-lg border-2 border-dashed border-line p-7">
-                <PlaceholderTag>{about.placeholderTag}</PlaceholderTag>
-                <p className="text-base text-muted">{about.testimonialPlaceholder}</p>
-              </div>
-            )}
-          </Item>
-        ))}
-      </Reveal>
+            </Item>
+          ))}
+        </Reveal>
+      )}
     </section>
   );
 }
 
-/* ───────────── Free analyzer (the section every CTA points to) ───────────── */
+/* ───────────── Free audit: the final CTA every button points to ───────────── */
 export function AnalyzerSection() {
   return (
-    <section id="analyzer" className="relative">
-      <Reveal className="relative mx-auto max-w-4xl px-5 py-24 text-center md:px-8 md:py-36">
-        <Item as="p" className="eyebrow mb-5">
+    <section id="analyzer" className="relative border-t-2 border-line">
+      <Reveal className="relative mx-auto max-w-5xl px-5 py-16 text-center md:px-8 md:py-28">
+        <Item as="p" className="eyebrow mb-4 md:mb-5">
           {analyzer.eyebrow}
         </Item>
-        <Item as="h2" className="display text-[clamp(2.5rem,7.5vw,5.5rem)]">
+        <Item as="h2" className="display-xl">
           {analyzer.headline}
         </Item>
-        <Item as="p" className="mx-auto mt-6 max-w-xl text-xl text-muted md:text-2xl">
+        <Item as="p" className="mx-auto mt-5 max-w-xl text-lg leading-snug text-muted md:mt-6 md:text-2xl">
           {analyzer.sub}
         </Item>
-        <Item className="mx-auto mt-10 max-w-3xl">
+        <Item className="mx-auto mt-8 max-w-3xl md:mt-10">
           <Analyzer />
         </Item>
       </Reveal>
@@ -307,7 +305,7 @@ export function Footer() {
               <Logo className="h-9 w-auto" />
             </Link>
             <p className="mt-5 text-base text-muted">{footer.line}</p>
-            <a href={`mailto:${site.email}`} className="mt-3 inline-flex min-h-11 items-center font-bold text-cream underline-offset-4 hover:underline">
+            <a href={`mailto:${site.email}`} className="mt-3 inline-flex min-h-12 items-center font-bold text-cream underline-offset-4 hover:underline">
               {site.email}
             </a>
           </div>
@@ -316,7 +314,7 @@ export function Footer() {
               <Link
                 key={l.href}
                 href={l.href}
-                className="inline-flex min-h-11 items-center text-sm font-extrabold uppercase tracking-[0.14em] text-cream underline-offset-4 hover:text-sage hover:underline"
+                className="inline-flex min-h-12 items-center text-sm font-extrabold uppercase tracking-[0.14em] text-cream underline-offset-4 hover:text-sage hover:underline"
               >
                 {l.label}
               </Link>
@@ -327,7 +325,7 @@ export function Footer() {
           <p>{footer.copyright}</p>
           <nav aria-label="Legal" className="flex gap-5">
             {footer.legalLinks.map((l) => (
-              <Link key={l.href} href={l.href} className="inline-flex min-h-11 items-center font-semibold underline-offset-4 hover:text-cream hover:underline">
+              <Link key={l.href} href={l.href} className="inline-flex min-h-12 items-center font-semibold underline-offset-4 hover:text-cream hover:underline">
                 {l.label}
               </Link>
             ))}

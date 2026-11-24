@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Axe, CloudLightning, Phone, Scissors, ShieldCheck, Star, TreePine } from "lucide-react";
+import { ArrowRight, Axe, Check, CircleDot, CloudLightning, Phone, Scissors, Star } from "lucide-react";
 import { mock } from "@/content";
 
 /**
@@ -116,111 +116,158 @@ export function BeforeSite() {
 }
 
 /* ───────────────────────── AFTER ─────────────────────────
-   The same company in the Arbor Leads look: forest, cream,
-   sage, and one orange tap-to-call button. */
-const serviceIcons = [Axe, Scissors, CloudLightning];
+   The same company as a premium, modern tree service homepage.
+   It has its OWN brand (charcoal, bone, hi-vis amber) on purpose:
+   it should look like a real client site, not like Arbor Leads. */
+const serviceIcons = [Axe, Scissors, CloudLightning, CircleDot];
+
+/** Simple geometric tree mark for the made-up Ridgeline brand. */
+function RidgeMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 32 36" className={className} aria-hidden="true">
+      <path d="M16 1 26 14h-5l8 11H3l8-11H6z" fill="#F5A524" />
+      <rect x="13.5" y="25" width="5" height="10" fill="#F3EFE6" />
+    </svg>
+  );
+}
+
+function Stars({ className }: { className: string }) {
+  return (
+    <span className="flex gap-0.5 text-[#F5B301]" aria-hidden="true">
+      {[0, 1, 2, 3, 4].map((n) => (
+        <Star key={n} className={`fill-current ${className}`} strokeWidth={0} />
+      ))}
+    </span>
+  );
+}
 
 export function AfterSite() {
   return (
-    <div className="mock mock-after absolute inset-0 flex flex-col overflow-hidden bg-bg text-cream">
-      {/* header */}
-      <div className="flex shrink-0 items-center justify-between border-b-2 border-line bg-deep px-5 py-3 @2xl:px-10 @2xl:py-4">
-        <div className="flex items-center gap-2.5">
-          <TreePine className="h-8 w-8 text-sage" strokeWidth={2} aria-hidden="true" />
-          <span className="text-lg uppercase leading-none tracking-[0.04em] @2xl:text-xl">
-            <span className="font-extrabold">Ridgeline</span> <span className="font-light">Tree Service</span>
+    <div className="mock mock-after absolute inset-0 flex flex-col overflow-hidden bg-[#101211] text-[#F3EFE6]">
+      {/* utility bar */}
+      <div className="flex h-6 shrink-0 items-center justify-center gap-2.5 bg-[#0a0b0a] text-[calc(var(--spacing)*2.4)] font-bold uppercase tracking-[0.14em] text-[#F5A524] @2xl:h-7 @2xl:gap-3 @2xl:text-xs">
+        {a.utility.map((u, i) => (
+          <span key={u} className={`items-center gap-2.5 whitespace-nowrap @2xl:gap-3 ${i > 1 ? "hidden @2xl:flex" : "flex"}`}>
+            {i > 0 && <span className="h-1 w-1 rounded-full bg-current opacity-60" />}
+            {u}
           </span>
+        ))}
+      </div>
+
+      {/* nav */}
+      <div className="flex shrink-0 items-center justify-between gap-4 border-b border-white/10 px-4 py-2.5 @2xl:px-10 @2xl:py-3.5">
+        <div className="flex items-center gap-2 @2xl:gap-2.5">
+          <RidgeMark className="h-8 w-7 @2xl:h-10 @2xl:w-9" />
+          <div className="leading-none">
+            <div className="text-lg font-extrabold uppercase leading-none tracking-[-0.01em] @2xl:text-2xl">{a.wordmark[0]}</div>
+            <div className="mt-1 text-[calc(var(--spacing)*2.2)] font-bold uppercase leading-none tracking-[0.34em] text-[#F5A524] @2xl:text-xs">
+              {a.wordmark[1]}
+            </div>
+          </div>
         </div>
-        <div className="hidden items-center gap-8 text-sm font-semibold uppercase tracking-[0.1em] text-muted @2xl:flex">
+        <div className="hidden items-center gap-7 whitespace-nowrap text-sm font-semibold text-white/85 @2xl:flex">
           {a.nav.map((n) => (
             <span key={n}>{n}</span>
           ))}
         </div>
-        <div className="flex items-center gap-2 rounded-md border-2 border-cream px-3 py-1.5 text-sm font-extrabold @2xl:px-4 @2xl:py-2">
-          <Phone className="h-3.5 w-3.5" strokeWidth={2.5} aria-hidden="true" />
-          <span className="hidden @2xl:inline">{mock.phone}</span>
-          <span className="@2xl:hidden">Call</span>
+        <div className="flex items-center gap-5">
+          <div className="hidden text-right leading-none @2xl:block">
+            <div className="text-[calc(var(--spacing)*2.5)] font-bold uppercase tracking-[0.18em] text-white/60">{a.phoneLabel}</div>
+            <div className="mt-1 whitespace-nowrap text-xl font-extrabold leading-none tracking-[-0.01em]">{mock.phone}</div>
+          </div>
+          <div className="whitespace-nowrap rounded-md bg-[#F5A524] px-3.5 py-2 text-sm font-extrabold uppercase tracking-[0.04em] text-[#101211] @2xl:px-5 @2xl:py-3">
+            {a.navQuote}
+          </div>
         </div>
       </div>
 
-      {/* hero */}
-      <div className="relative flex flex-col @2xl:min-h-0 @2xl:flex-1 @2xl:flex-row">
-        {/* crisp photo */}
-        <div className="relative h-32 shrink-0 @2xl:order-2 @2xl:h-auto @2xl:w-[46%]">
+      {/* hero: photo behind, dark from the left so the copy reads */}
+      <div className="relative flex min-h-0 flex-1 flex-col justify-center px-4 @2xl:px-10">
+        <div className="absolute inset-0 @2xl:left-[36%]">
           <Image
             src="/images/after-hero.jpg"
             alt=""
             fill
-            sizes="(max-width: 768px) 100vw, 560px"
-            className="object-cover object-[50%_45%] @2xl:object-[50%_100%]"
-            style={{ filter: "saturate(1.05) contrast(1.05)" }}
+            sizes="(max-width: 768px) 100vw, 760px"
+            className="object-cover object-[50%_55%] @2xl:object-[50%_62%]"
+            style={{ filter: "saturate(0.82) contrast(1.12)" }}
           />
-          {/* quote form (desktop: sits over the photo) */}
-          <div className="absolute inset-x-12 bottom-6 hidden rounded-lg border-2 border-bg bg-cream p-5 text-bg @2xl:block">
-            <div className="text-xl font-extrabold tracking-tight">{a.formTitle}</div>
-            <div className="mt-3 space-y-2">
-              {a.formFields.map((f) => (
-                <div key={f} className="rounded-md border-2 border-[#cfcdbf] bg-white px-3 py-2 text-sm text-[#5d6a60]">
-                  {f}
-                </div>
-              ))}
-            </div>
-            <div className="mt-3 rounded-md bg-forest py-3 text-center text-base font-extrabold uppercase tracking-[0.05em] text-cream">
-              {a.formButton}
-            </div>
-          </div>
         </div>
+        <div className="absolute inset-0 bg-[rgba(16,18,17,0.78)] @2xl:hidden" />
+        <div className="absolute inset-0 hidden bg-[linear-gradient(90deg,#101211_0%,#101211_36%,rgba(16,18,17,0.92)_40%,rgba(16,18,17,0.55)_54%,rgba(16,18,17,0)_68%)] @2xl:block" />
 
-        {/* copy */}
-        <div className="flex flex-col justify-center px-5 py-4 @2xl:order-1 @2xl:flex-1 @2xl:px-10 @2xl:py-0">
-          <div className="flex items-center gap-1.5 whitespace-nowrap text-[calc(var(--spacing)*2.6)] font-bold @2xl:gap-3 @2xl:text-sm">
-            <span className="flex items-center gap-1.5 rounded-md border-2 border-line bg-raised px-2.5 py-1.5 @2xl:px-3">
-              <span className="flex gap-0.5 text-sage" aria-hidden="true">
-                {[0, 1, 2, 3, 4].map((s) => (
-                  <Star key={s} className="h-3 w-3 fill-current @2xl:h-3.5 @2xl:w-3.5" strokeWidth={0} />
-                ))}
-              </span>
-              {a.rating} · {a.reviews}
-            </span>
-            <span className="flex items-center gap-1.5 rounded-md border-2 border-line bg-raised px-2.5 py-1.5 @2xl:px-3">
-              <ShieldCheck className="h-3.5 w-3.5 text-sage" strokeWidth={2.25} aria-hidden="true" /> {a.badge}
-            </span>
+        <div className="relative">
+          {/* Google review badge */}
+          <div className="inline-flex items-center gap-2 whitespace-nowrap rounded-md bg-white px-2.5 py-1.5 text-[#101211]">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full border border-[#d9d9d9] text-xs font-extrabold leading-none text-[#3b6fd4]">G</span>
+            <span className="text-sm font-extrabold leading-none">{a.rating}</span>
+            <Stars className="h-3.5 w-3.5" />
+            <span className="text-xs font-semibold leading-none text-[#444]">{a.reviews}</span>
           </div>
-          <div className="mt-4 text-5xl font-extrabold leading-[0.95] tracking-[-0.045em] @2xl:mt-5 @2xl:text-7xl">
+
+          <div className="mt-3 text-5xl font-extrabold leading-[0.93] tracking-[-0.045em] @2xl:mt-5 @2xl:text-7xl">
             {a.headline.map((line, i) => (
-              <div key={line} className={i === a.headline.length - 1 ? "text-sage" : ""}>
+              <div key={line} className={`whitespace-nowrap ${i === a.headline.length - 1 ? "text-[#F5A524]" : ""}`}>
                 {line}
               </div>
             ))}
           </div>
-          <div className="mt-3 hidden text-base text-muted @2xl:mt-4 @2xl:block @2xl:text-lg">{a.sub}</div>
-          <div className="mt-4 flex flex-col gap-2.5 @2xl:mt-6 @2xl:flex-row @2xl:items-center">
-            <div className="flex items-center justify-center gap-3 rounded-md bg-blaze px-6 py-4 text-xl font-extrabold uppercase tracking-[0.03em] text-bg @2xl:px-7">
-              <Phone className="h-6 w-6" strokeWidth={2.5} aria-hidden="true" />
-              {a.call} {mock.phone}
+          <div className="mt-2.5 text-sm leading-snug text-white/80 @2xl:mt-4 @2xl:w-[calc(var(--spacing)*118)] @2xl:text-lg">{a.sub}</div>
+
+          <div className="mt-3.5 flex flex-col gap-2 @2xl:mt-6 @2xl:flex-row @2xl:items-stretch @2xl:gap-3">
+            <div className="flex items-center justify-center gap-3 rounded-md bg-[#F5A524] px-6 py-2.5 text-[#101211]">
+              <Phone className="h-6 w-6 shrink-0" strokeWidth={2.5} aria-hidden="true" />
+              <div className="leading-none">
+                <div className="text-xl font-extrabold uppercase leading-none tracking-[0.02em]">{a.call}</div>
+                <div className="mt-1 whitespace-nowrap text-sm font-bold leading-none">{mock.phone}</div>
+              </div>
             </div>
-            {/* mobile: quote button instead of the form */}
-            <div className="rounded-md border-2 border-cream py-3.5 text-center text-lg font-extrabold uppercase tracking-[0.03em] @2xl:hidden">
-              {a.formTitle}
+            <div className="flex items-center justify-center whitespace-nowrap rounded-md border-2 border-[#F3EFE6] px-6 py-2.5 text-base font-extrabold uppercase tracking-[0.04em]">
+              {a.quote}
             </div>
           </div>
+
+          <div className="mt-3.5 grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs font-bold @2xl:mt-6 @2xl:flex @2xl:gap-5 @2xl:text-sm">
+            {a.trust.map((t) => (
+              <span key={t} className="flex items-center gap-1.5 whitespace-nowrap">
+                <Check className="h-3.5 w-3.5 shrink-0 text-[#F5A524]" strokeWidth={3.5} aria-hidden="true" />
+                {t}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* floating sample review (desktop frame only) */}
+        <div className="absolute bottom-5 right-10 hidden w-64 rounded-lg bg-[#F3EFE6] p-4 text-[#101211] shadow-[0_18px_40px_rgba(0,0,0,0.55)] @2xl:block">
+          <Stars className="h-4 w-4" />
+          <div className="mt-2 text-sm font-semibold leading-snug">&ldquo;{a.review.quote}&rdquo;</div>
+          <div className="mt-2 text-xs font-bold text-[#5a5a55]">{a.review.name}</div>
         </div>
       </div>
 
-      {/* service cards */}
-      <div className="grid shrink-0 grid-cols-3 gap-2.5 border-t-2 border-line bg-deep px-5 py-4 @2xl:gap-5 @2xl:px-10 @2xl:py-6">
+      {/* services */}
+      <div className="grid shrink-0 grid-cols-2 gap-2 bg-[#F3EFE6] px-4 py-3 @2xl:grid-cols-4 @2xl:gap-4 @2xl:px-10 @2xl:py-4">
         {a.services.map((s, i) => {
           const Icon = serviceIcons[i % serviceIcons.length];
           return (
-            <div key={s.title} className="rounded-md border-2 border-line bg-raised p-3 @2xl:flex @2xl:items-center @2xl:gap-4 @2xl:rounded-lg @2xl:p-5">
-              <Icon className="h-6 w-6 shrink-0 text-sage @2xl:h-8 @2xl:w-8" strokeWidth={1.75} aria-hidden="true" />
-              <div className="mt-2 @2xl:mt-0">
-                <div className="text-sm font-extrabold leading-tight tracking-tight @2xl:text-lg">{s.title}</div>
-                <div className="mt-0.5 hidden text-sm text-muted @2xl:block">{s.body}</div>
+            <div key={s.title} className="flex items-center gap-2.5 rounded-md bg-[#101211] p-3 text-[#F3EFE6] @2xl:block @2xl:rounded-lg @2xl:p-4">
+              <div className="flex items-center justify-between">
+                <Icon className="h-6 w-6 shrink-0 text-[#F5A524] @2xl:h-7 @2xl:w-7" strokeWidth={1.9} aria-hidden="true" />
+                <ArrowRight className="hidden h-4 w-4 text-[#F5A524] @2xl:block" strokeWidth={2.5} aria-hidden="true" />
+              </div>
+              <div className="min-w-0 @2xl:mt-2">
+                <div className="whitespace-nowrap text-[calc(var(--spacing)*3.2)] font-extrabold leading-tight tracking-[-0.01em] @2xl:text-lg">{s.title}</div>
+                <div className="mt-0.5 hidden whitespace-nowrap text-xs text-white/65 @2xl:block">{s.body}</div>
               </div>
             </div>
           );
         })}
+      </div>
+
+      {/* phone frame: call bar pinned to the bottom */}
+      <div className="flex shrink-0 items-center justify-center gap-2.5 bg-[#F5A524] py-3 text-base font-extrabold uppercase leading-none tracking-[0.03em] text-[#101211] @2xl:hidden">
+        <Phone className="h-5 w-5" strokeWidth={2.5} aria-hidden="true" />
+        {a.stickyCall}
       </div>
     </div>
   );

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { m, useInView, useReducedMotion } from "framer-motion";
-import { CalendarCheck, PhoneMissed, RotateCcw } from "lucide-react";
+import { CalendarCheck, PhoneMissed, RotateCcw, Timer } from "lucide-react";
 import { mock, speedToLead as copy } from "@/content";
 import { Item, Reveal, ease } from "./ui";
 
@@ -57,17 +57,28 @@ export default function SpeedToLead() {
   const [first, reply, link] = copy.messages;
 
   return (
-    <section className="relative overflow-hidden py-24 md:py-36">
-      <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 md:px-8 lg:grid-cols-[1.15fr_1fr] lg:gap-10">
+    <section className="relative overflow-hidden py-16 md:py-28">
+      <div className="mx-auto grid max-w-7xl items-center gap-7 px-5 md:px-8 lg:grid-cols-[1.15fr_1fr] lg:gap-10">
         <Reveal>
-          <Item as="p" className="eyebrow mb-5">
+          <Item as="p" className="eyebrow mb-4 md:mb-5">
             {copy.eyebrow}
           </Item>
-          <Item as="h2" className="display text-[clamp(2.25rem,5.4vw,4.25rem)]">
+          <Item as="h2" className="display-lg">
             {copy.headline}
           </Item>
-          <Item as="p" className="mt-8 max-w-xl border-l-4 border-sage pl-5 text-xl font-semibold leading-snug text-cream md:text-2xl">
+          <Item as="p" className="mt-5 max-w-xl text-lg font-semibold leading-snug text-muted md:mt-8 md:text-2xl">
             {copy.caption}
+          </Item>
+          {/* the big label beside the phone */}
+          <Item className="mt-6 flex items-center gap-4 border-y-2 border-cream py-4 md:mt-10 md:gap-6 md:py-6">
+            <Timer className="h-11 w-11 shrink-0 text-sage md:h-20 md:w-20" strokeWidth={1.5} aria-hidden="true" />
+            <p className="text-[1.75rem] font-extrabold leading-[0.98] tracking-[-0.04em] md:text-6xl">
+              {copy.bigLabel.map((l) => (
+                <span key={l} className="block">
+                  {l}
+                </span>
+              ))}
+            </p>
           </Item>
         </Reveal>
 
@@ -75,7 +86,7 @@ export default function SpeedToLead() {
         <div ref={ref} className="relative mx-auto w-full max-w-[21rem]">
           <div className="relative rounded-[2.75rem] border-2 border-line bg-deep p-2.5 shadow-[0_30px_60px_-25px_rgba(0,0,0,0.8)]">
             <div
-              className="relative flex h-[37rem] flex-col overflow-hidden rounded-[2.2rem] border-2 border-line bg-bg"
+              className="relative flex h-[33rem] flex-col md:h-[37rem] overflow-hidden rounded-[2.2rem] border-2 border-line bg-bg"
               role="img"
               aria-label={`Text conversation demo. A call to ${mock.company} is missed. An automatic text goes out: "${first.text}" The homeowner replies: "${reply.text}" An automatic reply sends a booking link. Result: ${copy.booked}.`}
             >
@@ -132,9 +143,9 @@ export default function SpeedToLead() {
                 {shown >= 6 && (
                   <m.div
                     {...rise}
-                    className="mt-1 flex items-center justify-center gap-2 rounded-lg border-2 border-sage px-3 py-3 text-sm font-extrabold text-sage"
+                    className="mt-1 flex items-center justify-center gap-2 rounded-lg border-2 border-sage px-3 py-3 text-sm font-extrabold text-cream"
                   >
-                    <CalendarCheck className="h-5 w-5" strokeWidth={2.25} />
+                    <CalendarCheck className="h-5 w-5 text-sage" strokeWidth={2.25} />
                     {copy.booked}
                   </m.div>
                 )}
@@ -142,12 +153,12 @@ export default function SpeedToLead() {
             </div>
           </div>
 
-          <div className="mt-4 flex h-11 justify-center">
+          <div className="mt-3 flex h-12 justify-center">
             {shown >= LAST && !reduce && (
               <button
                 type="button"
                 onClick={() => setRun((r) => r + 1)}
-                className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-md border-2 border-line px-4 text-sm font-bold uppercase tracking-[0.1em] text-muted transition-colors duration-300 hover:border-sage hover:text-cream"
+                className="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-md border-2 border-line px-4 text-sm font-bold uppercase tracking-[0.1em] text-muted transition-colors duration-300 hover:border-sage hover:text-cream"
               >
                 <RotateCcw className="h-4 w-4" strokeWidth={2.25} aria-hidden="true" />
                 {copy.replay}

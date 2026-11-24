@@ -16,7 +16,7 @@ Everything is in **`content.ts`**. Change it there and the page, SEO metadata an
 
 - Prices: `pricing.plans` (`regular`, `price`), `pricing.build`, `pricing.annualMonthsFree`
 - Countdown date: `pricing.banner.deadline`
-- Placeholders: anything with `placeholder: true` shows a yellow "Placeholder" tag. Fill in the real value and set it to `false`.
+- About section: the headshot, stat tiles and testimonials stay hidden until you add real ones in `content.ts` (set a headshot `src`, set a stat `value` with `placeholder: false`, fill in a `quote` and `name`).
 - Testimonials: fill in `about.testimonials` (leave `quote` empty to keep the placeholder slot)
 - Headshot: put a photo in `public/images/` and set `about.headshot.src`
 

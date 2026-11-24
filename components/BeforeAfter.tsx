@@ -10,27 +10,27 @@ const clamp = (n: number) => Math.min(100, Math.max(0, n));
 
 export default function BeforeAfter() {
   const frame = useRef<HTMLDivElement>(null);
-  const pos = useMotionValue(50); // divider position, % from the left
-  const [value, setValue] = useState(50); // mirrored for aria-valuenow
+  const pos = useMotionValue(100); // divider position, % from the left (100 = all "before")
+  const [value, setValue] = useState(100); // mirrored for aria-valuenow
   const [dragging, setDragging] = useState(false);
   const touched = useRef(false);
   const reduce = useReducedMotion();
-  const inView = useInView(frame, { once: true, amount: 0.6 });
+  const inView = useInView(frame, { once: true, amount: 0.4 });
 
   const clip = useMotionTemplate`inset(0 calc(100% - ${pos}%) 0 0)`;
   const left = useMotionTemplate`${pos}%`;
 
   useEffect(() => pos.on("change", (v) => setValue(Math.round(v))), [pos]);
 
-  // Subtle nudge the first time it's seen, so people know it drags.
+  // First time it's seen: sweep once from all-before to mostly-after, so the reveal happens
+  // without anyone having to find the handle. Reduced motion: just land on the end position.
   useEffect(() => {
-    if (!inView || reduce || touched.current) return;
-    const controls = animate(pos, [50, 60, 42, 50], {
-      duration: 2.4,
-      delay: 0.4,
-      ease: "easeInOut",
-      times: [0, 0.35, 0.75, 1],
-    });
+    if (!inView || touched.current) return;
+    if (reduce) {
+      pos.set(30);
+      return;
+    }
+    const controls = animate(pos, 30, { duration: 1.4, delay: 0.25, ease: [0.22, 0.61, 0.36, 1] });
     const stop = () => controls.stop();
     const el = frame.current;
     el?.addEventListener("pointerdown", stop, { once: true });
@@ -65,11 +65,11 @@ export default function BeforeAfter() {
   }
 
   return (
-    <section className="grain relative overflow-x-clip border-y-2 border-line bg-deep py-24 md:py-36">
+    <section className="grain relative overflow-x-clip bg-deep py-16 md:py-28">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <SectionHead eyebrow={copy.eyebrow} title={copy.headline} sub={copy.sub} center />
 
-        <Reveal className="mt-10 md:mt-16">
+        <Reveal className="mt-8 md:mt-14">
           <Item>
             <div className="relative mx-auto max-w-6xl">
               {/* browser chrome */}
@@ -92,7 +92,7 @@ export default function BeforeAfter() {
                 {/* the stage */}
                 <div
                   ref={frame}
-                  className={`@container relative aspect-[10/15.5] w-full touch-pan-y select-none overflow-hidden sm:aspect-[16/10] ${
+                  className={`@container relative aspect-[10/16.5] w-full touch-pan-y select-none overflow-hidden sm:aspect-[16/10] ${
                     dragging ? "cursor-grabbing" : "cursor-ew-resize"
                   }`}
                   onPointerDown={(e) => {
@@ -108,9 +108,9 @@ export default function BeforeAfter() {
                 >
                   <p className="sr-only">
                     Comparison of two versions of the website for {mock.company}, a fictional company. Before: a dated,
-                    cluttered site with a dim photo and a wall of text. After: a clean redesign with the headline
-                    &ldquo;{mock.after.headline.join(" ")}&rdquo;, a tap-to-call button, a 60-second quote form, a star
-                    rating and a licensed and insured badge.
+                    cluttered site with a dim photo and a wall of text. After: a modern redesign with the headline
+                    &ldquo;{mock.after.headline.join(" ")}&rdquo;, a large call button, a Google review rating, a sample
+                    customer review and four service cards.
                   </p>
 
                   {/* AFTER sits underneath, BEFORE is clipped on top */}
@@ -146,18 +146,18 @@ export default function BeforeAfter() {
                 </div>
 
                 {/* labels */}
-                <div className="flex items-center justify-between border-t-2 border-line px-3.5 py-2.5 md:px-5 md:py-3">
-                  <span className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.18em] text-muted md:text-sm">
-                    <span aria-hidden="true">←</span> {copy.before}
+                <div className="grid grid-cols-2 gap-4 border-t-2 border-line px-3.5 py-2.5 text-xs leading-snug md:px-5 md:py-3 md:text-sm">
+                  <span className="text-muted">
+                    <span className="font-extrabold uppercase tracking-[0.14em]">{copy.before.tag}:</span> {copy.before.text}
                   </span>
-                  <span className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.18em] text-sage md:text-sm">
-                    {copy.after} <span aria-hidden="true">→</span>
+                  <span className="text-right text-cream">
+                    <span className="font-extrabold uppercase tracking-[0.14em]">{copy.after.tag}:</span> {copy.after.text}
                   </span>
                 </div>
               </div>
             </div>
           </Item>
-          <Item as="p" className="mt-8 text-center text-sm text-muted">
+          <Item as="p" className="mt-5 text-center text-sm text-muted md:mt-8">
             {copy.caption}
           </Item>
         </Reveal>

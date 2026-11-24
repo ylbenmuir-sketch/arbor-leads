@@ -5,8 +5,8 @@ export const alt = site.seo.title;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const SAGE = "#9BBF9B";
-const CREAM = "#F4F1EA";
+const SAGE = "#8DB89A";
+const CREAM = "#F6F4EE";
 const TREE = "M32 4 L44 22 L39 22 L50 38 L44 38 L58 58 L38 58 L32 46 L26 58 L6 58 L20 38 L14 38 L25 22 L20 22 Z";
 
 /** Try to load Inter Tight 800 for the image; fall back to the default font if offline. */
@@ -37,7 +37,7 @@ export default async function OgImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#13201A",
+          background: "#0E2418",
           color: CREAM,
           padding: 72,
           fontFamily: font ? "Inter Tight" : "sans-serif",
