@@ -133,7 +133,7 @@ export function Pillars() {
 }
 
 /* ───────────── Comparison (light section) ─────────────
-   Arbor Leads vs typical agency vs doing it yourself.
+   Arbor Leads vs tree-service marketing agencies vs doing it yourself. No competitor is named.
    The Arbor Leads column is filled forest. Built as an ARIA table on a CSS grid so the row label can sit
    above its three cells on phones. */
 export function Comparison() {
@@ -145,6 +145,9 @@ export function Comparison() {
       <div className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-28">
         <SectionHead title={comparison.headline} center size="md" />
         <Reveal className="mt-8 md:mt-14">
+          <Item as="p" className="mb-3 rounded-lg bg-forest px-5 py-4 text-center text-lg font-extrabold leading-snug tracking-[-0.02em] text-cream md:mb-4 md:px-8 md:py-6 md:text-2xl">
+            {comparison.callout}
+          </Item>
           <Item>
             <div role="table" aria-label={comparison.headline} className="overflow-hidden rounded-lg border-2 border-bg">
               <div role="row" className={cols}>
@@ -152,7 +155,7 @@ export function Comparison() {
                 <span role="columnheader" className="border-b-2 border-bg bg-forest px-3 py-4 text-sm font-extrabold uppercase tracking-[0.08em] text-cream md:px-6 md:py-5 md:text-lg">
                   {columns.us}
                 </span>
-                <span role="columnheader" className="border-b-2 border-bg px-3 py-4 text-sm font-extrabold uppercase tracking-[0.06em] md:px-6 md:py-5 md:text-base">
+                <span role="columnheader" className="border-b-2 border-bg px-3 py-4 text-xs font-extrabold uppercase leading-snug tracking-[0.06em] sm:text-sm md:px-6 md:py-5 md:text-base">
                   {columns.agency}
                 </span>
                 <span role="columnheader" className="border-b-2 border-l-2 border-bg border-l-bg/15 max-sm:hidden px-3 py-4 text-sm font-extrabold uppercase tracking-[0.06em] md:px-6 md:py-5 md:text-base">
@@ -169,7 +172,7 @@ export function Comparison() {
                     >
                       {r.label}
                     </span>
-                    <span role="cell" className={`flex gap-2 bg-forest px-3 py-3 text-sm font-extrabold leading-snug text-cream md:gap-3 md:px-6 md:py-5 md:text-lg ${i < rows.length - 1 ? "border-b-2 border-cream/20" : ""}`}>
+                    <span role="cell" className={`flex gap-2 bg-forest px-3 py-3 font-extrabold leading-snug text-cream md:gap-3 md:px-6 md:py-5 ${r.big ? "items-center text-xl tracking-[-0.03em] md:text-[2rem]" : "text-sm md:text-lg"} ${i < rows.length - 1 ? "border-b-2 border-cream/20" : ""}`}>
                       <Check className="mt-0.5 h-4 w-4 shrink-0 text-cream md:h-5 md:w-5" strokeWidth={3} aria-hidden="true" />
                       {r.us}
                     </span>
@@ -183,6 +186,9 @@ export function Comparison() {
                 );
               })}
             </div>
+          </Item>
+          <Item as="p" className="mt-4 text-xs leading-relaxed text-bg/70 md:text-sm">
+            {comparison.finePrint}
           </Item>
         </Reveal>
       </div>

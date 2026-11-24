@@ -4,8 +4,8 @@
  *  Edit this file and the whole site updates.
  *
  *  CLAIMS RULES
- *  - The only real stats are the Recent Website Case numbers.
- *    Don't add other numbers or percentages.
+ *  - The only real stats are the Recent Website Case numbers, plus the
+ *    published agency price ranges in `comparison`. Don't add others.
  *  - The only guarantees are the two in `guarantee.items`.
  *  - No ranking, call-volume or results promises.
  *  - Missed-call text-back and review requests are Get Booked & up.
@@ -93,6 +93,8 @@ export const analyzer = {
   },
   /** Shown above the form when someone clicks a "Start with…" pricing button. */
   planLabel: "Plan you picked:",
+  /** Shown when someone clicks one of the "Two ways to start" buttons. */
+  setupLabel: "Setup you picked:",
   planClear: "Clear",
   button: "Run My Free Audit",
   /** Small print under the button. The link goes to /privacy. */
@@ -382,25 +384,34 @@ export const pricing = {
   setup: {
     title: "Two ways to start",
     options: [
-      { price: "$0 down", detail: "with a 6-month commitment" },
-      { price: "$495 one-time setup", detail: "then month-to-month" },
+      { id: "zero-down", price: "$0 down", detail: "with a 6-month commitment" },
+      { id: "495-setup", price: "$495 one-time setup", detail: "then month-to-month" },
     ],
     or: "or",
   },
 };
 
+/**
+ * COMPARISON
+ * The agency numbers come from published pricing at tree-service marketing
+ * agencies (Nov 2026). Update `finePrint` if you refresh them.
+ * Never name a competitor here.
+ */
 export const comparison = {
   headline: "Three ways to get more work. Only one lets you stay on the saw.",
-  columns: { us: "Arbor Leads", agency: "Typical agency", diy: "Doing it yourself" },
-  /** Keep these general. No competitor names, no numbers you can't source. */
+  /** Bold strip above the table. */
+  callout: "Most tree-service agencies charge $249 to $3,450 a month. Get Booked is $349, with no setup fee on the $0-down option.",
+  columns: { us: "Arbor Leads", agency: "Tree-service marketing agencies", diy: "Doing it yourself" },
+  /** `big: true` makes the Arbor Leads cell larger so the price gap stands out. */
   rows: [
-    { label: "Monthly cost", us: "From $149/mo", agency: "Often much higher", diy: "Free, but it's your time" },
-    { label: "Setup", us: "$0 down option", agency: "Setup fees are common", diy: "You build it" },
-    { label: "Contract", us: "6 months or month-to-month", agency: "Often a year", diy: "None" },
-    { label: "Missed-call text-back", us: "In Get Booked and up", agency: "Often extra", diy: "You set it up" },
-    { label: "Time to launch", us: "7 days", agency: "Varies", diy: "Whenever you find time" },
-    { label: "Built by", us: "A former tree service owner", agency: "Marketers", diy: "You, after work" },
+    { label: "Monthly cost", us: "From $149/mo", agency: "$249–$3,450/mo", diy: "Free, but it's your time", big: true },
+    { label: "Setup", us: "$0 down option", agency: "Up to $499+", diy: "You build it", big: false },
+    { label: "Contract", us: "6 months or month-to-month", agency: "Often 12 months", diy: "None", big: false },
+    { label: "Missed-call text-back", us: "In Get Booked and up", agency: "Often extra", diy: "You set it up", big: false },
+    { label: "Time to launch", us: "7 days", agency: "Often 30+ days", diy: "Whenever you find time", big: false },
+    { label: "Built by", us: "A former tree service owner", agency: "Marketers", diy: "You, after work", big: false },
   ],
+  finePrint: "Agency ranges based on published pricing from tree-service marketing agencies, Nov 2026. Prices vary by provider.",
 };
 
 /** The ONLY two guarantees. Keep this wording. No results or money-back promises. */

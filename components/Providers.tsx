@@ -7,9 +7,11 @@ import Lenis from "lenis";
 let lenis: Lenis | null = null;
 
 /** Smooth-scroll to the free audit form and put the cursor in the first field. */
-export function goToAnalyzer(plan?: string) {
+export function goToAnalyzer(plan?: string, setup?: string) {
   // Tell the analyzer form which plan button was clicked (see Analyzer.tsx).
   if (plan) window.dispatchEvent(new CustomEvent("arbor:plan", { detail: plan }));
+  // Same for the "Two ways to start" buttons ("zero-down" or "495-setup").
+  if (setup) window.dispatchEvent(new CustomEvent("arbor:setup", { detail: setup }));
   const section = document.getElementById("analyzer");
   if (!section) return;
   // Land on the form itself (with the last line of the pitch above it), not the big headline.

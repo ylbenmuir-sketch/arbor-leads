@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { m } from "framer-motion";
 import { ArrowRight, Check, ShieldCheck } from "lucide-react";
 import { guarantee, pricing } from "@/content";
+import { goToAnalyzer } from "./Providers";
 import { CtaButton, Item, Reveal, SectionHead, ease } from "./ui";
 
 const usd = (n: number) => "$" + n.toLocaleString("en-US");
@@ -227,18 +228,26 @@ export default function Pricing() {
 
           {/* setup options */}
           <Item className="mt-3 rounded-lg border-2 border-line bg-raised px-4 py-3 md:mt-5 md:p-7">
-            <div className="flex flex-col gap-1.5 md:gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-5">
+            <div className="flex flex-col gap-2.5 md:gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-5">
               <p className="eyebrow">{pricing.setup.title}</p>
-              <div className="flex flex-col gap-0.5 md:flex-row md:items-center md:gap-5">
+              <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-5">
+                {/* TODO: when Cal.com booking is live, these open booking instead of the audit form. */}
                 {pricing.setup.options.map((o, i) => (
-                  <div key={o.price} className="contents">
+                  <div key={o.id} className="contents">
                     {i > 0 && (
                       <span className="text-sm font-extrabold uppercase tracking-[0.2em] text-muted max-md:hidden">{pricing.setup.or}</span>
                     )}
-                    <p className="leading-snug md:rounded-md md:border-2 md:border-line md:bg-bg md:px-5 md:py-3.5">
-                      <span className="text-lg font-extrabold tracking-tight text-cream md:text-2xl">{o.price}</span>{" "}
-                      <span className="text-base text-muted">{o.detail}</span>
-                    </p>
+                    <button
+                      type="button"
+                      onClick={() => goToAnalyzer(undefined, o.id)}
+                      className="group flex min-h-12 cursor-pointer items-center justify-between gap-3 rounded-md border-2 border-line bg-bg px-4 py-2.5 text-left leading-snug transition-[border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-blaze md:px-5 md:py-3.5"
+                    >
+                      <span>
+                        <span className="text-lg font-extrabold text-cream md:text-2xl">{o.price}</span>{" "}
+                        <span className="text-base text-muted">{o.detail}</span>
+                      </span>
+                      <ArrowRight className="h-5 w-5 shrink-0 text-muted transition-colors duration-200 group-hover:text-cream" strokeWidth={2.5} aria-hidden="true" />
+                    </button>
                   </div>
                 ))}
               </div>

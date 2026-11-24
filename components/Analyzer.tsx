@@ -4,7 +4,7 @@ import { useEffect, useId, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import { Check, CircleCheck, Flag, X } from "lucide-react";
-import { analyzer as copy } from "@/content";
+import { analyzer as copy, pricing } from "@/content";
 import { Counter, ease } from "./ui";
 
 type Stage = "idle" | "scanning" | "done";
@@ -41,14 +41,24 @@ export default function Analyzer() {
   const [score, setScore] = useState(0);
   // Set when a "Start with <plan>" pricing button sends someone here.
   const [plan, setPlan] = useState("");
+  // "zero-down" or "495-setup", set by the "Two ways to start" buttons.
+  const [setup, setSetup] = useState("");
 
   useEffect(() => {
     const onPlan = (e: Event) => {
       setPlan((e as CustomEvent<string>).detail ?? "");
       setStage((s) => (s === "done" ? "idle" : s));
     };
+    const onSetup = (e: Event) => {
+      setSetup((e as CustomEvent<string>).detail ?? "");
+      setStage((s) => (s === "done" ? "idle" : s));
+    };
     window.addEventListener("arbor:plan", onPlan);
-    return () => window.removeEventListener("arbor:plan", onPlan);
+    window.addEventListener("arbor:setup", onSetup);
+    return () => {
+      window.removeEventListener("arbor:plan", onPlan);
+      window.removeEventListener("arbor:setup", onSetup);
+    };
   }, []);
 
   // Scanning sequence: tick through the steps, then show the score.
@@ -74,6 +84,7 @@ export default function Analyzer() {
       email: String(data.get("email") ?? ""),
       phone: String(data.get("phone") ?? ""),
       plan: String(data.get("plan") ?? ""),
+      setup: String(data.get("setup") ?? ""),
       mockScore: mock,
       submittedAt: new Date().toISOString(),
     };
@@ -91,6 +102,11 @@ export default function Analyzer() {
     setStage("scanning");
   }
 
+  const setupOption = pricing.setup.options.find((o) => o.id === setup);
+  const picks = [
+    ...(plan ? [{ label: copy.planLabel, value: plan, clear: () => setPlan("") }] : []),
+    ...(setupOption ? [{ label: copy.setupLabel, value: `${setupOption.price} ${setupOption.detail}`, clear: () => setSetup("") }] : []),
+  ];
   const ring = 2 * Math.PI * 52;
   const fields = [
     { name: "business", label: copy.fields.business, type: "text", auto: "organization", mode: "text" as const },
@@ -105,21 +121,22 @@ export default function Analyzer() {
         {stage === "idle" && (
           <m.form key="idle" {...swap} onSubmit={submit}>
             <input type="hidden" name="plan" value={plan} />
-            {plan && (
-              <p className="mb-4 flex items-center justify-between gap-3 rounded-md border-2 border-line bg-bg py-1 pl-4 pr-1 text-base text-muted">
+            <input type="hidden" name="setup" value={setup} />
+            {picks.map((c) => (
+              <p key={c.label} className="mb-3 flex items-center justify-between gap-3 rounded-md border-2 border-line bg-bg py-1 pl-4 pr-1 text-base text-muted">
                 <span>
-                  {copy.planLabel} <span className="font-extrabold text-cream">{plan}</span>
+                  {c.label} <span className="font-extrabold text-cream">{c.value}</span>
                 </span>
                 <button
                   type="button"
-                  onClick={() => setPlan("")}
-                  aria-label={`${copy.planClear} ${plan}`}
+                  onClick={c.clear}
+                  aria-label={`${copy.planClear} ${c.value}`}
                   className="flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-md text-muted hover:text-cream"
                 >
                   <X className="h-5 w-5" strokeWidth={2.5} aria-hidden="true" />
                 </button>
               </p>
-            )}
+            ))}
             <div className="grid gap-4 sm:grid-cols-2">
               {fields.map((f) => (
                 <div key={f.name}>
