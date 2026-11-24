@@ -44,7 +44,7 @@ export default function StickyCta() {
     >
       <div className="flex gap-2">
         <CtaButton
-          className="btn-bar flex-[1.6]"
+          className="btn-bar flex-[2.2] whitespace-nowrap"
           label={
             <>
               {site.ctaShort}

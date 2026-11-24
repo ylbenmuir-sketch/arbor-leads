@@ -65,15 +65,16 @@ export default function Header() {
         }`}
       >
         <div
-          className={`mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 transition-[padding] duration-300 md:px-8 ${
+          className={`mx-auto flex max-w-7xl items-center justify-between gap-3 px-5 transition-[padding] duration-300 md:px-8 ${
             scrolled ? "py-2" : "py-4"
           }`}
         >
           <Link href="/" className="shrink-0 rounded-sm">
-            <Logo className={`w-auto transition-[height] duration-300 ${scrolled ? "h-7" : "h-8 md:h-9"}`} />
+            <Logo className={`w-auto transition-[height] duration-300 ${scrolled ? "h-7" : "h-7 sm:h-8 md:h-9"}`} />
           </Link>
           <CtaButton
             size="sm"
+            className="whitespace-nowrap max-sm:!px-2.5 max-sm:!text-xs"
             label={
               <>
                 <span className="sm:hidden">{site.ctaShort}</span>

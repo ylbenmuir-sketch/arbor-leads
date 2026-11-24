@@ -27,9 +27,9 @@ export const site = {
       "Websites, Google Maps and ads for tree service companies, so homeowners in your town find you, trust you, and call. Built by a former tree service owner.",
   },
   /** The main call to action (orange buttons). */
-  cta: "Show Me What I'm Missing",
+  cta: "Who's Beating Me?",
   /** Short version for the header on phones and the sticky bar. */
-  ctaShort: "Free Audit",
+  ctaShort: "Who's Beating Me?",
   secondaryCta: "See Pricing",
   /** Label on the outline button in the phone sticky bar. */
   pricingShort: "Pricing",
@@ -60,7 +60,7 @@ export const hero = {
   highlight: "it should be you.",
   subhead:
     "We build your website, work your Google profile every month so you show up on the map, and run ads when you want more work, so homeowners find you, trust you, and call. Live in 7 days or your first month is free.",
-  micro: "Free audit · 60 seconds · No call required",
+  micro: "Free Google audit · 60 seconds · No call required",
   /** The number itself comes from `caseStudy.giant`. */
   proofText: "Google clicks in 30 days, our most recent website build",
   proofHref: "#case",
@@ -83,7 +83,7 @@ export const analyzer = {
   eyebrow: "Free audit",
   /** Short line above the headline. */
   vibe: "Next storm, your phone's going to ring. Make sure it's yours.",
-  headline: "See what's holding your site back on Google.",
+  headline: "See who's beating you on Google, and how to pass them.",
   sub: "Free. 60 seconds. We'll email your report and show you exactly what we'd fix.",
   fields: {
     business: "Business name",
