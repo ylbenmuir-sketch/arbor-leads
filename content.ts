@@ -378,6 +378,10 @@ export const pricing = {
   /** Plan buttons read "Start with <plan name>". */
   planCta: "Start with",
   swipeHint: "Swipe to compare plans",
+  /** Phones show the first 3 features of each plan, then this toggle. */
+  seeAll: "See everything included",
+  seeLess: "Show less",
+  featuresShown: 3,
   plans: [
     {
       name: "Get Found",

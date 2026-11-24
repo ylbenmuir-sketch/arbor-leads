@@ -65,7 +65,7 @@ export default function BeforeAfter() {
   }
 
   return (
-    <section className="grain relative overflow-x-clip border-y-2 border-line bg-deep py-20 md:py-28">
+    <section className="grain relative overflow-x-clip border-y-2 border-line bg-deep pb-20 pt-14 md:py-28">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <SectionHead
           eyebrow={copy.eyebrow}
@@ -79,12 +79,12 @@ export default function BeforeAfter() {
           center
         />
 
-        <Reveal className="mt-8 md:mt-14">
+        <Reveal className="mt-6 md:mt-14">
           <Item>
-            <div className="relative mx-auto max-w-6xl">
+            <div className="relative mx-auto max-w-6xl max-md:max-w-[calc(70svh/1.65)]">
               {/* browser chrome */}
               <div className="relative overflow-hidden rounded-lg border-2 border-line bg-raised shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)]">
-                <div className="flex items-center gap-3 border-b-2 border-line px-3.5 py-2.5 md:px-5 md:py-3.5">
+                <div className="flex items-center gap-3 border-b-2 border-line px-3.5 py-2.5 max-md:hidden md:px-5 md:py-3.5">
                   <div className="flex gap-1.5 md:gap-2" aria-hidden="true">
                     <span className="h-2.5 w-2.5 rounded-full bg-muted/40 md:h-3 md:w-3" />
                     <span className="h-2.5 w-2.5 rounded-full bg-muted/40 md:h-3 md:w-3" />
@@ -167,19 +167,19 @@ export default function BeforeAfter() {
               </div>
             </div>
           </Item>
-          <Item as="p" className="mt-5 text-center text-sm text-muted md:mt-8">
+          <Item as="p" className="mt-3 text-center text-xs text-muted md:mt-8 md:text-sm">
             {copy.caption}
           </Item>
         </Reveal>
 
         {/* PHONES ONLY: what you get, in three lines. Desktop tells this in its own sections. */}
-        <Reveal className="mt-14 md:hidden">
+        <Reveal className="mt-8 space-y-4 md:hidden">
           {copy.phoneLines.map((l) => (
-            <Item as="p" key={l} className="border-t-2 border-line py-5 text-[1.6rem] font-extrabold leading-[1.1] tracking-[-0.03em] text-cream">
+            <Item as="p" key={l} className="text-[1.3rem] font-extrabold leading-[1.15] tracking-[-0.03em] text-cream">
               {l}
             </Item>
           ))}
-          <Item as="p" className="border-t-2 border-line pt-5 text-base leading-snug text-muted">
+          <Item as="p" className="text-sm leading-snug text-muted">
             {copy.phoneNote}
           </Item>
         </Reveal>

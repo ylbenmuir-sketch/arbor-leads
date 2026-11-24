@@ -90,18 +90,18 @@ html.lenis body {
   text-wrap: balance;
   font-size: clamp(2.75rem, 12.5vw, 3.25rem);
 }
-/* PHONES: tight letter-spacing also squeezes the spaces between words until they nearly vanish
+/* Tight letter-spacing also squeezes the spaces between words until they nearly vanish
    ("calls.Live", "Do Iown my site?"). Give word spaces their width back on any tightly tracked text. */
+.display,
+.display-xl,
+.display-lg,
+.display-md,
+.display-hero,
+[class*="tracking-[-0.0"],
+.tracking-tight {
+  word-spacing: 0.09em;
+}
 @media (max-width: 767.98px) {
-  .display,
-  .display-xl,
-  .display-lg,
-  .display-md,
-  .display-hero,
-  [class*="tracking-[-0.0"],
-  .tracking-tight {
-    word-spacing: 0.09em;
-  }
   /* Phone headlines: big, but one size family across sections. */
   .display-xl {
     font-size: clamp(2.2rem, 9.6vw, 2.8rem);

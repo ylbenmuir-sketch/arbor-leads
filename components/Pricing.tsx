@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { m } from "framer-motion";
-import { ArrowRight, Check, ShieldCheck } from "lucide-react";
+import { ArrowRight, Check, ChevronDown, ShieldCheck } from "lucide-react";
 import { guarantee, pricing, roi } from "@/content";
 import { goToAnalyzer } from "./Providers";
 import { CtaButton, Item, Reveal, SectionHead, ease } from "./ui";
@@ -82,12 +82,14 @@ function Struck({ children }: { children: React.ReactNode }) {
 
 export default function Pricing() {
   const [annual, setAnnual] = useState(false);
+  // Phones: which plans have their full feature list open.
+  const [open, setOpen] = useState<string[]>([]);
   const left = useTimeLeft();
   const paidMonths = 12 - pricing.annualMonthsFree;
 
   return (
     <section id="pricing" className="grain overflow-x-clip bg-deep">
-      <div className="mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">
+      <div className="mx-auto max-w-7xl px-5 pb-20 pt-14 md:px-8 md:py-28">
         <SectionHead
           eyebrow={pricing.eyebrow}
           title={pricing.headline}
@@ -201,14 +203,34 @@ export default function Pricing() {
                     </p>
                   </div>
 
-                  <ul className="mb-5 mt-4 space-y-2 border-t-2 border-line pt-4 md:mb-9 md:mt-7 md:space-y-3.5 md:pt-7">
-                    {p.features.map((f) => (
-                      <li key={f} className="flex gap-3 text-base font-medium leading-snug text-cream">
+                  {/* Phones show the first few features and a toggle; tablets and up show them all. */}
+                  <ul id={`features-${p.name}`} className="mt-4 space-y-2 border-t-2 border-line pt-4 md:mb-9 md:mt-7 md:space-y-3.5 md:pt-7">
+                    {p.features.map((f, i) => (
+                      <li
+                        key={f}
+                        className={`flex gap-3 text-base font-medium leading-snug text-cream ${
+                          i >= pricing.featuresShown && !open.includes(p.name) ? "max-md:hidden" : ""
+                        }`}
+                      >
                         <Check className="mt-0.5 h-5 w-5 shrink-0 text-sage" strokeWidth={3} aria-hidden="true" />
                         {f}
                       </li>
                     ))}
                   </ul>
+                  {p.features.length > pricing.featuresShown ? (
+                    <button
+                      type="button"
+                      aria-expanded={open.includes(p.name)}
+                      aria-controls={`features-${p.name}`}
+                      onClick={() => setOpen((o) => (o.includes(p.name) ? o.filter((n) => n !== p.name) : [...o, p.name]))}
+                      className="mb-2 flex min-h-12 cursor-pointer items-center gap-1.5 self-start text-sm font-bold text-cream underline underline-offset-4 md:hidden"
+                    >
+                      {open.includes(p.name) ? pricing.seeLess : pricing.seeAll}
+                      <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${open.includes(p.name) ? "rotate-180" : ""}`} strokeWidth={2.5} aria-hidden="true" />
+                    </button>
+                  ) : (
+                    <div className="mb-5 md:hidden" />
+                  )}
 
                   <div className="mt-auto">
                     {/* Scrolls to the free audit form with this plan pre-selected. */}
@@ -223,11 +245,11 @@ export default function Pricing() {
           {pricing.swipeHint} <ArrowRight className="h-4 w-4" strokeWidth={2.5} aria-hidden="true" />
         </p>
 
-        <Reveal className="mt-4 md:mt-8">
-          {/* guarantee strip */}
-          <Item className="flex items-center gap-4 rounded-lg border-2 border-cream bg-raised px-4 py-3 md:gap-6 md:px-7 md:py-5">
+        <Reveal className="mt-3 md:mt-8">
+          {/* guarantee strip (on phones it joins "Two ways to start" below as one card) */}
+          <Item className="flex items-center gap-4 rounded-lg border-2 border-cream bg-raised px-4 py-3 max-md:rounded-b-none max-md:border-b-0 md:gap-6 md:px-7 md:py-5">
             <ShieldCheck className="h-9 w-9 shrink-0 text-sage md:h-11 md:w-11" strokeWidth={1.75} aria-hidden="true" />
-            <ul className="grid gap-1.5 text-base font-extrabold leading-snug tracking-[-0.01em] md:grid-cols-2 md:gap-8 md:text-xl">
+            <ul className="grid gap-1.5 text-[0.9375rem] font-extrabold leading-snug tracking-[-0.01em] md:grid-cols-2 md:gap-8 md:text-xl">
               {guarantee.items.map((g) => (
                 <li key={g.text}>
                   {g.text}
@@ -238,8 +260,8 @@ export default function Pricing() {
           </Item>
 
           {/* setup options */}
-          <Item className="mt-3 rounded-lg border-2 border-line bg-raised px-4 py-3 md:mt-5 md:p-7">
-            <div className="flex flex-col gap-2.5 md:gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-5">
+          <Item className="rounded-lg border-2 border-line bg-raised px-4 py-3 max-md:rounded-t-none max-md:border-cream max-md:border-t-line md:mt-5 md:p-7">
+            <div className="flex flex-col gap-2 md:gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-5">
               <p className="eyebrow">{pricing.setup.title}</p>
               <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-5">
                 {/* TODO: when Cal.com booking is live, these open booking instead of the audit form. */}
@@ -251,11 +273,11 @@ export default function Pricing() {
                     <button
                       type="button"
                       onClick={() => goToAnalyzer(undefined, o.id)}
-                      className="group flex min-h-12 cursor-pointer items-center justify-between gap-3 rounded-md border-2 border-line bg-bg px-4 py-2.5 text-left leading-snug transition-[border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-blaze md:px-5 md:py-3.5"
+                      className="group flex min-h-12 cursor-pointer items-center justify-between gap-3 rounded-md border-2 border-line bg-bg px-3.5 py-1.5 text-left leading-snug md:py-2.5 transition-[border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-blaze md:px-5 md:py-3.5"
                     >
                       <span>
-                        <span className="text-lg font-extrabold text-cream md:text-2xl">{o.price}</span>{" "}
-                        <span className="text-base text-muted">{o.detail}</span>
+                        <span className="text-base font-extrabold text-cream md:text-2xl">{o.price}</span>{" "}
+                        <span className="text-sm text-muted md:text-base">{o.detail}</span>
                       </span>
                       <ArrowRight className="h-5 w-5 shrink-0 text-muted transition-colors duration-200 group-hover:text-cream" strokeWidth={2.5} aria-hidden="true" />
                     </button>
@@ -266,13 +288,13 @@ export default function Pricing() {
           </Item>
 
           {/* PHONES ONLY: the guarantee section is hidden there, so ownership and the honest note sit here once. */}
-          <Item className="mt-10 md:hidden">
+          <Item className="mt-7 md:hidden">
             {guarantee.ownershipShort.map((l, i) => (
-              <p key={l} className={i === 0 ? "text-[1.6rem] font-extrabold leading-[1.1] tracking-[-0.03em] text-cream" : "mt-3 text-lg leading-snug text-cream"}>
+              <p key={l} className={i === 0 ? "text-[1.3rem] font-extrabold leading-[1.1] tracking-[-0.03em] text-cream" : "mt-2 text-base leading-snug text-cream"}>
                 {l}
               </p>
             ))}
-            <p className="mt-7 text-sm leading-relaxed text-muted">{guarantee.note}</p>
+            <p className="mt-4 text-sm leading-snug text-muted">{guarantee.note}</p>
           </Item>
         </Reveal>
       </div>
