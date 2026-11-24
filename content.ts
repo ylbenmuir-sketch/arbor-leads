@@ -87,6 +87,30 @@ export const beforeAfter = {
   caption: "Ridgeline Tree Service is a made-up company, shown as an example.",
 };
 
+/**
+ * RECENT WEBSITE CASE
+ * Real numbers from a client build. Do not name or link the client.
+ * No lead, call, or revenue numbers here — only what the reports show.
+ * Each stat counts up to `value`; `prefix`/`suffix` wrap it (e.g. "+153%").
+ */
+export const caseStudy = {
+  eyebrow: "Recent website case",
+  headline: "Not just a prettier website. Rebuilt to get found.",
+  sub: "We didn't just redesign it. We rebuilt the structure, pages, speed, and Google setup so the right customers find it, trust it, and reach out. Here's what changed in the first 30 days.",
+  changesLabel: "What we changed",
+  changes: ["Restructured pages for search", "Built for speed on mobile", "Clear paths to call or book"],
+  stats: [
+    { prefix: "+", value: 153, decimals: 0, suffix: "%", label: "Google clicks", detail: "151 → 382 (30 days before vs. after)" },
+    { prefix: "+", value: 167, decimals: 0, suffix: "%", label: "Times shown on Google", detail: "3.9K → 10.4K impressions" },
+    { prefix: "", value: 2.3, decimals: 1, suffix: "x", label: "Click rate when people search the business name", detail: "11.7% → 26.8%" },
+    { prefix: "", value: 3, decimals: 0, suffix: "x", label: "Shown for non-branded searches", detail: "1.97K → 5.84K impressions" },
+    { prefix: "+", value: 70, decimals: 0, suffix: "%", label: "Organic visitors per day", detail: "16 → 28 per day" },
+    { prefix: "", value: 98, decimals: 0, suffix: "–100", label: "Mobile speed score", detail: "Google Lighthouse, after launch" },
+  ],
+  finePrint:
+    "Results from a recent client build, measured Sep 17–Oct 16 vs. Oct 18–Nov 16, 2026 (Google Search Console) and Sep 1–Oct 17 vs. Oct 18–Nov 17, 2026 (Google Analytics). Individual results vary and depend on market, season, and competition.",
+};
+
 /** The fictional company used in the slider and phone demo. */
 export const mock = {
   company: "Ridgeline Tree Service",

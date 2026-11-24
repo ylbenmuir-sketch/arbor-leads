@@ -1,10 +1,69 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Check, Globe, MapPin, Star, UserRound } from "lucide-react";
-import { about, analyzer, comparison, footer, guarantee, ownership, site } from "@/content";
+import { Check, Gauge, Globe, MapPin, PhoneCall, Search, Star, UserRound } from "lucide-react";
+import { about, analyzer, caseStudy, comparison, footer, guarantee, ownership, site } from "@/content";
 import Analyzer from "./Analyzer";
 import Logo from "./Logo";
 import { Counter, Item, PlaceholderTag, Reveal, SectionHead } from "./ui";
+
+/* ───────────── Recent website case (proof) ─────────────
+   Real numbers from one client build. The client is never named. */
+const changeIcons = [Search, Gauge, PhoneCall];
+
+export function CaseStudy() {
+  return (
+    <section className="border-b-2 border-line">
+      <div className="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-36">
+        <SectionHead eyebrow={caseStudy.eyebrow} title={caseStudy.headline} sub={caseStudy.sub} />
+
+        <Reveal className="mt-10 md:mt-14">
+          <Item as="p" className="text-xs font-bold uppercase tracking-[0.22em] text-muted">
+            {caseStudy.changesLabel}
+          </Item>
+          <Item>
+            <ul className="mt-4 flex flex-wrap gap-3">
+              {caseStudy.changes.map((c, i) => {
+                const Icon = changeIcons[i % changeIcons.length];
+                return (
+                  <li key={c} className="flex items-center gap-2.5 rounded-md border-2 border-line px-4 py-2.5 text-sm font-bold md:text-base">
+                    <Icon className="h-5 w-5 shrink-0 text-sage" strokeWidth={2} aria-hidden="true" />
+                    {c}
+                  </li>
+                );
+              })}
+            </ul>
+          </Item>
+        </Reveal>
+
+        <Reveal as="ul" className="mt-8 grid grid-cols-2 gap-3 md:gap-5 lg:grid-cols-3">
+          {caseStudy.stats.map((s) => (
+            <Item as="li" key={s.label} className="flex flex-col rounded-lg border-2 border-line bg-raised p-4 md:p-8">
+              <Counter
+                to={s.value}
+                prefix={s.prefix}
+                suffix={s.suffix}
+                decimals={s.decimals}
+                className="block whitespace-nowrap text-[clamp(1.5rem,8.4vw,4.75rem)] font-extrabold leading-[0.95] tracking-[-0.045em] text-cream"
+              />
+              <p className="mb-4 mt-3 text-xs font-bold uppercase leading-snug tracking-[0.12em] text-sage md:mb-6 md:mt-4 md:text-sm md:tracking-[0.16em]">
+                {s.label}
+              </p>
+              <p className="mt-auto border-t-2 border-line pt-3 text-xs leading-snug text-muted md:pt-4 md:text-sm">
+                {s.detail}
+              </p>
+            </Item>
+          ))}
+        </Reveal>
+
+        <Reveal>
+          <Item as="p" className="mt-8 max-w-4xl text-xs leading-relaxed text-muted md:text-sm">
+            {caseStudy.finePrint}
+          </Item>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
 
 /* ───────────── Comparison (light section) ─────────────
    Arbor Leads vs typical agency vs doing it yourself.

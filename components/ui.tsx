@@ -102,13 +102,17 @@ export function Counter({
   to,
   prefix = "",
   suffix = "",
+  decimals = 0,
   className,
 }: {
   to: number;
   prefix?: string;
   suffix?: string;
+  decimals?: number;
   className?: string;
 }) {
+  const show = (v: number) =>
+    prefix + v.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals }) + suffix;
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "0px 0px -10% 0px" });
   const reduce = useReducedMotion();
@@ -119,14 +123,16 @@ export function Counter({
     const controls = animate(0, to, {
       duration: 1.6,
       ease,
-      onUpdate: (v) => (el.textContent = prefix + fmt(v) + suffix),
+      onUpdate: (v) => (el.textContent = show(v)),
+      onComplete: () => (el.textContent = show(to)),
     });
     return () => controls.stop();
-  }, [inView, to, prefix, suffix, reduce]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView, to, prefix, suffix, decimals, reduce]);
 
   return (
     <span ref={ref} className={className} style={{ fontVariantNumeric: "tabular-nums" }}>
-      {prefix + fmt(to) + suffix}
+      {show(to)}
     </span>
   );
 }
