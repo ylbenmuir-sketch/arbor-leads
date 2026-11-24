@@ -38,6 +38,8 @@ export const site = {
 /** Thin orange bar above the header. Days left are counted from `pricing.deadline`. */
 export const announcement = {
   text: "Year-end pricing ends Dec 31",
+  /** Phone version: "Year-end pricing · 37 days left". */
+  textShort: "Year-end pricing",
   lock: "Locked in for life",
   daysLeft: "days left",
   dayLeft: "day left",
@@ -60,7 +62,12 @@ export const hero = {
   highlight: "it should be you.",
   subhead:
     "We build your website, work your Google profile every month so you show up on the map, and run ads when you want more work, so homeowners find you, trust you, and call. Live in 7 days or your first month is free.",
+  /** Phones get a shorter subhead, small line, proof text and chips. Desktop uses the full ones. */
+  subheadShort: "Websites, Google Maps and ads for tree companies. Live in 7 days or your first month is free.",
   micro: "Free Google audit · 60 seconds · No call required",
+  microShort: "Free audit · 60 seconds",
+  proofTextShort: "Google clicks in 30 days on a recent project",
+  chipsShort: ["Live in 7 days", "Google Maps", "$0 down"],
   /** The number itself comes from `caseStudy.giant`. */
   proofText: "Google clicks in 30 days, our most recent website build",
   proofHref: "#case",

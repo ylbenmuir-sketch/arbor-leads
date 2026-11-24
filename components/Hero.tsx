@@ -16,16 +16,16 @@ function MapPack() {
     </span>
   );
   return (
-    <figure className="fade-up mx-auto w-full max-w-md lg:max-w-none" style={{ "--d": "0.9s" } as React.CSSProperties}>
+    <figure className="fade-up mx-auto w-full max-w-md max-md:w-[90%] lg:max-w-none" style={{ "--d": "0.9s" } as React.CSSProperties}>
       <div className="overflow-hidden rounded-lg border-2 border-cream bg-cream text-bg shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)]">
         {/* search bar */}
-        <div className="flex items-center gap-2.5 border-b-2 border-bg/10 px-4 py-3">
+        <div className="flex items-center gap-2.5 border-b-2 border-bg/10 px-3.5 py-2 md:px-4 md:py-3">
           <Search className="h-4 w-4 shrink-0 text-bg/60" strokeWidth={2.5} aria-hidden="true" />
           <span className="text-base font-semibold">{mapPack.query}</span>
         </div>
 
         {/* simple map tile */}
-        <div className="relative h-24 overflow-hidden bg-[var(--cream-deep)] lg:h-36" aria-hidden="true">
+        <div className="relative h-20 overflow-hidden bg-[var(--cream-deep)] md:h-24 lg:h-36" aria-hidden="true">
           <span className="absolute -left-4 top-[58%] h-2.5 w-[120%] -rotate-6 bg-cream" />
           <span className="absolute left-[30%] -top-4 h-[140%] w-2.5 rotate-12 bg-cream" />
           <span className="absolute left-[68%] -top-4 h-[140%] w-1.5 -rotate-[20deg] bg-cream" />
@@ -39,8 +39,8 @@ function MapPack() {
         </div>
 
         {/* results */}
-        <ol className="p-2.5 lg:p-3">
-          <li className="rounded-md border-2 border-forest bg-white px-3.5 py-3 lg:px-4 lg:py-4">
+        <ol className="p-2 md:p-2.5 lg:p-3">
+          <li className="rounded-md border-2 border-forest bg-white px-3 py-2.5 md:px-3.5 md:py-3 lg:px-4 lg:py-4">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <p className="text-lg font-extrabold leading-tight tracking-[-0.02em] lg:text-xl">{t.name}</p>
@@ -66,7 +66,7 @@ function MapPack() {
             </div>
           </li>
           {mapPack.others.map((o) => (
-            <li key={o} className="mt-2 flex items-center justify-between gap-3 rounded-md px-3.5 py-2 opacity-45 lg:px-4 lg:py-2.5">
+            <li key={o} className="mt-1 flex items-center justify-between gap-3 rounded-md px-3 py-1.5 opacity-45 md:mt-2 md:px-3.5 md:py-2 lg:px-4 lg:py-2.5">
               <div>
                 <p className="text-base font-bold leading-tight">{o}</p>
                 <div className="mt-1.5">{stars("text-bg/40")}</div>
@@ -78,6 +78,25 @@ function MapPack() {
       </div>
       <figcaption className="mt-2 text-right text-xs text-muted">{mapPack.caption}</figcaption>
     </figure>
+  );
+}
+
+/** The one real number, linked to the case section. */
+function ProofCard({ text, className = "" }: { text: string; className?: string }) {
+  const g = caseStudy.giant;
+  return (
+    <a
+      href={hero.proofHref}
+      className={`group flex max-w-xl items-center gap-4 rounded-lg border-2 border-line bg-deep px-4 py-3 transition-colors duration-300 hover:border-sage md:px-5 md:py-4 ${className}`}
+    >
+      <span className="text-4xl font-extrabold leading-none tracking-[-0.04em] text-cream md:text-5xl">
+        {g.prefix}
+        {g.value}
+        {g.suffix}
+      </span>
+      <span className="text-sm font-semibold leading-snug text-cream md:text-base">{text}</span>
+      <ArrowRight className="ml-auto h-5 w-5 shrink-0 text-sage transition-transform duration-300 group-hover:translate-x-1" strokeWidth={2.5} aria-hidden="true" />
+    </a>
   );
 }
 
@@ -96,8 +115,6 @@ export function Hero() {
       </span>{" "}
     </Fragment>
   );
-  const g = caseStudy.giant;
-
   return (
     <section id="top" className="relative overflow-hidden pb-12 pt-32 md:pb-24 md:pt-44">
       {/* Darkened, desaturated forest photo, faded into the page background. */}
@@ -117,8 +134,9 @@ export function Hero() {
         />
       </div>
 
-      <div className="relative mx-auto grid max-w-7xl gap-10 px-5 md:px-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center lg:gap-14">
-        <div>
+      <div className="relative mx-auto grid max-w-7xl gap-8 px-5 md:gap-10 md:px-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center lg:gap-14">
+        {/* Phones: this block fills the first screen on its own (headline, one line, one button). */}
+        <div className="max-md:flex max-md:min-h-[calc(100svh-9.5rem)] max-md:flex-col max-md:justify-center max-md:pb-[11svh]">
           <h1 className="display-hero" aria-label={hero.headline}>
             <span aria-hidden="true">
               {lead.map(word)}
@@ -130,35 +148,27 @@ export function Hero() {
             </span>
           </h1>
           <p
-            className="fade-up mt-5 max-w-2xl text-[1.0625rem] leading-snug text-muted md:mt-7 md:text-xl"
+            className="fade-up mt-7 max-w-2xl text-[1.0625rem] leading-snug text-muted md:text-xl"
             style={{ "--d": "0.6s" } as React.CSSProperties}
           >
-            {hero.subhead}
+            <span className="md:hidden">{hero.subheadShort}</span>
+            <span className="max-md:hidden">{hero.subhead}</span>
           </p>
-          <div className="fade-up mt-6 md:mt-8" style={{ "--d": "0.75s" } as React.CSSProperties}>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+          <div className="fade-up mt-8" style={{ "--d": "0.75s" } as React.CSSProperties}>
+            <div id="hero-cta" className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
               <CtaButton size="lg" arrow />
               <a href="#pricing" className="btn btn-outline btn-lg max-sm:!hidden">
                 {site.secondaryCta}
               </a>
             </div>
-            <p className="mt-3 text-sm font-semibold text-muted max-sm:text-center md:text-base">{hero.micro}</p>
+            <p className="mt-3 text-sm font-semibold text-muted max-sm:text-center md:text-base">
+              <span className="md:hidden">{hero.microShort}</span>
+              <span className="max-md:hidden">{hero.micro}</span>
+            </p>
 
-            {/* proof strip: the one real number, linked to the case section */}
-            <a
-              href={hero.proofHref}
-              className="group mt-6 flex max-w-xl items-center gap-4 rounded-lg border-2 border-line bg-deep px-4 py-3 transition-colors duration-300 hover:border-sage md:mt-8 md:px-5 md:py-4"
-            >
-              <span className="text-4xl font-extrabold leading-none tracking-[-0.04em] text-cream md:text-5xl">
-                {g.prefix}
-                {g.value}
-                {g.suffix}
-              </span>
-              <span className="text-sm font-semibold leading-snug text-cream md:text-base">{hero.proofText}</span>
-              <ArrowRight className="ml-auto h-5 w-5 shrink-0 text-sage transition-transform duration-300 group-hover:translate-x-1" strokeWidth={2.5} aria-hidden="true" />
-            </a>
-
-            <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm font-bold text-cream md:text-base">
+            {/* desktop: proof strip and chips sit under the button */}
+            <ProofCard text={hero.proofText} className="mt-8 max-md:!hidden" />
+            <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-base font-bold text-cream max-md:hidden">
               {hero.chips.map((c) => (
                 <li key={c} className="flex items-center gap-1.5">
                   <Check className="h-4 w-4 shrink-0 text-sage" strokeWidth={3} aria-hidden="true" />
@@ -169,8 +179,14 @@ export function Hero() {
           </div>
         </div>
 
-        {/* desktop: fills the right half. phones: sits below the proof strip. */}
+        {/* desktop: fills the right half. phones: starts the second screen. */}
         <MapPack />
+
+        {/* phones: proof strip moves below the map example, then one quiet row of trust points */}
+        <div className="md:hidden">
+          <ProofCard text={hero.proofTextShort} />
+          <p className="mt-5 text-center text-[0.8125rem] font-semibold text-muted">{hero.chipsShort.join("  ·  ")}</p>
+        </div>
       </div>
     </section>
   );
