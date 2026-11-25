@@ -371,23 +371,16 @@ export const guarantee = {
 
 export const about = {
   eyebrow: "Built by a former tree service owner",
-  title: "I've run the saw. Now I run the phones.",
-  /** One paragraph per entry. */
+  title: "I've run the saw. Now I help tree companies grow.",
+  /** One paragraph per entry. Same story on phones and desktop. */
   copy: [
     "I owned a tree service company for years. I know how tight the margins are. Fuel, insurance, equipment, payroll, and one slow month can wipe out a good one.",
-    "I hired multiple tree service marketing companies. Most took my money and produced nothing. The one that finally worked? $4,000+ for a new website, $3,450 a month, and a 12-month contract I couldn't get out of.",
-    "After I sold my tree company, I built what I wished I could have bought all those years: a website and Google setup that actually gets found, at a price that makes sense for a tree company, with no year-long contract. Modern tools let us do the work of a big agency without charging like one.",
+    "I hired multiple marketing companies. Most took my money and produced nothing. The one that worked charged $4,000+ for a website, up to $3,450 a month, and locked me into a 12-month contract.",
+    "So I built what I wished I could have bought: a website and Google setup that actually gets found, at a price that makes sense for a tree company, with no year-long contract.",
   ],
-  signature: "— Ben Muir, Founder",
-  /** DESKTOP: one bold line with what Ben paid, then its source line. */
-  agencyLine: "What I paid other agencies: $4,000+ for a website, $500–$3,450 a month, and a 12-month contract.",
-  finePrint: "Agency figures based on what our founder paid tree-service marketing companies. Prices vary by provider.",
-  /** PHONES ONLY: the same story, shorter, with the agency numbers in the body and its own source line. */
-  phone: {
-    body: "I owned a tree service, and I know how tight the margins are. I hired multiple tree marketing companies, and most produced nothing. The one that did cost $4,000+ for the site, up to $3,450 a month, and a 12-month contract.",
-    close: "So I built what I wished I could have bought, starting at $0 down and $149 a month, with no year-long lock-in.",
-    source: "Agency figures based on what our founder paid tree-service marketing companies.",
-  },
+  signature: "Ben Muir, Founder",
+  /** Source line for the agency numbers in the story. */
+  finePrint: "Agency figures are what I personally paid. Prices vary by provider.",
   /** Big statement under the story. */
   pullQuote: "Nobody produced results. The one that did wanted me locked into a 12-month contract.",
   headshot: { src: "/ben-muir.png", alt: "Ben Muir, founder of Arbor Leads", caption: "Ben Muir · Founder, Arbor Leads" },

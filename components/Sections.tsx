@@ -229,7 +229,8 @@ export function About() {
         <div className="grid gap-8 md:grid-cols-[2fr_3fr] md:items-center md:gap-12 lg:gap-16">
           <Reveal>
             <Item>
-              <figure>
+              {/* From tablet up the caption hangs below the photo, so the photo itself centers on the text. */}
+              <figure className="relative">
                 {/* rounded 16px, 1px line border, a soft sage glow off the right edge */}
                 <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-line bg-raised shadow-[28px_0_60px_-30px_rgba(141,184,154,0.45)]">
                   <Image
@@ -240,55 +241,31 @@ export function About() {
                     className="object-cover"
                   />
                 </div>
-                <figcaption className="mt-3 text-sm font-semibold text-cream/80 md:text-muted">{photo.caption}</figcaption>
+                <figcaption className="mt-3 text-sm font-semibold text-cream/80 md:absolute md:top-full md:text-muted">{photo.caption}</figcaption>
               </figure>
             </Item>
           </Reveal>
 
-          {/* PHONES ONLY: the short version. It carries the agency numbers in the body. */}
-          <Reveal className="md:hidden">
-            <Item as="p" className="eyebrow mb-5 !text-cream">
+          {/* The story. Under the photo on phones, beside it (vertically centered) from tablet up. */}
+          <Reveal>
+            <Item as="p" className="eyebrow mb-5 max-md:!text-cream">
               {about.eyebrow}
             </Item>
-            <Item as="h2" className="display-lg">
+            {/* scales with the column so it holds two even lines from tablet up */}
+            <Item as="h2" className="display-md md:!text-[clamp(2rem,3.4vw,3rem)]">
               {about.title}
             </Item>
-            <Item as="p" className="mt-7 text-lg leading-snug text-cream">
-              {about.phone.body}
-            </Item>
-            <Item as="p" className="mt-5 text-xl font-extrabold leading-[1.2] tracking-[-0.02em] text-cream">
-              {about.phone.close}
-            </Item>
-            <Item as="p" className="mt-6 text-base font-extrabold uppercase tracking-[0.1em] text-cream">
-              {about.signature}
-            </Item>
-            <Item as="p" className="mt-7 text-xs leading-relaxed text-cream/75">
-              {about.phone.source}
-            </Item>
-          </Reveal>
-
-          {/* TABLET AND UP: the full story, then one bold line with what agencies cost. */}
-          <Reveal className="max-md:hidden">
-            <Item as="p" className="eyebrow mb-5">
-              {about.eyebrow}
-            </Item>
-            <Item as="h2" className="display-lg">
-              {about.title}
-            </Item>
-            <div className="mt-8 border-l-4 border-sage pl-8">
-              {about.copy.map((para, i) => (
-                <Item as="p" key={para} className={`text-lg leading-relaxed text-cream lg:text-xl ${i > 0 ? "mt-4" : ""}`}>
+            <div className="mt-7 space-y-6 md:mt-8">
+              {about.copy.map((para) => (
+                <Item as="p" key={para} className="text-lg leading-relaxed text-cream lg:text-xl">
                   {para}
                 </Item>
               ))}
-              <Item as="p" className="mt-4 text-base font-extrabold uppercase tracking-[0.1em] text-muted">
-                {about.signature}
-              </Item>
             </div>
-            <Item as="p" className="mt-8 rounded-lg bg-forest px-6 py-5 text-xl font-extrabold leading-snug tracking-[-0.02em] text-cream lg:text-2xl">
-              {about.agencyLine}
+            <Item as="p" className="mt-7 text-sm font-bold uppercase tracking-[0.14em] text-cream md:text-muted">
+              {about.signature}
             </Item>
-            <Item as="p" className="mt-3 text-xs leading-relaxed text-muted md:text-sm">
+            <Item as="p" className="mt-6 text-xs leading-relaxed text-cream/75 md:text-sm md:text-muted">
               {about.finePrint}
             </Item>
           </Reveal>
