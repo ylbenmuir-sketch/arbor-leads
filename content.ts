@@ -374,9 +374,9 @@ export const about = {
   title: "I've run the saw. Now I run the phones.",
   /** One paragraph per entry. */
   copy: [
-    "I owned a tree service. I know how tight the margins are: fuel, insurance, equipment, payroll, and a slow month can wipe out a good one.",
-    "I hired multiple tree service marketing companies. Most took my money and produced nothing. The one that finally did? It cost $4,000+ for the website, up to $3,450 a month, and locked me into a 12-month contract.",
-    "So I built what I wished I could have bought: a website and Google setup that actually gets found, at a price that makes sense for a tree company, without trapping you in a year-long contract.",
+    "I owned a tree service company for years. I know how tight the margins are. Fuel, insurance, equipment, payroll, and one slow month can wipe out a good one.",
+    "I hired multiple tree service marketing companies. Most took my money and produced nothing. The one that finally worked? $4,000+ for a new website, $3,450 a month, and a 12-month contract I couldn't get out of.",
+    "After I sold my tree company, I built what I wished I could have bought all those years: a website and Google setup that actually gets found, at a price that makes sense for a tree company, with no year-long contract. Modern tools let us do the work of a big agency without charging like one.",
   ],
   signature: "— Ben Muir, Founder",
   /** DESKTOP: one bold line with what Ben paid, then its source line. */
