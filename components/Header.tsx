@@ -6,6 +6,10 @@ import Logo from "./Logo";
 import { CtaButton } from "./ui";
 import { announcement, pricing, site } from "@/content";
 
+/** Desktop header phone number. Hidden when the variable isn't set. Inlined at build time. */
+const contactPhone = process.env.NEXT_PUBLIC_CONTACT_PHONE ?? "";
+const telHref = `tel:${contactPhone.replace(/[^\d+]/g, "")}`;
+
 /** Thin orange bar above the header. Hides itself once the pricing deadline passes. */
 function AnnouncementBar({ hidden }: { hidden: boolean }) {
   const [days, setDays] = useState<number | null>(null);
@@ -70,6 +74,27 @@ export default function Header() {
   }, []);
   const showCta = pastCta && !heroGone;
 
+  // Desktop: the header button steps aside whenever another orange button is on screen
+  // (hero, case study, featured plan, audit form), so there's only ever one.
+  const [otherOrange, setOtherOrange] = useState(false);
+  useEffect(() => {
+    // The audit form swaps its button in and out as it changes stage, so watch the form itself.
+    const form = document.querySelector<HTMLElement>("main [data-audit-form]");
+    const buttons = [...document.querySelectorAll<HTMLElement>("main .btn-blaze")].filter((b) => !b.closest("[data-audit-form]"));
+    if (form) buttons.push(form);
+    if (!buttons.length) return;
+    const seen = new Set<Element>();
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) seen.add(e.target);
+        else seen.delete(e.target);
+      }
+      setOtherOrange(seen.size > 0);
+    });
+    buttons.forEach((b) => io.observe(b));
+    return () => io.disconnect();
+  }, []);
+
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 24);
@@ -96,18 +121,25 @@ export default function Header() {
           <Link href="/" className="shrink-0 rounded-sm">
             <Logo className={`w-auto transition-[height] duration-300 ${scrolled ? "h-7" : "h-7 sm:h-8 md:h-9"}`} />
           </Link>
-          <CtaButton
-            size="sm"
-            className={`whitespace-nowrap transition-[opacity,visibility,background-color,border-color,transform] duration-300 max-sm:!px-2.5 max-sm:!text-xs ${
-              showCta ? "" : "max-md:invisible max-md:opacity-0"
-            }`}
-            label={
-              <>
-                <span className="sm:hidden">{site.ctaShort}</span>
-                <span className="hidden sm:inline">{site.cta}</span>
-              </>
-            }
-          />
+          <div className="flex items-center gap-5">
+            {contactPhone && (
+              <a href={telHref} className="text-base font-semibold text-muted underline-offset-4 hover:text-cream hover:underline max-md:hidden" style={{ fontVariantNumeric: "tabular-nums" }}>
+                {contactPhone}
+              </a>
+            )}
+            <CtaButton
+              size="sm"
+              className={`whitespace-nowrap transition-[opacity,visibility,background-color,border-color,transform] duration-300 max-sm:!px-2.5 max-sm:!text-xs ${
+                showCta ? "" : "max-md:invisible max-md:opacity-0"
+              } ${otherOrange ? "md:invisible md:opacity-0" : ""}`}
+              label={
+                <>
+                  <span className="sm:hidden">{site.ctaShort}</span>
+                  <span className="hidden sm:inline">{site.cta}</span>
+                </>
+              }
+            />
+          </div>
         </div>
       </div>
     </header>

@@ -294,60 +294,6 @@ html.lenis body {
   }
 }
 
-/* ── Marquee ── */
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee 44s linear infinite;
-}
-@keyframes marquee {
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-/* ── Range sliders (ROI calculator, on cream) ── */
-.range {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 3rem;
-  background: transparent;
-  cursor: pointer;
-}
-.range::-webkit-slider-runnable-track {
-  height: 8px;
-  border-radius: 2px;
-  background: linear-gradient(to right, var(--forest) var(--fill, 50%), #cfcbbd var(--fill, 50%));
-}
-.range::-moz-range-track {
-  height: 8px;
-  border-radius: 2px;
-  background: #cfcbbd;
-}
-.range::-moz-range-progress {
-  height: 8px;
-  border-radius: 2px;
-  background: var(--forest);
-}
-.range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 30px;
-  height: 30px;
-  margin-top: -11px;
-  border-radius: 6px;
-  background: var(--bg);
-  border: 3px solid var(--cream);
-  box-shadow: 0 2px 6px rgb(0 0 0 / 0.3);
-}
-.range::-moz-range-thumb {
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-  background: var(--bg);
-  border: 3px solid var(--cream);
-}
-
 /* ── Analyzer ── */
 @keyframes scan {
   0% {
@@ -357,17 +303,6 @@ html.lenis body {
     transform: translateX(350%);
   }
 }
-@keyframes typing {
-  0%,
-  60%,
-  100% {
-    opacity: 0.3;
-  }
-  30% {
-    opacity: 1;
-  }
-}
-
 /* ─────────────────────────────────────────────────────────────
    Before/After mock websites.
    Everything inside .mock scales with the browser frame: Tailwind's
@@ -412,9 +347,6 @@ html.lenis body {
     animation: none;
     opacity: 1;
     transform: none;
-  }
-  .marquee-track {
-    animation: none;
   }
   .hl {
     animation: none;

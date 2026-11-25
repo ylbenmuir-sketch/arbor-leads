@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import Image from "next/image";
 import { ArrowRight, Check, Globe, Phone, Search, Star } from "lucide-react";
-import { caseStudy, hero, mapPack, marquee, pain, site } from "@/content";
+import { about, caseStudy, hero, mapPack, pain, site } from "@/content";
 import { CtaButton, Item, Reveal } from "./ui";
 
 /* A made-up Google Maps "3-pack" for the search the headline talks about.
@@ -164,6 +164,18 @@ export function Hero() {
               <span className="md:hidden">{hero.microShort}</span>
               <span className="max-md:hidden">{hero.micro}</span>
             </p>
+            {/* quiet trust line: Ben's face and one short line */}
+            <p className="mt-3 flex items-center gap-2.5 text-sm text-muted max-sm:justify-center">
+              <Image
+                src={about.headshot.src}
+                alt=""
+                width={32}
+                height={32}
+                sizes="32px"
+                className="h-8 w-8 shrink-0 rounded-full border border-line object-cover object-[50%_25%]"
+              />
+              <span className="whitespace-nowrap">{hero.builtBy}</span>
+            </p>
 
             {/* phones: a quiet proof card that links to the case section */}
             <a
@@ -200,28 +212,6 @@ export function Hero() {
         <MapPack />
       </div>
     </section>
-  );
-}
-
-/* Cream-on-forest strip: the two guarantees and the two short offers. */
-export function Marquee() {
-  const row = (hidden: boolean) => (
-    <ul className="flex shrink-0 items-center" aria-hidden={hidden || undefined}>
-      {marquee.map((t) => (
-        <li key={t} className="flex items-center whitespace-nowrap text-sm font-extrabold uppercase tracking-[0.08em] md:text-lg">
-          <span className="px-5 md:px-9">{t}</span>
-          <span className="h-2 w-2 rotate-45 bg-cream" aria-hidden="true" />
-        </li>
-      ))}
-    </ul>
-  );
-  return (
-    <div className="grain overflow-hidden bg-forest py-5 text-cream max-md:hidden">
-      <div className="marquee-track">
-        {row(false)}
-        {row(true)}
-      </div>
-    </div>
   );
 }
 

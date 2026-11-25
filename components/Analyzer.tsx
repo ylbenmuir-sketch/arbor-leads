@@ -4,8 +4,8 @@ import { useEffect, useId, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import { Check, CircleCheck, Flag, X } from "lucide-react";
-import { analyzer as copy, pricing } from "@/content";
-import { Counter, ease } from "./ui";
+import { analyzer as copy, pricing, site } from "@/content";
+import { Counter, bookingUrl, ease } from "./ui";
 
 type Stage = "idle" | "scanning" | "done";
 
@@ -76,10 +76,15 @@ export default function Analyzer() {
   function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
+    const business = String(data.get("business") ?? "").trim();
+    const city = String(data.get("city") ?? "").trim();
     const website = String(data.get("website") ?? "").trim();
-    const mock = mockScore(website);
+    // No website: score and show the business name instead.
+    const checking = website || business;
+    const mock = mockScore(website || `${business} ${city}`);
     const lead = {
-      businessName: String(data.get("business") ?? ""),
+      businessName: business,
+      city,
       website,
       email: String(data.get("email") ?? ""),
       phone: String(data.get("phone") ?? ""),
@@ -96,7 +101,7 @@ export default function Analyzer() {
     //      swap `mockScore()` for the real result before launch.
     // ────────────────────────────────────────────────────────────────
     console.log("[Arbor Leads] New analysis request (not sent anywhere yet):", lead);
-    setUrl(website);
+    setUrl(checking);
     setScore(mock);
     setStep(0);
     setStage("scanning");
@@ -108,9 +113,11 @@ export default function Analyzer() {
     ...(setupOption ? [{ label: copy.setupLabel, value: `${setupOption.price} ${setupOption.detail}`, clear: () => setSetup("") }] : []),
   ];
   const ring = 2 * Math.PI * 52;
+  // Website is optional and spans the full row, so business/city and email/phone pair up.
   const fields = [
     { name: "business", label: copy.fields.business, type: "text", auto: "organization", mode: "text" as const },
-    { name: "website", label: copy.fields.website, type: "text", auto: "url", mode: "url" as const },
+    { name: "city", label: copy.fields.city, type: "text", auto: "address-level2", mode: "text" as const },
+    { name: "website", label: copy.fields.website, type: "text", auto: "url", mode: "url" as const, optional: true, wide: true, placeholder: copy.websitePlaceholder },
     { name: "email", label: copy.fields.email, type: "email", auto: "email", mode: "email" as const },
     { name: "phone", label: copy.fields.phone, type: "tel", auto: "tel", mode: "tel" as const },
   ];
@@ -139,9 +146,10 @@ export default function Analyzer() {
             ))}
             <div className="grid gap-4 sm:grid-cols-2">
               {fields.map((f) => (
-                <div key={f.name}>
+                <div key={f.name} className={f.wide ? "sm:col-span-2" : undefined}>
                   <label htmlFor={`${uid}-${f.name}`} className="mb-2 block text-xs font-bold uppercase tracking-[0.16em] text-cream">
                     {f.label}
+                    {f.optional && <span className="ml-1.5 font-semibold normal-case tracking-normal text-muted">{copy.optional}</span>}
                   </label>
                   <input
                     id={`${uid}-${f.name}`}
@@ -149,17 +157,31 @@ export default function Analyzer() {
                     type={f.type}
                     inputMode={f.mode}
                     autoComplete={f.auto}
-                    autoCapitalize={f.name === "business" ? "words" : "none"}
+                    autoCapitalize={f.name === "business" || f.name === "city" ? "words" : "none"}
                     spellCheck={false}
-                    required
-                    className={inputClass}
+                    required={!f.optional}
+                    placeholder={f.placeholder}
+                    className={`${inputClass} placeholder:text-muted/60`}
                   />
                 </div>
               ))}
             </div>
-            <button type="submit" className="btn btn-blaze btn-lg mt-5 w-full">
+            <button type="submit" className="btn btn-blaze btn-lg mt-5 w-full max-[400px]:!px-3 max-[400px]:!text-[0.875rem]">
               {copy.button}
             </button>
+            {/* Second path for ready buyers. Hidden until a booking link is set: without one it would only point back at this form. */}
+            {bookingUrl && (
+              <p className="mt-3 text-center text-sm text-muted">
+                <a
+                  href={bookingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-12 items-center font-semibold underline underline-offset-4 hover:text-cream"
+                >
+                  {site.ratherTalk} {site.bookCall}
+                </a>
+              </p>
+            )}
             <p className="mt-3 text-xs leading-relaxed text-muted">
               {copy.consent.text}{" "}
               <Link href="/privacy" className="font-bold text-cream underline underline-offset-2">

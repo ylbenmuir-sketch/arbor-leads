@@ -5,7 +5,7 @@
  *
  *  CLAIMS RULES
  *  - The only real stats are the Recent Website Case numbers, plus what
- *    Ben paid agencies himself (in `comparison` and `about`). Don't add others.
+ *    Ben paid agencies himself (in `about`). Don't add others.
  *  - The only guarantees are the two in `guarantee.items`.
  *  - No ranking, call-volume or results promises.
  *  - Missed-call text-back and review requests are Get Booked & up.
@@ -33,6 +33,12 @@ export const site = {
   secondaryCta: "See Pricing",
   /** Label on the outline button in the phone sticky bar. */
   pricingShort: "Pricing",
+  /**
+   * Plan buttons and the link under the audit form. They open NEXT_PUBLIC_BOOKING_URL,
+   * or scroll to the audit form when it isn't set.
+   */
+  bookCall: "Book a 15-min call",
+  ratherTalk: "Rather talk?",
 };
 
 /** Thin orange bar above the header. Days left are counted from `pricing.deadline`. */
@@ -47,15 +53,6 @@ export const announcement = {
   href: "#pricing",
 };
 
-export const marquee = [
-  "Websites that get calls",
-  "Google & Maps",
-  "Review growth",
-  "Ads when you want more work",
-  "Live in 7 days",
-  "$0 down option",
-];
-
 export const hero = {
   headline: "When your town searches “tree service near me,” it should be you.",
   /** These closing words go on their own line with the orange underline. Must match the headline exactly. */
@@ -66,6 +63,8 @@ export const hero = {
   subheadShort: "Websites, Google Maps and ads for tree companies. Live in 7 days or your first month is free.",
   micro: "Free Google audit · 60 seconds · No call required",
   microShort: "Free audit · 60 seconds",
+  /** Quiet line with Ben's photo, under the small line above. */
+  builtBy: "Built by a former tree service owner",
   /** The phone proof card: small label, then the number with this line. */
   proofEyebrow: "Recent project",
   proofTextShort: "Google clicks in 30 days",
@@ -97,16 +96,19 @@ export const analyzer = {
   subShort: "Free. 60 seconds. We'll email your report.",
   fields: {
     business: "Business name",
+    city: "City you serve",
     website: "Website URL",
     email: "Email",
     phone: "Phone",
   },
+  optional: "(optional)",
+  websitePlaceholder: "No website? That's what we fix.",
   /** Shown above the form when someone clicks a "Start with…" pricing button. */
   planLabel: "Plan you picked:",
   /** Shown when someone clicks one of the "Two ways to start" buttons. */
   setupLabel: "Setup you picked:",
   planClear: "Clear",
-  button: "Run My Free Audit",
+  button: "Show Me Who's Beating Me",
   /** Small print under the button. The link goes to /privacy. */
   consent: {
     text: "By submitting, you agree to be contacted by Arbor Leads by email, phone or text about your audit. Msg & data rates may apply. Reply STOP to opt out. See our",
@@ -137,52 +139,19 @@ export const pain = {
   ],
 };
 
-/** "How we grow you": the three pillars. `tag` says which plans include it. */
-export const pillars = {
-  eyebrow: "How we grow you",
-  headline: "Get found. Get chosen. Get the call.",
-  items: [
-    {
-      icon: "site",
-      title: "A website that sells.",
-      body: "Built to turn a search into a phone call. Fast on mobile, clear prices and services, one-tap call. Live in 7 days.",
-      tag: "All plans",
-    },
-    {
-      icon: "map",
-      title: "Google & Maps.",
-      body: "Your Google Business Profile set up and worked every month, plus local SEO and service-area pages, so you show up where your town is looking.",
-      tag: "All plans",
-    },
-    {
-      icon: "ads",
-      title: "Ads when you want more work.",
-      body: "Google and Facebook ads managed for you. You set the budget; ad spend goes straight to Google and Meta.",
-      tag: "Dominate plan",
-    },
-  ] as { icon: "site" | "map" | "ads"; title: string; body: string; tag: string }[],
-  also: {
-    text: "And no lead slips through: every missed call texted back in under 60 seconds, plus automatic review requests.",
-    tag: "Get Booked & up",
-  },
-};
-
 export const beforeAfter = {
   eyebrow: "Before / After",
   headline: "Your truck looks like a pro. Does your website?",
   sub: "Same company. Left is what most tree sites look like. Right is what we build. Drag it.",
   /** Phone version of the line above. */
   subShort: "Same company. Left is what most tree sites look like. Right is what we build.",
-  /**
-   * PHONES ONLY: three short lines under the slider. On phones these replace the
-   * "How we grow you", "What you get" and missed-call sections, which stay on desktop.
-   */
-  phoneLines: [
+  /** "What you get": three short lines under the slider, with the plan note under them. */
+  lines: [
     "A website built to get the call. Live in 7 days.",
     "Google and Maps set up so your town can find you.",
     "You stay on the saw. We handle the rest.",
   ],
-  phoneNote: "On Get Booked and up, every missed call is texted back in 60 seconds.",
+  planNote: "On Get Booked and up, every missed call is texted back in 60 seconds.",
   before: { tag: "Before", text: "what most tree sites look like" },
   after: { tag: "After", text: "what we build" },
   caption: "Ridgeline is a made-up company, and its review is a sample. Shown as an example of our work.",
@@ -296,60 +265,6 @@ export const mock = {
   },
 };
 
-export const speedToLead = {
-  eyebrow: "And when they call",
-  headline: "You're on the saw. We're on the phone.",
-  caption: "Missed call → automatic text in under 60 seconds → they book an estimate. You call back when you're on the ground.",
-  /** Big label beside the phone. */
-  bigLabel: ["Under 60 seconds.", "Guaranteed."],
-  planNote: "On Get Booked & Dominate.",
-  replay: "Replay",
-  contactName: "Homeowner",
-  missedCall: { title: "Missed call", detail: "(615) 555-0188 · just now" },
-  messages: [
-    { from: "business", text: "Sorry we missed you! We're on a job. What can we help with?", tag: "Automatic text · under 60 seconds" },
-    { from: "customer", text: "Hi, I've got a big dead oak leaning toward my house. Can someone come take a look?" },
-    { from: "business", text: "We can help with that. Pick a time for a free estimate:", link: "ridgelinetree.com/book", tag: "Automatic reply" },
-  ] as { from: "business" | "customer"; text: string; link?: string; tag?: string }[],
-  booked: "Estimate booked: Thursday 10am",
-};
-
-/** Full-width photo band. */
-export const photoBand = {
-  line: "Storm season doesn't wait. Neither do your customers.",
-};
-
-/** "What you get" list + the 3-step strip. */
-export const offer = {
-  eyebrow: "What you get",
-  headline: "Here's everything we take off your plate.",
-  /** `tag` marks anything that isn't in every plan. Leave it "" for all plans. */
-  items: [
-    { icon: "site", text: "A site built to get calls. Live in 7 days.", tag: "" },
-    { icon: "map", text: "Your Google profile set up so you show up in Maps.", tag: "" },
-    { icon: "search", text: "Local SEO basics built in. Extra service-area pages on Dominate.", tag: "" },
-    { icon: "star", text: "Review requests sent after every job, automatically.", tag: "Get Booked & up" },
-    { icon: "text", text: "Every missed call texted back in under 60 seconds.", tag: "Get Booked & up" },
-    { icon: "ads", text: "Google and Facebook ads, managed for you.", tag: "Dominate" },
-    { icon: "wrench", text: "Hosting, updates and fixes. Never your problem.", tag: "" },
-    { icon: "report", text: "A one-page report every month: what came in and what's working.", tag: "" },
-  ] as { icon: "site" | "map" | "search" | "star" | "text" | "ads" | "wrench" | "report"; text: string; tag: string }[],
-  closing: { lead: "You do:", text: "answer the leads and run your crews." },
-  steps: ["Free audit", "Live in 7 days", "We run it. You run crews."],
-};
-
-export const roi = {
-  eyebrow: "Do the math",
-  headline: "What's one more removal worth to you?",
-  jobSize: { label: "Average job size", min: 300, max: 10000, step: 100, default: 1500 },
-  extraJobs: { label: "Extra jobs per month", min: 1, max: 20, step: 1, default: 2 },
-  resultLead: "That's",
-  resultMonth: "more per month",
-  resultYear: "per year.",
-  note: "If this books you one extra job a month, it's paid for.",
-  disclaimer: "Your numbers, your math. This is a calculator, not a promise.",
-};
-
 /**
  * PRICING
  * NOTE: `regular` prices take effect Jan 1 for new customers.
@@ -375,8 +290,8 @@ export const pricing = {
   billedMonthly: "billed monthly",
   regularLabel: "Regular",
   perMonth: "/mo",
-  /** Plan buttons read "Start with <plan name>". */
-  planCta: "Start with",
+  /** Payoff line under the headline (the calculator was cut, so it lives here). */
+  payoff: "If this books you one extra job a month, it's paid for.",
   swipeHint: "Swipe to compare plans",
   /** Phones show the first 3 features of each plan, then this toggle. */
   seeAll: "See everything included",
@@ -439,48 +354,19 @@ export const pricing = {
   },
 };
 
-/**
- * COMPARISON
- * The agency figures are what Ben paid tree-service marketing companies
- * himself. Update `finePrint` if you change them. Never name a competitor here.
- */
-export const comparison = {
-  headline: "Three ways to get more work. Only one lets you stay on the saw.",
-  /** Bold strip above the table. */
-  callout: "I paid $4,000+ for a website and $500–$3,450 a month for marketing. Arbor Leads starts at $0 down and $149 a month.",
-  columns: { us: "Arbor Leads", agency: "Tree-service marketing agencies", diy: "Doing it yourself" },
-  /** `big: true` makes the Arbor Leads cell larger so the price gap stands out. */
-  rows: [
-    { label: "Website build", us: "$0 down or $495", agency: "$4,000+", diy: "You build it", big: true },
-    { label: "Monthly cost", us: "From $149/mo", agency: "$500–$3,450/mo", diy: "Free, but it's your time", big: true },
-    { label: "Contract", us: "6 months or month-to-month", agency: "Often 12 months", diy: "None", big: false },
-    { label: "Missed-call text-back", us: "In Get Booked and up", agency: "Often extra", diy: "You set it up", big: false },
-    { label: "Time to launch", us: "7 days", agency: "Varies", diy: "Whenever you find time", big: false },
-    { label: "Built by", us: "A former tree service owner", agency: "Marketers", diy: "You, after work", big: false },
-  ],
-  finePrint: "Agency figures based on what our founder paid tree-service marketing companies. Prices vary by provider.",
-};
-
 /** The ONLY two guarantees. Keep this wording. No results or money-back promises. */
 export const guarantee = {
-  eyebrow: "The guarantee",
-  headline: "Two promises. In writing.",
   items: [
     { text: "Live in 7 days, or your first month is free.", planNote: "" },
     { text: "Every missed call texted back in 60 seconds, or that month is free.", planNote: "On Get Booked & Dominate." },
   ],
-  stamp: "Arbor Leads guarantee",
   note: "We won't promise you a magic number of calls. Anyone who does is guessing. We promise the work gets done, fast, and you see the numbers every month.",
-  /** PHONES ONLY: the ownership promise as short lines under the plans. */
+  /** The ownership promise as short lines under the plans. */
   ownershipShort: [
     "You're never trapped.",
     "Your domain, Google profile and reviews are always yours.",
     "Your site is yours after 6 months, or day one with the $495 setup.",
   ],
-  ownership: {
-    lead: "And you're never trapped.",
-    body: "Your domain, Google profile and reviews are always yours. Your site is yours after 6 months, or day one with the $495 setup.",
-  },
 };
 
 export const about = {
@@ -493,21 +379,23 @@ export const about = {
     "So I built what I wished I could have bought: a website and Google setup that actually gets found, at a price that makes sense for a tree company, without trapping you in a year-long contract.",
   ],
   signature: "— Ben Muir, Founder",
-  /** PHONES ONLY: the same story, shorter. The comparison table is hidden on phones, so the source line sits here. */
+  /** DESKTOP: one bold line with what Ben paid, then its source line. */
+  agencyLine: "What I paid other agencies: $4,000+ for a website, $500–$3,450 a month, and a 12-month contract.",
+  finePrint: "Agency figures based on what our founder paid tree-service marketing companies. Prices vary by provider.",
+  /** PHONES ONLY: the same story, shorter, with the agency numbers in the body and its own source line. */
   phone: {
     body: "I owned a tree service, and I know how tight the margins are. I hired multiple tree marketing companies, and most produced nothing. The one that did cost $4,000+ for the site, up to $3,450 a month, and a 12-month contract.",
     close: "So I built what I wished I could have bought, starting at $0 down and $149 a month, with no year-long lock-in.",
     source: "Agency figures based on what our founder paid tree-service marketing companies.",
   },
   /** Big statement under the story. */
-  pullQuote: "Nobody produced results. The one that did wanted 12 months of my money up front.",
+  pullQuote: "Nobody produced results. The one that did wanted me locked into a 12-month contract.",
+  headshot: { src: "/ben-muir.png", alt: "Ben Muir, founder of Arbor Leads", caption: "Ben Muir · Founder, Arbor Leads" },
   /**
    * Nothing below shows on the site until it's real:
-   * - headshot: drop a photo in /public/images and set `src`, e.g. "/images/ben.jpg".
    * - stats: set a real `value` and `placeholder: false`.
    * - testimonials: fill in a real `quote` and `name`. Real quotes only.
    */
-  headshot: { src: "", alt: "Ben, founder of Arbor Leads" },
   stats: [
     { value: 0, suffix: "+", label: "Jobs booked", placeholder: true },
     { value: 0, suffix: "+", label: "Reviews gained", placeholder: true },

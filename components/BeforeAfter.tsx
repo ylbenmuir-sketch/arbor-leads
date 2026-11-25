@@ -172,15 +172,17 @@ export default function BeforeAfter() {
           </Item>
         </Reveal>
 
-        {/* PHONES ONLY: what you get, in three lines. Desktop tells this in its own sections. */}
-        <Reveal className="mt-8 space-y-4 md:hidden">
-          {copy.phoneLines.map((l) => (
-            <Item as="p" key={l} className="text-[1.3rem] font-extrabold leading-[1.15] tracking-[-0.03em] text-cream">
-              {l}
-            </Item>
-          ))}
-          <Item as="p" className="text-sm leading-snug text-muted">
-            {copy.phoneNote}
+        {/* What you get, in three lines. Stacked on phones, a row of three on desktop. */}
+        <Reveal className="mt-8 md:mx-auto md:mt-16 md:max-w-6xl">
+          <div className="space-y-4 md:grid md:grid-cols-3 md:gap-8 md:space-y-0">
+            {copy.lines.map((l) => (
+              <Item as="p" key={l} className="text-[1.3rem] font-extrabold leading-[1.15] tracking-[-0.03em] text-cream md:border-t-2 md:border-sage md:pt-5 md:text-2xl">
+                {l}
+              </Item>
+            ))}
+          </div>
+          <Item as="p" className="mt-4 text-sm leading-snug text-muted md:mt-8 md:text-center md:text-base">
+            {copy.planNote}
           </Item>
         </Reveal>
       </div>

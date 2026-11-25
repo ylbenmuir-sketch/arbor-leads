@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { m, animate, useInView, useMotionValue, useReducedMotion, useSpring, type Variants } from "framer-motion";
+import { m, animate, useInView, useReducedMotion, type Variants } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { site } from "@/content";
 import { goToAnalyzer } from "./Providers";
@@ -98,8 +98,6 @@ export function SectionHead({
   );
 }
 
-const fmt = (n: number) => Math.round(n).toLocaleString("en-US");
-
 /** Counts up from 0 the first time it's visible. */
 export function Counter({
   to,
@@ -140,37 +138,6 @@ export function Counter({
   );
 }
 
-/** A number that eases to its new value whenever it changes (ROI calculator). */
-export function SpringNumber({ value, prefix = "" }: { value: number; prefix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const reduce = useReducedMotion();
-  const mv = useMotionValue(value);
-  // Over-damped on purpose: settles without any bounce.
-  const spring = useSpring(mv, { stiffness: 120, damping: 34 });
-
-  useEffect(() => {
-    if (reduce) {
-      if (ref.current) ref.current.textContent = prefix + fmt(value);
-      return;
-    }
-    mv.set(value);
-  }, [value, mv, reduce, prefix]);
-
-  useEffect(
-    () =>
-      spring.on("change", (v) => {
-        if (ref.current) ref.current.textContent = prefix + fmt(v);
-      }),
-    [spring, prefix],
-  );
-
-  return (
-    <span ref={ref} style={{ fontVariantNumeric: "tabular-nums" }}>
-      {prefix + fmt(value)}
-    </span>
-  );
-}
-
 /**
  * The call to action. Scrolls to the free audit form.
  * Pass `plan` to pre-select a pricing plan in the form.
@@ -206,6 +173,30 @@ export function CtaButton({
     >
       {label}
       {arrow && <ArrowRight className="h-5 w-5 shrink-0" strokeWidth={2.5} aria-hidden="true" />}
+    </a>
+  );
+}
+
+/** Booking link for ready buyers. Empty means "not set up yet". Inlined at build time. */
+export const bookingUrl = process.env.NEXT_PUBLIC_BOOKING_URL ?? "";
+
+/**
+ * "Book a 15-min call". Opens the booking page in a new tab, or scrolls to the
+ * free audit form (with `plan` pre-selected) when NEXT_PUBLIC_BOOKING_URL isn't set.
+ */
+export function BookCallButton({
+  variant = "blaze",
+  plan,
+  className = "",
+}: {
+  variant?: "blaze" | "forest";
+  plan?: string;
+  className?: string;
+}) {
+  if (!bookingUrl) return <CtaButton full variant={variant} label={site.bookCall} plan={plan} className={className} />;
+  return (
+    <a href={bookingUrl} target="_blank" rel="noopener noreferrer" className={`btn btn-${variant} w-full ${className}`}>
+      {site.bookCall}
     </a>
   );
 }

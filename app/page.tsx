@@ -1,14 +1,11 @@
 import { faq, site } from "@/content";
 import Header from "@/components/Header";
-import { Hero, Marquee, Pain } from "@/components/Hero";
+import { Hero, Pain } from "@/components/Hero";
 import BeforeAfter from "@/components/BeforeAfter";
-import SpeedToLead from "@/components/SpeedToLead";
-import { OfferStack, RoiCalculator } from "@/components/Roi";
-import PhotoBand from "@/components/PhotoBand";
 import StickyCta from "@/components/StickyCta";
 import Pricing from "@/components/Pricing";
 import Faq from "@/components/Faq";
-import { About, AnalyzerSection, CaseStudy, Comparison, Footer, Guarantee, Pillars } from "@/components/Sections";
+import { About, AnalyzerSection, CaseStudy, Footer } from "@/components/Sections";
 
 export default function Home() {
   const jsonLd = [
@@ -37,19 +34,11 @@ export default function Home() {
       <Header />
       <main id="main">
         <Hero />
-        <Marquee />
         <Pain />
         <CaseStudy />
-        <Pillars />
-        <BeforeAfter />
-        <OfferStack />
-        <SpeedToLead />
-        <PhotoBand />
-        <RoiCalculator />
-        <Pricing />
-        <Guarantee />
-        <Comparison />
         <About />
+        <BeforeAfter />
+        <Pricing />
         <Faq />
         <AnalyzerSection />
       </main>
