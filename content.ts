@@ -371,16 +371,14 @@ export const guarantee = {
 
 export const about = {
   eyebrow: "Built by a former tree service owner",
-  title: "I've run the saw. Now I help tree companies grow.",
+  title: "I built and sold a tree company. Now I help yours grow.",
   /** One paragraph per entry. Same story on phones and desktop. */
   copy: [
-    "I owned a tree service company for years. I know how tight the margins are. Fuel, insurance, equipment, payroll, and one slow month can wipe out a good one.",
-    "I hired multiple marketing companies. Most took my money and produced nothing. The one that worked charged $4,000+ for a website, up to $3,450 a month, and locked me into a 12-month contract.",
-    "So I built what I wished I could have bought: a website and Google setup that actually gets found, at a price that makes sense for a tree company, with no year-long contract.",
+    "I ran a tree service for years. One slow month eats into the good ones, and at the end of the year you're left wondering where all the money went.",
+    "I hired several marketing companies. Most produced nothing. The one that finally worked charged $4,000+ for a website, up to $3,450 a month, and a 12-month contract.",
+    "After I sold my company, I built what I wish I'd had: a website and Google setup that actually gets found, priced for a tree company, with no year-long contract.",
   ],
-  signature: "Ben Muir, Founder",
-  /** Source line for the agency numbers in the story. */
-  finePrint: "Agency figures are what I personally paid. Prices vary by provider.",
+  signature: "— Ben Muir, Founder",
   /** Big statement under the story. */
   pullQuote: "Nobody produced results. The one that did wanted me locked into a 12-month contract.",
   headshot: { src: "/ben-muir.png", alt: "Ben Muir, founder of Arbor Leads", caption: "Ben Muir · Founder, Arbor Leads" },

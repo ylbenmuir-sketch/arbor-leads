@@ -265,9 +265,6 @@ export function About() {
             <Item as="p" className="mt-7 text-sm font-bold uppercase tracking-[0.14em] text-cream md:text-muted">
               {about.signature}
             </Item>
-            <Item as="p" className="mt-6 text-xs leading-relaxed text-cream/75 md:text-sm md:text-muted">
-              {about.finePrint}
-            </Item>
           </Reveal>
         </div>
 
