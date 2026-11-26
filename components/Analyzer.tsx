@@ -5,7 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import { Check, CircleCheck, Flag, X } from "lucide-react";
 import { analyzer as copy, pricing, site } from "@/content";
-import { Counter, bookingUrl, ease } from "./ui";
+import { Counter, bookingUrl, ease, rememberContact, useBookingHref } from "./ui";
 
 type Stage = "idle" | "scanning" | "done";
 
@@ -43,6 +43,10 @@ export default function Analyzer() {
   const [plan, setPlan] = useState("");
   // "zero-down" or "495-setup", set by the "Two ways to start" buttons.
   const [setup, setSetup] = useState("");
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState(false);
+  const [email, setEmail] = useState("");
+  const bookHref = useBookingHref();
 
   useEffect(() => {
     const onPlan = (e: Event) => {
@@ -73,34 +77,48 @@ export default function Analyzer() {
     return () => clearTimeout(t);
   }, [stage, step, reduce]);
 
-  function submit(e: React.FormEvent<HTMLFormElement>) {
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (sending) return;
     const data = new FormData(e.currentTarget);
-    const business = String(data.get("business") ?? "").trim();
-    const city = String(data.get("city") ?? "").trim();
-    const website = String(data.get("website") ?? "").trim();
+    const get = (key: string) => String(data.get(key) ?? "").trim();
+    const business = get("business");
+    const city = get("city");
+    const website = get("website");
     // No website: score and show the business name instead.
     const checking = website || business;
+    // TODO: the score is still a MOCK generated from the URL. Swap in a real analysis before relying on it.
     const mock = mockScore(website || `${business} ${city}`);
     const lead = {
+      name: get("name"),
       businessName: business,
       city,
       website,
-      email: String(data.get("email") ?? ""),
-      phone: String(data.get("phone") ?? ""),
-      plan: String(data.get("plan") ?? ""),
-      setup: String(data.get("setup") ?? ""),
-      mockScore: mock,
-      submittedAt: new Date().toISOString(),
+      email: get("email"),
+      phone: get("phone"),
+      plan: get("plan"),
+      setup: get("setup"),
+      company: get("company"), // honeypot
     };
-    // ────────────────────────────────────────────────────────────────
-    // TODO(backend): REPLACE THIS WITH THE REAL BACKEND.
-    //   1. POST `lead` to your API route / CRM / email tool.
-    //   2. Run the real business analysis and email the report.
-    //   3. The score shown below is a MOCK generated from the URL —
-    //      swap `mockScore()` for the real result before launch.
-    // ────────────────────────────────────────────────────────────────
-    console.log("[Arbor Leads] New analysis request (not sent anywhere yet):", lead);
+
+    setSending(true);
+    setError(false);
+    try {
+      // Saves to Supabase and emails the owner (app/api/leads/route.ts).
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(lead),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    } catch {
+      setError(true);
+      setSending(false);
+      return;
+    }
+    setSending(false);
+    rememberContact({ name: lead.name, email: lead.email });
+    setEmail(lead.email);
     setUrl(checking);
     setScore(mock);
     setStep(0);
@@ -115,6 +133,7 @@ export default function Analyzer() {
   const ring = 2 * Math.PI * 52;
   // Website is optional and spans the full row, so business/city and email/phone pair up.
   const fields = [
+    { name: "name", label: copy.fields.name, type: "text", auto: "name", mode: "text" as const, wide: true },
     { name: "business", label: copy.fields.business, type: "text", auto: "organization", mode: "text" as const },
     { name: "city", label: copy.fields.city, type: "text", auto: "address-level2", mode: "text" as const },
     { name: "website", label: copy.fields.website, type: "text", auto: "url", mode: "url" as const, optional: true, wide: true, placeholder: copy.websitePlaceholder },
@@ -157,7 +176,7 @@ export default function Analyzer() {
                     type={f.type}
                     inputMode={f.mode}
                     autoComplete={f.auto}
-                    autoCapitalize={f.name === "business" || f.name === "city" ? "words" : "none"}
+                    autoCapitalize={f.name === "name" || f.name === "business" || f.name === "city" ? "words" : "none"}
                     spellCheck={false}
                     required={!f.optional}
                     placeholder={f.placeholder}
@@ -166,14 +185,34 @@ export default function Analyzer() {
                 </div>
               ))}
             </div>
-            <button type="submit" className="btn btn-blaze btn-lg mt-5 w-full max-[400px]:!px-3 max-[400px]:!text-[0.875rem]">
-              {copy.button}
+            {/* Honeypot: hidden from people, filled in by bots. The API drops anything that has it. */}
+            <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+              <label>
+                Company <input type="text" name="company" tabIndex={-1} autoComplete="off" />
+              </label>
+            </div>
+            {error && (
+              <p role="alert" className="mt-5 rounded-md border-2 border-blaze bg-bg px-4 py-3 text-base font-semibold text-cream">
+                {copy.error}{" "}
+                <a href={`mailto:${site.email}`} className="underline underline-offset-2">
+                  {site.email}
+                </a>
+                .
+              </p>
+            )}
+            <button
+              type="submit"
+              disabled={sending}
+              aria-busy={sending}
+              className="btn btn-blaze btn-lg mt-5 w-full disabled:cursor-wait disabled:opacity-70 max-[400px]:!px-3 max-[400px]:!text-[0.875rem]"
+            >
+              {sending ? copy.sending : copy.button}
             </button>
             {/* Second path for ready buyers. Hidden until a booking link is set: without one it would only point back at this form. */}
             {bookingUrl && (
               <p className="mt-3 text-center text-sm text-muted">
                 <a
-                  href={bookingUrl}
+                  href={bookHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex min-h-12 items-center font-semibold underline underline-offset-4 hover:text-cream"
@@ -233,7 +272,9 @@ export default function Analyzer() {
           <m.div key="done" {...swap}>
             <div className="flex items-start gap-4 border-b-2 border-line pb-6">
               <CircleCheck className="mt-0.5 h-8 w-8 shrink-0 text-sage" strokeWidth={2} aria-hidden="true" />
-              <p className="text-xl font-extrabold leading-snug tracking-tight sm:text-2xl">{copy.success}</p>
+              <p className="min-w-0 break-words text-xl font-extrabold leading-snug tracking-tight sm:text-2xl">
+                {copy.success.replace("{email}", email)}
+              </p>
             </div>
 
             <div className="mt-6 grid gap-7 md:grid-cols-[auto_1fr] md:items-center">
@@ -283,6 +324,15 @@ export default function Analyzer() {
                 </ul>
               </div>
             </div>
+
+            {bookingUrl && (
+              <div className="mt-7 flex flex-col gap-3 border-t-2 border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-lg font-extrabold tracking-tight">{copy.bookAfter}</p>
+                <a href={bookHref} target="_blank" rel="noopener noreferrer" className="btn btn-blaze shrink-0">
+                  {site.bookCall}
+                </a>
+              </div>
+            )}
 
             <button
               type="button"

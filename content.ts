@@ -95,6 +95,7 @@ export const analyzer = {
   /** Phone version of the line above. */
   subShort: "Free. 60 seconds. We'll email your report.",
   fields: {
+    name: "Your name",
     business: "Business name",
     city: "City you serve",
     website: "Website URL",
@@ -109,6 +110,10 @@ export const analyzer = {
   setupLabel: "Setup you picked:",
   planClear: "Clear",
   button: "Show Me Who's Beating Me",
+  /** Button text while the form is sending. */
+  sending: "Sending…",
+  /** Shown above the button if the form couldn't be sent. */
+  error: "That didn't go through. Please try again, or email us at",
   /** Small print under the button. The link goes to /privacy. */
   consent: {
     text: "By submitting, you agree to be contacted by Arbor Leads by email, phone or text about your audit. Msg & data rates may apply. Reply STOP to opt out. See our",
@@ -125,7 +130,10 @@ export const analyzer = {
   redFlagsTitle: "3 things to fix",
   /** Shown blurred. Real findings come from the backend later. */
   redFlags: ["Finding #1", "Finding #2", "Finding #3"],
-  success: "Your report is on the way. Check your inbox in a few minutes.",
+  /** `{email}` is replaced with the address they entered. */
+  success: "Got it. We'll email your full report to {email}.",
+  /** Under the score, next to the booking button (only shown when NEXT_PUBLIC_BOOKING_URL is set). */
+  bookAfter: "Want to go over it together?",
   startOver: "Check another business",
 };
 

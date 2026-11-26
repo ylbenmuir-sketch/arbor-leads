@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { m, animate, useInView, useReducedMotion, type Variants } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { site } from "@/content";
@@ -180,6 +180,48 @@ export function CtaButton({
 /** Booking link for ready buyers. Empty means "not set up yet". Inlined at build time. */
 export const bookingUrl = process.env.NEXT_PUBLIC_BOOKING_URL ?? "";
 
+type Contact = { name: string; email: string };
+const CONTACT_KEY = "arbor:contact";
+const CONTACT_EVENT = "arbor:contact";
+
+/** Remember who filled in the audit form so every "Book a call" link can pre-fill Cal.com. */
+export function rememberContact(contact: Contact) {
+  try {
+    localStorage.setItem(CONTACT_KEY, JSON.stringify(contact));
+  } catch {
+    // Private mode / storage blocked: links still work, just not pre-filled after a reload.
+  }
+  window.dispatchEvent(new CustomEvent(CONTACT_EVENT, { detail: contact }));
+}
+
+/** The booking URL with Cal.com's `name` and `email` pre-fill params, when we know them. */
+export function bookingHref(contact?: Contact | null) {
+  if (!bookingUrl || !contact) return bookingUrl;
+  try {
+    const url = new URL(bookingUrl);
+    if (contact.name) url.searchParams.set("name", contact.name);
+    if (contact.email) url.searchParams.set("email", contact.email);
+    return url.toString();
+  } catch {
+    return bookingUrl;
+  }
+}
+
+/** Booking href that picks up the visitor's name and email once they've submitted the audit form. */
+export function useBookingHref() {
+  const [contact, setContact] = useState<Contact | null>(null);
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(CONTACT_KEY);
+      if (saved) setContact(JSON.parse(saved));
+    } catch {}
+    const onContact = (e: Event) => setContact((e as CustomEvent<Contact>).detail);
+    window.addEventListener(CONTACT_EVENT, onContact);
+    return () => window.removeEventListener(CONTACT_EVENT, onContact);
+  }, []);
+  return bookingHref(contact);
+}
+
 /**
  * "Book a 15-min call". Opens the booking page in a new tab, or scrolls to the
  * free audit form (with `plan` pre-selected) when NEXT_PUBLIC_BOOKING_URL isn't set.
@@ -193,9 +235,10 @@ export function BookCallButton({
   plan?: string;
   className?: string;
 }) {
+  const href = useBookingHref();
   if (!bookingUrl) return <CtaButton full variant={variant} label={site.bookCall} plan={plan} className={className} />;
   return (
-    <a href={bookingUrl} target="_blank" rel="noopener noreferrer" className={`btn btn-${variant} w-full ${className}`}>
+    <a href={href} target="_blank" rel="noopener noreferrer" className={`btn btn-${variant} w-full ${className}`}>
       {site.bookCall}
     </a>
   );
