@@ -104,12 +104,30 @@ export const analyzer = {
   },
   optional: "(optional)",
   websitePlaceholder: "No website? That's what we fix.",
+  /** Two-step form. Step 1 finds the business on Google; step 2 asks where to send the report. */
+  steps: { business: "Step 1 of 2", contact: "Step 2 of 2" },
+  find: {
+    label: "Find your business",
+    placeholder: "Start typing your business name",
+    hint: "Pick it from the list so we check the right listing.",
+    manualLink: "Not on Google? Enter it manually",
+    searchLink: "Search Google instead",
+    change: "Change",
+    loading: "Getting your listing…",
+    /** Shown when they press Next without picking from the list or filling the manual fields. */
+    pickError: "Start typing your business name, then pick it from the list.",
+    cityMissing: "We couldn't see a city on that listing. Which city do you serve?",
+    cityPlaceholder: "Start typing your city",
+  },
+  next: "Next",
+  contactHeading: "Where should we send your report?",
+  back: "Back",
   /** Shown above the form when someone clicks a "Start with…" pricing button. */
   planLabel: "Plan you picked:",
   /** Shown when someone clicks one of the "Two ways to start" buttons. */
   setupLabel: "Setup you picked:",
   planClear: "Clear",
-  button: "Show Me Who's Beating Me",
+  button: "Show me who's beating me",
   /** Button text while the form is sending. */
   sending: "Sending…",
   /** Shown above the button if the form couldn't be sent. */
