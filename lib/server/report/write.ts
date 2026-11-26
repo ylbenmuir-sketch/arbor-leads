@@ -88,7 +88,7 @@ export function buildFacts(lead: ReportInput, data: ReportData) {
           name_on_google: p.name,
           address: p.address ?? "not shown (may be a service-area listing)",
           town: where(p.address),
-          in_the_searched_city: yourTown ? sameTown(yourTown, city) : "unknown (no address shown)",
+          in_the_searched_city: yourTown ? sameTown(yourTown, city) : "No: no town is shown on the listing",
           primary_category: p.category ?? "not shown",
           primary_category_is_tree_service: isTreeService(p.category),
           rating: p.rating ?? "no rating shown",
