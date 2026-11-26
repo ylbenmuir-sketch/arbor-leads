@@ -132,7 +132,8 @@ export function buildFacts(lead: ReportInput, data: ReportData) {
       top_3_with_primary_category_tree_service: `${topTreeService} of ${top.length}`,
       your_best_position: ranks.length ? Math.min(...ranks) : "not in the top 20",
     },
-    likely_reasons: likelyReasons,
+    // Left out entirely when empty, so the model has nothing to say "no reasons were found" about.
+    ...(likelyReasons.length ? { likely_reasons: likelyReasons } : {}),
   };
 }
 
@@ -148,7 +149,7 @@ const schema = z.object({
   where_you_show_up: z.string().describe("2 to 4 sentences on their map position in each search."),
   whos_beating_you: z
     .string()
-    .describe("3 to 5 sentences. If likely_reasons isn't empty, start with those, said plainly. Then compare the top 3 to them using concrete facts: reviews, rating, website, town, category."),
+    .describe("3 to 5 sentences. If FACTS has likely_reasons, start with those, said plainly. Then compare the top 3 to them using concrete facts: reviews, rating, website, town, category."),
   holding_back: z.array(point).describe("Exactly 3 items: the biggest things holding them back, most important first."),
   fixes: z.array(point).describe("Exactly 3 items, one per problem above, in the same order: what fixing it would look like."),
 });
@@ -166,9 +167,10 @@ Rules:
 - If a fact says something wasn't checked or didn't finish, don't guess at it, and don't make it one of the 3 problems.
 - Position 1 is the top of the map. Most people call one of the first 3.
 - Call the business by business_name and the city by city, exactly as written in FACTS.
+- You're writing to the owner, not about your inputs. Never mention FACTS, "the data", field names, or what was or wasn't found or provided. Never write lines like "No likely reasons were found", "here's what the numbers show" or "based on the data provided". Just say the finding.
 
 Explaining why (the "whos_beating_you" section):
-- If likely_reasons has items, say each one plainly as the likely reason, before anything else. Keep the town names and category names exactly as written. These usually belong in the 3 problems too.
+- If FACTS has likely_reasons, say each one plainly as the likely reason, before anything else. Keep the town names and category names exactly as written. These usually belong in the 3 problems too.
 - Every reason must point to a specific fact: their town vs. the searched city, their primary category, review counts, rating, website. Never write vague lines like "the gap is in how Google ranks your listing", "Google's algorithm", "ranking factors" or "visibility signals".
 - If you can't point to a specific fact, compare what the facts show and stop. Don't fill the gap with a vague explanation.
 
@@ -182,7 +184,33 @@ If they have a listing but aren't in the top 20: say they exist on Google but ho
 
 Pick the 3 problems from the gaps the facts actually show (for example: listing address in a different town, primary category that isn't "Tree service", far fewer reviews than the competitors, lower rating, no website or no website on the listing, a mobile speed verdict of slow). Most important first; likely_reasons usually come first. The fixes describe what the work looks like in practice, concretely and honestly.`;
 
-/** Have the model write the report text. Throws if the call fails or the output doesn't match. */
+// Sentences that talk about the model's inputs or wave at "the algorithm" instead of saying something.
+// A safety net under the instructions: any sentence matching one of these never reaches a customer.
+const INTERNAL = [
+  /likely[_ ]reasons?/i,
+  /\bno (specific |clear |obvious |single |other )?(likely )?reasons? (were|was|could be|are|is) (found|identified|given|listed)/i,
+  /here'?s what the (numbers|data|facts) (show|say)/i,
+  /\b(based on|according to|going by|from) the (facts|data|information|numbers)( (provided|given|above|we have|available))?\b/i,
+  /\bthe (facts|data) (provided|given)\b/i,
+  /\b(provided|given) (facts|data)\b/i,
+  /\bFACTS\b/,
+  /\bthe gap is in how google/i,
+  /how google ranks your (listing|business)/i,
+  /google'?s algorithm/i,
+  /\branking (factors|signals)\b/i,
+  /\bvisibility signals?\b/i,
+];
+
+/** Drop sentences that leak internal phrasing. Splits on sentence ends, not decimals ("4.8 stars"). */
+export function scrub(text: string) {
+  return text
+    .split(/(?<=[.!?]["”')]?)\s+(?=["“(]?[A-Z0-9])/)
+    .filter((sentence) => !INTERNAL.some((re) => re.test(sentence)))
+    .join(" ")
+    .trim();
+}
+
+/** Have the model write the report text, then scrub it. Throws if the call fails or the output doesn't match. */
 export async function writeReport(facts: Facts): Promise<Written> {
   const { output } = await generateText({
     model: MODEL,
@@ -191,5 +219,16 @@ export async function writeReport(facts: Facts): Promise<Written> {
     output: Output.object({ schema }),
     abortSignal: AbortSignal.timeout(120_000),
   });
-  return { ...output, holding_back: output.holding_back.slice(0, 3), fixes: output.fixes.slice(0, 3) };
+  const points = (items: { title: string; detail: string }[]) =>
+    items
+      .slice(0, 3)
+      .map((it) => ({ title: scrub(it.title), detail: scrub(it.detail) }))
+      .filter((it) => it.title || it.detail);
+  return {
+    opening: scrub(output.opening),
+    where_you_show_up: scrub(output.where_you_show_up),
+    whos_beating_you: scrub(output.whos_beating_you),
+    holding_back: points(output.holding_back),
+    fixes: points(output.fixes),
+  };
 }

@@ -77,9 +77,14 @@ export function sameTown(a: { town: string; state: string | null }, b: { town: s
 
 export const isTreeService = (category: string | null | undefined) => category?.trim().toLowerCase() === "tree service";
 
+/** "Smith Tree Service - Tree Removal Spring Hill | 24/7" → "Smith Tree Service": the part before " - ", " | " or " + ". */
+export function shortName(name: string) {
+  return name.split(/\s+[-|+–—]\s+/)[0].trim() || name.trim();
+}
+
 /**
- * What the report calls the business and the city: the name on their Google listing when we found it,
- * and the city as "Spring Hill, TN". If they didn't type a state, borrow it from listings in that town.
+ * What the report calls the business and the city: the short form of the name on their Google listing
+ * when we found it, and the city as "Spring Hill, TN". If they didn't type a state, borrow it from listings in that town.
  */
 export function displayNames(lead: ReportInput, data: ReportData) {
   const city = formatCity(lead.city);
@@ -94,5 +99,5 @@ export function displayNames(lead: ReportInput, data: ReportData) {
     if (top) city.state = top;
     city.label = label(city.town, city.state);
   }
-  return { businessName: data.profile?.name || lead.business_name, city };
+  return { businessName: shortName(data.profile?.name || lead.business_name), city };
 }

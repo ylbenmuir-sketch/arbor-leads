@@ -3,6 +3,7 @@ import { escape as esc } from "@/lib/server/leads";
 import type { ReportData, ReportInput } from "./data";
 import { displayNames, formatCity, isTreeService, sameTown, townOf, type City } from "./place";
 import type { Written } from "./write";
+import type { PresenceScore } from "./score";
 import { SLOW_SPEED, topCompetitors } from "./write";
 
 const C = {
@@ -17,6 +18,13 @@ const C = {
   blaze: "#e07a2e",
   /** Darker orange for text, so flags stay readable on light backgrounds. */
   warn: "#a8490f",
+};
+
+/** Score colors: strong for the number, a pale tint for the box. */
+const SCORE = {
+  red: { ink: "#b42318", tint: "#fdf0ee" },
+  orange: { ink: "#b45309", tint: "#fdf4e7" },
+  green: { ink: "#1e7a46", tint: "#ecf6ef" },
 };
 const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
 
@@ -110,10 +118,31 @@ function speedLine(data: ReportData) {
   return `<tr><td style="padding:12px 0 0;font:400 15px/1.55 ${FONT};color:${C.body}">${text}</td></tr>`;
 }
 
+/** The big Google Presence Score with its 5-part breakdown. */
+function scoreBox(score: PresenceScore) {
+  const c = SCORE[score.color];
+  const rows = score.parts
+    .map(
+      (p) => `<tr>
+<td style="padding:7px 0;border-top:1px solid ${C.line};font:700 14px/1.35 ${FONT};color:${C.ink};white-space:nowrap;vertical-align:top">${esc(p.label)}</td>
+<td style="padding:7px 10px;border-top:1px solid ${C.line};font:400 13px/1.35 ${FONT};color:${C.body};vertical-align:top">${esc(p.detail)}</td>
+<td align="right" style="padding:7px 0;border-top:1px solid ${C.line};font:700 14px/1.35 ${FONT};color:${C.ink};white-space:nowrap;vertical-align:top">${p.points}<span style="color:${C.muted};font-weight:400">/${p.max}</span></td>
+</tr>`,
+    )
+    .join("");
+  return `<tr><td style="padding:22px 0 0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${c.tint};border:2px solid ${c.ink};border-radius:12px">
+<tr><td style="padding:18px 20px 6px">
+<p style="margin:0;font:700 12px/1.4 ${FONT};letter-spacing:.14em;text-transform:uppercase;color:${C.muted}">Google Presence Score</p>
+<p style="margin:2px 0 0;font:800 52px/1.05 ${FONT};color:${c.ink}">${score.total}<span style="font-size:24px;font-weight:700">/100</span></p>
+</td></tr>
+<tr><td style="padding:6px 20px 14px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">${rows}</table></td></tr>
+</table></td></tr>`;
+}
+
 const button = (href: string, text: string, pad: string) =>
   `<tr><td align="center" style="padding:${pad}"><a href="${esc(href)}" style="display:inline-block;background:${C.blaze};color:${C.ink};font:800 17px/1 ${FONT};text-decoration:none;padding:18px 28px;border-radius:8px">${text}</a></td></tr>`;
 
-export function renderReportHtml(lead: ReportInput, data: ReportData, w: Written, sentAt = new Date()) {
+export function renderReportHtml(lead: ReportInput, data: ReportData, w: Written, score: PresenceScore, sentAt = new Date()) {
   const book = bookingLink(lead);
   const { businessName, city } = displayNames(lead, data);
   const date = sentAt.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
@@ -124,7 +153,7 @@ export function renderReportHtml(lead: ReportInput, data: ReportData, w: Written
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light">
 <style>@media (max-width:480px){.pad{padding-left:16px!important;padding-right:16px!important}.c{padding-left:3px!important;padding-right:3px!important;font-size:13px!important}th.c{font-size:10px!important}}</style><title>Who's Beating Me? ${esc(businessName)}</title></head>
 <body style="margin:0;padding:0;background:${C.page}">
-<div style="display:none;max-height:0;overflow:hidden">${esc(w.opening)}</div>
+<div style="display:none;max-height:0;overflow:hidden">Google Presence Score: ${score.total}/100. ${esc(w.opening)}</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${C.page}"><tr><td align="center" style="padding:24px 8px">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:${C.card};border-radius:12px;border:1px solid ${C.line}">
 <tr><td class="pad" style="background:${C.ink};border-radius:12px 12px 0 0;padding:26px 28px">
@@ -133,7 +162,8 @@ export function renderReportHtml(lead: ReportInput, data: ReportData, w: Written
 <p style="margin:4px 0 0;font:400 15px/1.4 ${FONT};color:#b7c3b8">${esc(city.label)} · ${date}</p>
 </td></tr>
 <tr><td class="pad" style="padding:8px 28px 32px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-<tr><td style="padding:22px 0 0;font:600 18px/1.5 ${FONT};color:${C.ink}">${esc(w.opening)}</td></tr>
+${scoreBox(score)}
+${w.opening ? `<tr><td style="padding:22px 0 0;font:600 18px/1.5 ${FONT};color:${C.ink}">${esc(w.opening)}</td></tr>` : ""}
 ${topCta}
 ${heading(1, "Where you show up right now")}
 ${rankTable(data)}
@@ -158,7 +188,7 @@ ${cta}
 }
 
 /** Plain-text version for email clients that don't show HTML. */
-export function renderReportText(lead: ReportInput, data: ReportData, w: Written) {
+export function renderReportText(lead: ReportInput, data: ReportData, w: Written, score: PresenceScore) {
   const top = topCompetitors(data);
   const book = bookingLink(lead);
   const { businessName, city } = displayNames(lead, data);
@@ -167,8 +197,10 @@ export function renderReportText(lead: ReportInput, data: ReportData, w: Written
   return [
     `Who's Beating Me? Report: ${businessName} (${city.label})`,
     "",
-    w.opening,
+    `GOOGLE PRESENCE SCORE: ${score.total}/100`,
+    ...score.parts.map((p) => `- ${p.label}: ${p.points}/${p.max} (${p.detail})`),
     "",
+    ...(w.opening ? [w.opening, ""] : []),
     ...(book ? [`Book a 15-min call: ${book}`, ""] : []),
     "1. WHERE YOU SHOW UP RIGHT NOW",
     ...data.searches.map((s) => `- "${s.keyword}": ${rankText(s.leadRank)}`),
