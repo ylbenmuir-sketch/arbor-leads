@@ -1,8 +1,9 @@
 // Server-only. The report email. Table layout + inline styles so it holds up in Gmail, Outlook and Apple Mail.
 import { escape as esc } from "@/lib/server/leads";
 import type { ReportData, ReportInput } from "./data";
+import { displayNames, formatCity, isTreeService, sameTown, townOf, type City } from "./place";
 import type { Written } from "./write";
-import { topCompetitors } from "./write";
+import { SLOW_SPEED, topCompetitors } from "./write";
 
 const C = {
   page: "#f6f4ee",
@@ -14,6 +15,8 @@ const C = {
   sage: "#8db89a",
   soft: "#eef4ef",
   blaze: "#e07a2e",
+  /** Darker orange for text, so flags stay readable on light backgrounds. */
+  warn: "#a8490f",
 };
 const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
 
@@ -63,23 +66,36 @@ function rankTable(data: ReportData) {
   return `<tr><td style="padding:12px 0 0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse"><tr>${th("Google Maps search")}${th("Your spot", "right")}</tr>${rows}</table></td></tr>`;
 }
 
-/** "tree service Austin" → "tree service": the search without the city, for column headers. */
-const shortSearch = (keyword: string, city: string) => keyword.replace(city, "").trim();
+/** "tree service Spring Hill, TN" → "tree service": the search without the city, for column headers. */
+const shortSearch = (keyword: string, lead: ReportInput) => keyword.replace(formatCity(lead.city).label, "").trim();
 const spot = (r: number | null) => (r == null ? `<span style="color:${C.muted}">–</span>` : `#${r}`);
+
+/** Small grey "Town · Category" line under a name. Parts that differ from the searched city / "Tree service" are flagged. */
+function placeLine(address: string | null, category: string | null, city: City, flag: boolean) {
+  const t = townOf(address);
+  const bad = (s: string) => `<span style="color:${C.warn};font-weight:700">${esc(s)}</span>`;
+  const town = t ? (flag && !sameTown(t, city) ? bad(t.town) : esc(t.town)) : "";
+  const cat = category ? (flag && !isTreeService(category) ? bad(category) : esc(category)) : "";
+  const parts = [town, cat].filter(Boolean);
+  return parts.length ? `<br><span style="color:${C.muted};font-size:12px;line-height:1.5">${parts.join(" · ")}</span>` : "";
+}
 
 function competitorTable(lead: ReportInput, data: ReportData) {
   const top = topCompetitors(data);
   const p = data.profile;
-  const you = `<tr style="background:${C.soft}">${td(`<strong>You</strong><br><span style="color:${C.muted};font-size:13px">${esc(lead.business_name)}</span>`)}${data.searches
+  const { businessName, city } = displayNames(lead, data);
+  const you = `<tr style="background:${C.soft}">${td(
+    `<strong>You</strong><br><span style="color:${C.muted};font-size:13px">${esc(businessName)}</span>${p ? placeLine(p.address, p.category, city, true) : ""}`,
+  )}${data.searches
     .map((s) => td(spot(s.leadRank), "center", true))
     .join("")}${td(p ? stars(p.rating) : "–", "center")}${td(p ? num(p.reviews ?? 0) : "–", "center")}${td(lead.website || p?.website ? "Yes" : "No", "center")}</tr>`;
   const rows = top
     .map(
       (c) =>
-        `<tr>${td(esc(c.name))}${c.ranks.map((r) => td(spot(r), "center", true)).join("")}${td(stars(c.rating), "center")}${td(num(c.reviews ?? 0), "center")}${td(c.website ? "Yes" : "No", "center")}</tr>`,
+        `<tr>${td(esc(c.name) + placeLine(c.address, c.category, city, false))}${c.ranks.map((r) => td(spot(r), "center", true)).join("")}${td(stars(c.rating), "center")}${td(num(c.reviews ?? 0), "center")}${td(c.website ? "Yes" : "No", "center")}</tr>`,
     )
     .join("");
-  const searchHeads = data.searches.map((s) => th(esc(shortSearch(s.keyword, lead.city)), "center")).join("");
+  const searchHeads = data.searches.map((s) => th(esc(shortSearch(s.keyword, lead)), "center")).join("");
   return `<tr><td style="padding:12px 0 0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse"><tr>${th("Business")}${searchHeads}${th("Rating", "center")}${th("Reviews", "center")}${th("Site", "center")}</tr>${you}${rows}</table><p style="margin:8px 0 0;font:400 13px/1.4 ${FONT};color:${C.muted}">Map spot in each search. – means not in the top 20.</p></td></tr>`;
 }
 
@@ -87,32 +103,38 @@ function speedLine(data: ReportData) {
   const s = data.speed;
   if (!s) return "";
   const text = s.ok
-    ? `Your website's mobile speed score from Google: <strong style="color:${C.ink}">${s.score} / 100</strong>${s.lcp ? ` (main content shows up in ${esc(s.lcp)})` : ""}.`
+    ? s.score < SLOW_SPEED
+      ? `Your website's mobile speed score from Google: <strong style="color:${C.ink}">${s.score} / 100</strong>${s.lcp ? ` (main content shows up in ${esc(s.lcp)})` : ""}. That's slow on phones.`
+      : `Your website's mobile speed score from Google: <strong style="color:${C.ink}">${s.score} / 100</strong>. That's fine.`
     : `We tried to test your website's mobile speed, but Google's tester couldn't finish it.`;
   return `<tr><td style="padding:12px 0 0;font:400 15px/1.55 ${FONT};color:${C.body}">${text}</td></tr>`;
 }
 
+const button = (href: string, text: string, pad: string) =>
+  `<tr><td align="center" style="padding:${pad}"><a href="${esc(href)}" style="display:inline-block;background:${C.blaze};color:${C.ink};font:800 17px/1 ${FONT};text-decoration:none;padding:18px 28px;border-radius:8px">${text}</a></td></tr>`;
+
 export function renderReportHtml(lead: ReportInput, data: ReportData, w: Written, sentAt = new Date()) {
   const book = bookingLink(lead);
+  const { businessName, city } = displayNames(lead, data);
   const date = sentAt.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
-  const cta = book
-    ? `<tr><td align="center" style="padding:32px 0 6px"><a href="${esc(book)}" style="display:inline-block;background:${C.blaze};color:${C.ink};font:800 17px/1 ${FONT};text-decoration:none;padding:18px 28px;border-radius:8px">Book a 15-min call to walk through it.</a></td></tr>`
-    : "";
+  const topCta = book ? button(book, "Book a 15-min call", "20px 0 4px") : "";
+  const cta = book ? button(book, "Book a 15-min call to walk through it.", "32px 0 6px") : "";
 
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light">
-<style>@media (max-width:480px){.pad{padding-left:16px!important;padding-right:16px!important}.c{padding-left:3px!important;padding-right:3px!important;font-size:13px!important}th.c{font-size:10px!important}}</style><title>Who's Beating Me? ${esc(lead.business_name)}</title></head>
+<style>@media (max-width:480px){.pad{padding-left:16px!important;padding-right:16px!important}.c{padding-left:3px!important;padding-right:3px!important;font-size:13px!important}th.c{font-size:10px!important}}</style><title>Who's Beating Me? ${esc(businessName)}</title></head>
 <body style="margin:0;padding:0;background:${C.page}">
 <div style="display:none;max-height:0;overflow:hidden">${esc(w.opening)}</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${C.page}"><tr><td align="center" style="padding:24px 8px">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:${C.card};border-radius:12px;border:1px solid ${C.line}">
 <tr><td class="pad" style="background:${C.ink};border-radius:12px 12px 0 0;padding:26px 28px">
 <p style="margin:0;font:700 12px/1.4 ${FONT};letter-spacing:.16em;text-transform:uppercase;color:${C.sage}">Who's Beating Me? Report</p>
-<h1 style="margin:6px 0 0;font:800 26px/1.25 ${FONT};color:#f6f4ee">${esc(lead.business_name)}</h1>
-<p style="margin:4px 0 0;font:400 15px/1.4 ${FONT};color:#b7c3b8">${esc(lead.city)} · ${date}</p>
+<h1 style="margin:6px 0 0;font:800 26px/1.25 ${FONT};color:#f6f4ee">${esc(businessName)}</h1>
+<p style="margin:4px 0 0;font:400 15px/1.4 ${FONT};color:#b7c3b8">${esc(city.label)} · ${date}</p>
 </td></tr>
 <tr><td class="pad" style="padding:8px 28px 32px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">
 <tr><td style="padding:22px 0 0;font:600 18px/1.5 ${FONT};color:${C.ink}">${esc(w.opening)}</td></tr>
+${topCta}
 ${heading(1, "Where you show up right now")}
 ${rankTable(data)}
 ${para(w.where_you_show_up)}
@@ -139,11 +161,15 @@ ${cta}
 export function renderReportText(lead: ReportInput, data: ReportData, w: Written) {
   const top = topCompetitors(data);
   const book = bookingLink(lead);
+  const { businessName, city } = displayNames(lead, data);
+  const where = (address: string | null, category: string | null) =>
+    [townOf(address)?.town, category].filter(Boolean).join(", ") || null;
   return [
-    `Who's Beating Me? Report: ${lead.business_name} (${lead.city})`,
+    `Who's Beating Me? Report: ${businessName} (${city.label})`,
     "",
     w.opening,
     "",
+    ...(book ? [`Book a 15-min call: ${book}`, ""] : []),
     "1. WHERE YOU SHOW UP RIGHT NOW",
     ...data.searches.map((s) => `- "${s.keyword}": ${rankText(s.leadRank)}`),
     w.where_you_show_up,
@@ -151,7 +177,7 @@ export function renderReportText(lead: ReportInput, data: ReportData, w: Written
     "2. WHO'S BEATING YOU, AND WHY",
     ...top.map(
       (c) =>
-        `- ${c.name}: ${data.searches.map((s, i) => `"${s.keyword}" ${rankText(c.ranks[i])}`).join(", ")}; ${stars(c.rating)}, ${num(c.reviews ?? 0)} reviews, website: ${c.website ? "yes" : "no"}`,
+        `- ${c.name}${where(c.address, c.category) ? ` (${where(c.address, c.category)})` : ""}: ${data.searches.map((s, i) => `"${s.keyword}" ${rankText(c.ranks[i])}`).join(", ")}; ${stars(c.rating)}, ${num(c.reviews ?? 0)} reviews, website: ${c.website ? "yes" : "no"}`,
     ),
     w.whos_beating_you,
     "",

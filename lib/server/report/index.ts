@@ -3,6 +3,7 @@
 import { leadRows, notifyOwner, ownerEmails, sendEmail, supabase } from "@/lib/server/leads";
 import { pullReportData, type ReportData, type ReportInput } from "./data";
 import { renderReportHtml, renderReportText } from "./html";
+import { displayNames } from "./place";
 import { buildFacts, MODEL, writeReport, type Facts, type Written } from "./write";
 
 const message = (e: unknown) => (e instanceof Error ? e.message : String(e));
@@ -38,7 +39,7 @@ export async function buildAndSendReport(lead: ReportInput, leadId: string | nul
     raw.provider = data.provider;
     raw.searches = data.searches;
     raw.lead_profile = data.profile;
-    raw.lookup = { keyword: `${lead.business_name} ${lead.city}`, rawItems: data.lookupRawItems };
+    raw.lookup = { keyword: data.lookupKeyword, rawItems: data.lookupRawItems };
     raw.pagespeed = data.speed;
 
     step = "writing the report";
@@ -49,7 +50,7 @@ export async function buildAndSendReport(lead: ReportInput, leadId: string | nul
 
     const html = renderReportHtml(lead, data, written);
     const text = renderReportText(lead, data, written);
-    const subject = `Your Who's Beating Me report for ${lead.business_name}`;
+    const subject = `Your Who's Beating Me report for ${displayNames(lead, data).businessName}`;
 
     step = "emailing the report to the lead";
     await sendEmail({ to: lead.email, subject, html, text, replyTo: ownerEmails() });

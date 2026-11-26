@@ -1,6 +1,7 @@
 // Server-only. Pulls the facts for a "Who's Beating Me?" report:
 // Google Maps rankings from Serper.dev or DataForSEO (DATA_PROVIDER) and mobile speed from Google PageSpeed Insights.
 import { env } from "@/lib/server/leads";
+import { formatCity } from "./place";
 
 export type ReportInput = {
   name: string;
@@ -45,7 +46,8 @@ export type ReportData = {
   profile: (Listing & { foundIn: string }) | null;
   /** Null when they didn't give a website. */
   speed: Speed | null;
-  /** Raw items from the "{business} {city}" lookup, for raw_data. */
+  /** The "{business} {city}" lookup search and its raw items, for raw_data. */
+  lookupKeyword: string;
   lookupRawItems: unknown[];
 };
 
@@ -274,8 +276,10 @@ export const keywordsFor = (city: string) => [`tree service ${city}`, `tree remo
  */
 export async function pullReportData(lead: ReportInput): Promise<ReportData> {
   const provider = chooseProvider();
-  const keywords = keywordsFor(lead.city);
-  const lookupKeyword = `${lead.business_name} ${lead.city}`;
+  // "spring hill tn" → "Spring Hill, TN", so searches and the email read cleanly.
+  const city = formatCity(lead.city).label;
+  const keywords = keywordsFor(city);
+  const lookupKeyword = `${lead.business_name} ${city}`;
   const [rankResults, lookup, speed] = await Promise.all([
     Promise.all(keywords.map((k) => mapsSearch(provider, k))),
     // Their own listing, even if it isn't in the top 20 for the money searches.
@@ -302,5 +306,5 @@ export async function pullReportData(lead: ReportInput): Promise<ReportData> {
     if (mine) profile = { ...mine, foundIn: lookupKeyword };
   }
 
-  return { provider, searches, profile, speed, lookupRawItems: lookup.raw };
+  return { provider, searches, profile, speed, lookupKeyword, lookupRawItems: lookup.raw };
 }
