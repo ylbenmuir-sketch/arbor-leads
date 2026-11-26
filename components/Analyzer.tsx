@@ -2,25 +2,12 @@
 
 import { useEffect, useId, useState } from "react";
 import Link from "next/link";
-import { AnimatePresence, m, useReducedMotion } from "framer-motion";
-import { Check, CircleCheck, Flag, X } from "lucide-react";
+import { AnimatePresence, m } from "framer-motion";
+import { CircleCheck, X } from "lucide-react";
 import { analyzer as copy, pricing, site } from "@/content";
-import { Counter, bookingUrl, ease, rememberContact, useBookingHref } from "./ui";
+import { bookingUrl, ease, rememberContact, useBookingHref } from "./ui";
 
-type Stage = "idle" | "scanning" | "done";
-
-/** Same URL always gets the same mock score (31–58). */
-function mockScore(url: string) {
-  const clean = url
-    .trim()
-    .toLowerCase()
-    .replace(/^https?:\/\//, "")
-    .replace(/^www\./, "")
-    .replace(/\/+$/, "");
-  let h = 2166136261;
-  for (let i = 0; i < clean.length; i++) h = Math.imul(h ^ clean.charCodeAt(i), 16777619);
-  return 31 + (Math.abs(h) % 28);
-}
+type Stage = "idle" | "done";
 
 const swap = {
   initial: { opacity: 0, y: 12 },
@@ -34,11 +21,7 @@ const inputClass =
 
 export default function Analyzer() {
   const uid = useId();
-  const reduce = useReducedMotion();
   const [stage, setStage] = useState<Stage>("idle");
-  const [url, setUrl] = useState("");
-  const [step, setStep] = useState(0);
-  const [score, setScore] = useState(0);
   // Set when a "Start with <plan>" pricing button sends someone here.
   const [plan, setPlan] = useState("");
   // "zero-down" or "495-setup", set by the "Two ways to start" buttons.
@@ -65,35 +48,16 @@ export default function Analyzer() {
     };
   }, []);
 
-  // Scanning sequence: tick through the steps, then show the score.
-  useEffect(() => {
-    if (stage !== "scanning") return;
-    const per = reduce ? 250 : 800;
-    if (step >= copy.scanSteps.length) {
-      const t = setTimeout(() => setStage("done"), 400);
-      return () => clearTimeout(t);
-    }
-    const t = setTimeout(() => setStep((s) => s + 1), per);
-    return () => clearTimeout(t);
-  }, [stage, step, reduce]);
-
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (sending) return;
     const data = new FormData(e.currentTarget);
     const get = (key: string) => String(data.get(key) ?? "").trim();
-    const business = get("business");
-    const city = get("city");
-    const website = get("website");
-    // No website: score and show the business name instead.
-    const checking = website || business;
-    // TODO: the score is still a MOCK generated from the URL. Swap in a real analysis before relying on it.
-    const mock = mockScore(website || `${business} ${city}`);
     const lead = {
       name: get("name"),
-      businessName: business,
-      city,
-      website,
+      businessName: get("business"),
+      city: get("city"),
+      website: get("website"),
       email: get("email"),
       phone: get("phone"),
       plan: get("plan"),
@@ -104,7 +68,7 @@ export default function Analyzer() {
     setSending(true);
     setError(false);
     try {
-      // Saves to Supabase and emails the owner (app/api/leads/route.ts).
+      // Saves to Supabase, emails the owner, and starts the report in the background (app/api/leads/route.ts).
       const res = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -119,10 +83,7 @@ export default function Analyzer() {
     setSending(false);
     rememberContact({ name: lead.name, email: lead.email });
     setEmail(lead.email);
-    setUrl(checking);
-    setScore(mock);
-    setStep(0);
-    setStage("scanning");
+    setStage("done");
   }
 
   const setupOption = pricing.setup.options.find((o) => o.id === setup);
@@ -130,7 +91,6 @@ export default function Analyzer() {
     ...(plan ? [{ label: copy.planLabel, value: plan, clear: () => setPlan("") }] : []),
     ...(setupOption ? [{ label: copy.setupLabel, value: `${setupOption.price} ${setupOption.detail}`, clear: () => setSetup("") }] : []),
   ];
-  const ring = 2 * Math.PI * 52;
   // Website is optional and spans the full row, so business/city and email/phone pair up.
   const fields = [
     { name: "name", label: copy.fields.name, type: "text", auto: "name", mode: "text" as const, wide: true },
@@ -231,97 +191,15 @@ export default function Analyzer() {
           </m.form>
         )}
 
-        {stage === "scanning" && (
-          <m.div key="scan" {...swap} className="py-4">
-            <p className="truncate text-base text-muted">
-              Checking <span className="font-bold text-cream">{url}</span>
-            </p>
-            <div className="relative mt-4 h-1.5 overflow-hidden rounded-sm bg-line">
-              <div
-                className="absolute inset-y-0 w-1/3 bg-sage"
-                style={{ animation: reduce ? undefined : "scan 1.4s ease-in-out infinite" }}
-              />
-            </div>
-            <ul className="mt-7 grid gap-4 sm:grid-cols-2">
-              {copy.scanSteps.map((label, i) => {
-                const done = i < step;
-                const active = i === step;
-                return (
-                  <li
-                    key={label}
-                    className={`flex items-center gap-3 text-lg font-bold transition-opacity duration-500 ${
-                      done || active ? "opacity-100" : "opacity-35"
-                    }`}
-                  >
-                    <span
-                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-sm border-2 ${
-                        done ? "border-sage bg-sage text-bg" : active ? "border-sage" : "border-line"
-                      }`}
-                    >
-                      {done && <Check className="h-4 w-4" strokeWidth={3.5} aria-hidden="true" />}
-                    </span>
-                    {label}
-                  </li>
-                );
-              })}
-            </ul>
-          </m.div>
-        )}
-
         {stage === "done" && (
           <m.div key="done" {...swap}>
-            <div className="flex items-start gap-4 border-b-2 border-line pb-6">
+            <div className="flex items-start gap-4">
               <CircleCheck className="mt-0.5 h-8 w-8 shrink-0 text-sage" strokeWidth={2} aria-hidden="true" />
-              <p className="min-w-0 break-words text-xl font-extrabold leading-snug tracking-tight sm:text-2xl">
-                {copy.success.replace("{email}", email)}
-              </p>
-            </div>
-
-            <div className="mt-6 grid gap-7 md:grid-cols-[auto_1fr] md:items-center">
-              <div className="flex items-center gap-5">
-                <div className="relative h-32 w-32 shrink-0">
-                  <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90" aria-hidden="true">
-                    <circle cx="60" cy="60" r="52" fill="none" stroke="var(--line)" strokeWidth="10" />
-                    <m.circle
-                      cx="60"
-                      cy="60"
-                      r="52"
-                      fill="none"
-                      stroke="var(--sage)"
-                      strokeWidth="10"
-                      strokeDasharray={ring}
-                      initial={{ strokeDashoffset: ring }}
-                      animate={{ strokeDashoffset: ring * (1 - score / 100) }}
-                      transition={{ duration: 1.6, ease }}
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <Counter to={score} className="text-4xl font-extrabold tracking-tight" />
-                    <span className="text-xs font-semibold text-muted">/ 100</span>
-                  </div>
-                </div>
-                <div className="min-w-0">
-                  <p className="eyebrow">{copy.scoreLabel}</p>
-                  <p className="mt-1.5 text-xl font-extrabold leading-tight tracking-tight">{copy.scoreVerdict}</p>
-                  <p className="mt-1 truncate text-sm text-muted">{url}</p>
-                </div>
-              </div>
-
-              <div>
-                <p className="text-sm font-bold uppercase tracking-[0.14em] text-cream">{copy.redFlagsTitle}</p>
-                <ul className="mt-3 space-y-2">
-                  {copy.redFlags.map((flag, i) => (
-                    <li key={flag} className="flex items-center gap-3 rounded-md border-2 border-line bg-bg px-3.5 py-2.5">
-                      <Flag className="h-4 w-4 shrink-0 text-sage" strokeWidth={2.25} aria-hidden="true" />
-                      <span className="text-sm font-bold">{flag}</span>
-                      {/* Decorative blurred filler. Real findings come from the backend. */}
-                      <span aria-hidden="true" className="ml-auto select-none text-sm text-muted blur-[6px]">
-                        {["details in your report", "see the full report", "details in your report"][i % 3]}
-                      </span>
-                      <span className="sr-only">Details in your full report</span>
-                    </li>
-                  ))}
-                </ul>
+              <div className="min-w-0">
+                <p className="break-words text-xl font-extrabold leading-snug tracking-tight sm:text-2xl">
+                  {copy.success.replace("{email}", email)}
+                </p>
+                <p className="mt-2 text-base text-muted">{copy.successSub}</p>
               </div>
             </div>
 

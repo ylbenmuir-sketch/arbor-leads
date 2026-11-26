@@ -17,7 +17,7 @@ export type Lead = {
   booking_id: string | null;
 };
 
-function env(name: string) {
+export function env(name: string) {
   const value = process.env[name];
   if (!value) throw new Error(`Missing env var ${name}`);
   return value;
@@ -33,13 +33,29 @@ export function supabase() {
   return db;
 }
 
-const escape = (s: string) =>
+export const escape = (s: string) =>
   s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 
+/** LEAD_NOTIFY_EMAIL as a list (it can be comma-separated). */
+export const ownerEmails = () =>
+  env("LEAD_NOTIFY_EMAIL")
+    .split(",")
+    .map((e) => e.trim())
+    .filter(Boolean);
+
 /**
- * Email the site owner (LEAD_NOTIFY_EMAIL). `rows` are label/value pairs; empty values are skipped.
- * Sends from LEAD_FROM_EMAIL, or Resend's test sender, which only delivers to your own Resend account email.
+ * Send one email through Resend. Sends from LEAD_FROM_EMAIL, or Resend's test sender,
+ * which only delivers to your own Resend account email.
  */
+export async function sendEmail(message: { to: string | string[]; subject: string; html: string; text: string; replyTo?: string | string[] }) {
+  const { error } = await new Resend(env("RESEND_API_KEY")).emails.send({
+    from: process.env.LEAD_FROM_EMAIL || "Arbor Leads <onboarding@resend.dev>",
+    ...message,
+  });
+  if (error) throw new Error(`Resend: ${error.message}`);
+}
+
+/** Email the site owner (LEAD_NOTIFY_EMAIL). `rows` are label/value pairs; empty values are skipped. */
 export async function notifyOwner(subject: string, rows: [string, string | null | undefined][], replyTo?: string) {
   const filled = rows.filter((r): r is [string, string] => Boolean(r[1]));
   const text = filled.map(([k, v]) => `${k}: ${v}`).join("\n");
@@ -47,15 +63,7 @@ export async function notifyOwner(subject: string, rows: [string, string | null 
     .map(([k, v]) => `<tr><td style="color:#666;vertical-align:top">${escape(k)}</td><td><strong>${escape(v)}</strong></td></tr>`)
     .join("")}</table>`;
 
-  const { error } = await new Resend(env("RESEND_API_KEY")).emails.send({
-    from: process.env.LEAD_FROM_EMAIL || "Arbor Leads <onboarding@resend.dev>",
-    to: env("LEAD_NOTIFY_EMAIL").split(",").map((e) => e.trim()),
-    subject,
-    text,
-    html,
-    replyTo,
-  });
-  if (error) throw new Error(`Resend: ${error.message}`);
+  await sendEmail({ to: ownerEmails(), subject, text, html, replyTo });
 }
 
 /** Rows for the notification email, in a fixed order. */

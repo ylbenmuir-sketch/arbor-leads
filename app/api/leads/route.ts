@@ -1,6 +1,12 @@
+import { after } from "next/server";
 import { leadRows, notifyOwner, supabase } from "@/lib/server/leads";
+import { buildAndSendReport } from "@/lib/server/report";
 
-/** Free audit form submissions. Saves the lead, then emails the owner. */
+// The report builds after the response is sent, inside this function's time limit.
+// 300s is the most Vercel's Hobby plan allows; a report usually takes under 2 minutes.
+export const maxDuration = 300;
+
+/** Free audit form submissions. Saves the lead, emails the owner, then builds their report in the background. */
 export async function POST(request: Request) {
   let body: Record<string, unknown>;
   try {
@@ -31,10 +37,12 @@ export async function POST(request: Request) {
 
   // Save and email independently: if one fails, the other still captures the lead.
   let saved = false;
+  let leadId: string | null = null;
   try {
-    const { error } = await supabase().from("leads").insert(lead);
+    const { data, error } = await supabase().from("leads").insert(lead).select("id").single();
     if (error) throw new Error(error.message);
     saved = true;
+    leadId = data.id;
   } catch (e) {
     console.error("[leads] Supabase insert failed:", e);
   }
@@ -59,5 +67,8 @@ export async function POST(request: Request) {
   if (!saved && !emailed) {
     return Response.json({ error: "Something went wrong on our end. Please try again, or email us." }, { status: 500 });
   }
+
+  // The visitor gets their answer now; the report is built and emailed after the response.
+  after(() => buildAndSendReport(lead, leadId));
   return Response.json({ ok: true });
 }

@@ -294,15 +294,6 @@ html.lenis body {
   }
 }
 
-/* ── Analyzer ── */
-@keyframes scan {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(350%);
-  }
-}
 /* ─────────────────────────────────────────────────────────────
    Before/After mock websites.
    Everything inside .mock scales with the browser frame: Tailwind's

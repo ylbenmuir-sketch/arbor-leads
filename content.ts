@@ -119,20 +119,10 @@ export const analyzer = {
     text: "By submitting, you agree to be contacted by Arbor Leads by email, phone or text about your audit. Msg & data rates may apply. Reply STOP to opt out. See our",
     link: "Privacy Policy",
   },
-  scanSteps: [
-    "Checking speed…",
-    "Checking Google profile…",
-    "Checking reviews…",
-    "Checking mobile…",
-  ],
-  scoreLabel: "Your starting score",
-  scoreVerdict: "There's room to pick up more jobs.",
-  redFlagsTitle: "3 things to fix",
-  /** Shown blurred. Real findings come from the backend later. */
-  redFlags: ["Finding #1", "Finding #2", "Finding #3"],
-  /** `{email}` is replaced with the address they entered. */
-  success: "Got it. We'll email your full report to {email}.",
-  /** Under the score, next to the booking button (only shown when NEXT_PUBLIC_BOOKING_URL is set). */
+  /** `{email}` is replaced with the address they entered. The report is built and emailed in the background (lib/server/report). */
+  success: "Your report is on its way to {email}.",
+  successSub: "Usually within 10 minutes.",
+  /** On the success screen, next to the booking button (only shown when NEXT_PUBLIC_BOOKING_URL is set). */
   bookAfter: "Want to go over it together?",
   startOver: "Check another business",
 };

@@ -26,16 +26,16 @@ Logo files are in `public/logo/` (`logo-dark.svg`, `logo-light.svg`, `icon.svg`)
 
 ## Leads and bookings
 
-- **Audit form** → `POST /api/leads` (`app/api/leads/route.ts`): saves to the Supabase `leads` table and emails `LEAD_NOTIFY_EMAIL` via Resend.
+- **Audit form** → `POST /api/leads` (`app/api/leads/route.ts`): saves to the Supabase `leads` table and emails `LEAD_NOTIFY_EMAIL` via Resend, then builds their report in the background (Next.js `after()`).
+- **"Who's Beating Me?" report** (`lib/server/report/`): Google Maps searches for "tree service {city}" and "tree removal {city}" plus "{business} {city}" via DataForSEO (`data.ts`), mobile PageSpeed, Claude Haiku via AI Gateway writes the words (`write.ts`), and the email is rendered in `html.ts`. Tables in the email come straight from the data; the model only writes the sentences. It's emailed to the lead and copied to `LEAD_NOTIFY_EMAIL`. Every report is saved to the `reports` table (`status`: `building` → `sent` or `failed`, with the error in `raw_data->>'error'`). If it fails you get a "Report FAILED" email.
 - **Cal.com** → `POST /api/webhooks/cal` (`app/api/webhooks/cal/route.ts`): on `BOOKING_CREATED`, verifies the signature, marks the lead `booked` (or creates one) and emails "New call booked".
 - **Book a call buttons** use `NEXT_PUBLIC_BOOKING_URL`, with `?name=&email=` added once someone has submitted the form.
-- Table SQL: `supabase/migrations/20261126000000_create_leads.sql` (run it in the Supabase SQL Editor).
+- Table SQL: `supabase/migrations/20261126000000_create_leads.sql`, then `20261126010000_create_reports.sql` (run them in the Supabase SQL Editor, in that order).
 
-Env vars: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`, `LEAD_NOTIFY_EMAIL` (comma-separate for several), `CAL_WEBHOOK_SECRET`, `NEXT_PUBLIC_BOOKING_URL`, and optionally `LEAD_FROM_EMAIL` (e.g. `Arbor Leads <leads@arborleads.co>` once the domain is verified in Resend; without it, mail comes from Resend's test sender, which only delivers to your own Resend account email).
+Env vars: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`, `LEAD_NOTIFY_EMAIL` (comma-separate for several), `CAL_WEBHOOK_SECRET`, `NEXT_PUBLIC_BOOKING_URL`, `DATAFORSEO_LOGIN`, `DATAFORSEO_PASSWORD`, `AI_GATEWAY_API_KEY`, `PAGESPEED_API_KEY` (free from Google Cloud; without it the shared keyless quota is usually used up and the speed check is skipped), and optionally `LEAD_FROM_EMAIL` (e.g. `Arbor Leads <leads@arborleads.co>` once the domain is verified in Resend; without it, mail comes from Resend's test sender, which only delivers to your own Resend account email).
 
 ## Before launch
 
-- The audit score in `components/Analyzer.tsx` is still a mock generated from the URL. Hook up a real analysis.
 - Replace the placeholder stats, testimonials, headshot, and the `/privacy` and `/terms` pages.
 
 ## Photo credits
