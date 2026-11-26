@@ -9,11 +9,15 @@ export type ReportInput = {
   email: string;
   city: string;
   website: string | null;
+  /** Google place ID of the listing they picked on the form. When set, their listing is matched by it instead of by name. */
+  place_id?: string | null;
 };
 
 /** One Google Maps listing, trimmed to what the report uses. */
 export type Listing = {
   name: string;
+  /** Google place ID ("ChIJ…"), when the provider returns one. */
+  placeId: string | null;
   rank: number;
   rating: number | null;
   reviews: number | null;
@@ -82,6 +86,7 @@ const strOrNull = (s: unknown) => (typeof s === "string" && s.trim() ? s.trim() 
 
 type DataForSeoItem = {
   type?: string;
+  place_id?: string | null;
   rank_group?: number;
   rank_absolute?: number;
   title?: string;
@@ -128,6 +133,7 @@ async function dataForSeoSearch(keyword: string, depth: number): Promise<MapsRes
     .map(
       (it, i): Listing => ({
         name: cleanName(it.title),
+        placeId: strOrNull(it.place_id),
         rank: it.rank_group ?? i + 1,
         rating: numOrNull(it.rating?.value),
         reviews: numOrNull(it.rating?.votes_count),
@@ -195,6 +201,7 @@ async function serperSearch(keyword: string, depth: number): Promise<MapsResult>
   const listings = unique.slice(0, depth).map(
     (p, i): Listing => ({
       name: cleanName(p.title),
+      placeId: strOrNull(p.placeId),
       rank: i + 1,
       rating: numOrNull(p.rating),
       reviews: numOrNull(p.ratingCount),
@@ -258,6 +265,15 @@ export function isSameBusiness(lead: { business_name: string; website: string | 
   const distinctive = a.filter((t) => !GENERIC.has(t));
   const listing = new Set(b);
   return distinctive.length > 0 && distinctive.every((t) => listing.has(t));
+}
+
+/**
+ * Is this listing the lead's business? When we have their Google place ID and the listing has one too,
+ * that decides it. Otherwise (typed in by hand, or the provider gave no ID) fall back to name/website matching.
+ */
+export function isLeadListing(lead: ReportInput, item: Listing) {
+  if (lead.place_id && item.placeId) return lead.place_id === item.placeId;
+  return isSameBusiness(lead, item);
 }
 
 // ── PageSpeed ──
@@ -367,7 +383,7 @@ export async function pullReportData(lead: ReportInput): Promise<ReportData> {
   let profile: ReportData["profile"] = null;
   const searches = keywords.map((keyword, i): SearchResult => {
     const { listings, raw } = rankResults[i];
-    const mine = listings.find((l) => isSameBusiness(lead, l));
+    const mine = listings.find((l) => isLeadListing(lead, l));
     if (mine && !profile) profile = { ...mine, foundIn: keyword };
     const competitors: Listing[] = [];
     const droppedFar: Dropped[] = [];
@@ -381,7 +397,7 @@ export async function pullReportData(lead: ReportInput): Promise<ReportData> {
   });
 
   if (!profile) {
-    const mine = lookup.listings.find((l) => isSameBusiness(lead, l));
+    const mine = lookup.listings.find((l) => isLeadListing(lead, l));
     if (mine) profile = { ...mine, foundIn: lookupKeyword };
   }
 

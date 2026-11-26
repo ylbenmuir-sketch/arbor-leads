@@ -17,6 +17,8 @@ function AnnouncementBar({ hidden }: { hidden: boolean }) {
 
   useEffect(() => {
     const ms = new Date(pricing.deadline).getTime() - Date.now();
+    // Reads the clock after hydration on purpose, so server and browser HTML match.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (ms <= 0) setEnded(true);
     else setDays(Math.floor(ms / 86400000));
   }, []);
@@ -59,7 +61,8 @@ export default function Header() {
     const cta = document.getElementById("hero-cta");
     const hero = document.getElementById("top");
     if (!cta || !hero) {
-      // Pages without the hero (privacy, terms): always show the button.
+      // Pages without the hero (privacy, terms): always show the button. Needs the DOM, so it runs after hydration.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPastCta(true);
       return;
     }

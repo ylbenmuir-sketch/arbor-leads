@@ -162,6 +162,8 @@ export function CtaButton({
 }) {
   const sizes = { sm: "btn-sm", md: "", lg: "btn-lg" };
   return (
+    // A plain <a> on purpose: on the home page the click is handled here (smooth scroll), elsewhere it's a normal page load.
+    // eslint-disable-next-line @next/next/no-html-link-for-pages
     <a
       href="/#analyzer"
       onClick={(e) => {
@@ -213,6 +215,8 @@ export function useBookingHref() {
   useEffect(() => {
     try {
       const saved = localStorage.getItem(CONTACT_KEY);
+      // localStorage only exists in the browser, so this runs after hydration on purpose.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (saved) setContact(JSON.parse(saved));
     } catch {}
     const onContact = (e: Event) => setContact((e as CustomEvent<Contact>).detail);

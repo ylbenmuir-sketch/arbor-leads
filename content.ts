@@ -104,12 +104,30 @@ export const analyzer = {
   },
   optional: "(optional)",
   websitePlaceholder: "No website? That's what we fix.",
+  /** Two-step form. Step 1 finds the business on Google; step 2 asks where to send the report. */
+  steps: { business: "Step 1 of 2", contact: "Step 2 of 2" },
+  find: {
+    label: "Find your business",
+    placeholder: "Start typing your business name",
+    hint: "Pick it from the list so we check the right listing.",
+    manualLink: "Not on Google? Enter it manually",
+    searchLink: "Search Google instead",
+    change: "Change",
+    loading: "Getting your listing…",
+    /** Shown when they press Next without picking from the list or filling the manual fields. */
+    pickError: "Start typing your business name, then pick it from the list.",
+    cityMissing: "We couldn't see a city on that listing. Which city do you serve?",
+    cityPlaceholder: "Start typing your city",
+  },
+  next: "Next",
+  contactHeading: "Where should we send your report?",
+  back: "Back",
   /** Shown above the form when someone clicks a "Start with…" pricing button. */
   planLabel: "Plan you picked:",
   /** Shown when someone clicks one of the "Two ways to start" buttons. */
   setupLabel: "Setup you picked:",
   planClear: "Clear",
-  button: "Show Me Who's Beating Me",
+  button: "Show me who's beating me",
   /** Button text while the form is sending. */
   sending: "Sending…",
   /** Shown above the button if the form couldn't be sent. */
@@ -461,6 +479,8 @@ export const legal = {
   back: "← Back to home",
   privacy: {
     title: "Privacy Policy",
+    /** Overrides legal.effective for this page. */
+    effective: "November 26, 2026",
     intro: "This is the plain-English version of how Arbor Leads handles your information.",
     sections: [
       {
@@ -470,21 +490,35 @@ export const legal = {
       {
         h: "What we collect",
         p: [
-          "What you give us: your business name, website URL, name, email, phone number, and which plan you're interested in.",
+          "What you give us on the free audit form: your business (picked from Google or typed in), city, website, your name, email, phone number if you add it, and which plan you're interested in. We save what you enter in step 1 even if you don't finish step 2.",
           "What the site collects on its own: basic analytics and cookies, like which pages were visited and what kind of device was used.",
         ],
       },
       {
         h: "Why we collect it",
-        p: ["To send you the free audit you asked for, to contact you about it, and to provide our services if you become a customer."],
+        p: [
+          "To build and email the free report you asked for, to follow up about it, and to provide our services if you become a customer.",
+          "If you get a report and don't book a call, we may send you up to 3 short follow-up emails about it. Every one has an unsubscribe link.",
+        ],
       },
       {
         h: "We don't sell your information",
         p: ["We do not sell your personal information."],
       },
       {
-        h: "Service providers",
-        p: ["We use other companies for hosting, email, text messaging and analytics. They get only what they need to run the service for us, and they may use it only for that."],
+        h: "Who we share it with to build your report",
+        p: [
+          "Google: when you type in the \"Find your business\" box, what you type goes to Google Places to suggest matching businesses and cities. We also send your website address to Google PageSpeed Insights to check how fast it loads on a phone.",
+          "Serper or DataForSEO: we send your business name and city to look up Google Maps results for tree searches in your area.",
+          "An AI provider, through Vercel AI Gateway: we send the facts we found (your listing, your competitors, the search results) so it can write the sentences in your report. Your score and the numbers in your report are worked out by our own code, not the AI.",
+        ],
+      },
+      {
+        h: "Where it's stored and how we email you",
+        p: [
+          "Your details and your report are stored in a database at Supabase. Emails, including your report, come to you through Resend. If you book a call, the booking happens on Cal.com. The site itself is hosted on Vercel.",
+          "These companies get only what they need to do that job for us, and they may use it only for that.",
+        ],
       },
       {
         h: "Text messages (SMS)",
@@ -497,8 +531,11 @@ export const legal = {
         p: ["We keep your information for as long as we need it for the reasons above, or as long as the law requires. After that we delete it."],
       },
       {
-        h: "Seeing or deleting your information",
-        p: ["Email hello@arborleads.co and ask. We'll show you what we have, or delete it."],
+        h: "Unsubscribing, seeing or deleting your information",
+        p: [
+          "To stop our emails or to ask us to delete your information, just reply to any email we've sent you, or write to hello@arborleads.co. You can also use the unsubscribe link at the bottom of our follow-up emails.",
+          "If you ask, we'll show you what we have about you, or delete it.",
+        ],
       },
       {
         h: "Children",
