@@ -19,7 +19,7 @@ export default function Page() {
       <article className="pt-12 md:pt-16">
         <h1 className="display-lg">{page.title}</h1>
         <p className="mt-3 text-sm font-bold uppercase tracking-[0.14em] text-muted">
-          {legal.effectiveLabel} {legal.effective}
+          {legal.effectiveLabel} {page.effective}
         </p>
         <p className="mt-6 text-lg leading-relaxed text-cream">{page.intro}</p>
         {page.sections.map((s) => (
