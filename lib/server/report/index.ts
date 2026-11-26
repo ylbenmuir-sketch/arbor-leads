@@ -35,6 +35,7 @@ export async function buildAndSendReport(lead: ReportInput, leadId: string | nul
   let step = "pulling Google Maps and PageSpeed data";
   try {
     const data: ReportData = await pullReportData(lead);
+    raw.provider = data.provider;
     raw.searches = data.searches;
     raw.lead_profile = data.profile;
     raw.lookup = { keyword: `${lead.business_name} ${lead.city}`, rawItems: data.lookupRawItems };
